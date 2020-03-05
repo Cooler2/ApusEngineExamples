@@ -1,0 +1,214 @@
+#PAGE_HOMEHEAD:
+<table width=100% style='margin-top:10px' cellpadding=0 cellspacing=0><tr>
+<td>
+<div align=center><a href='$DOWNLOAD_URL?m=$MODE' onClick="ReportDL();" style='text-decoration:none;' title='$BUTTON_DOWNLOAD_DESC'>	
+   <div id=PlayBtn style="min-width:200px; background: url('/img/playbtn2.png') 50% 50% no-repeat; background-size:120%; width:324px; height:80px; top:0px; font-size:140%;">$BUTTON_DOWNLOAD</div>
+   <div style='color:#FFE; text-shadow: 0px 1px 2px #000; font-size:80%; position:relative; top:-10px;'>$BUTTON_DOWNLOAD_EXT $CLIENT_SIZE_AND_VERSION</div>	
+	</a>
+</div>
+<td>
+<div id='HomeHeadSteam' align=center><a href='http://store.steampowered.com/app/488910' target=_blank style='text-decoration:none;' title='$BUTTON_STEAM_DESC'>
+   <div id=PlayBtn style="min-width:200px; background: url('/img/playbtn3.png') 50% 50% no-repeat; background-size:120%; width:324px; height:80px; top:0px; font-size:140%;">$BUTTON_STEAM</div>
+   <div style='color:#FFE; text-shadow: 0px 1px 2px #000; font-size:80%; position:relative; top:-10px;'>$BUTTON_STEAM_EXT</div></a>
+</div>
+<td>
+<div align=center><a href='http://astralheroes.gamepedia.com/'  target=_blank style='text-decoration:none;' title='$BUTTON_WIKI_DESC'>
+   <div id=PlayBtn style="min-width:200px; 	background: url('/img/playbtn.png') 50% 50% no-repeat; background-size:120%; width:324px; height:80px; top:0px;  font-size:140%;">$BUTTON_WIKI</div>
+   <div style='color:#FFE; text-shadow: 0px 1px 2px #000; font-size:80%; position:relative; top:-10px;'>$BUTTON_WIKI_EXT</div></a>
+</div>
+</table>
+
+#PAGE_ABOUT:
+<div style='padding:15px;'>
+<p align=justify>Astral Heroes is a card-battle and deck-construction online game that challenges your brain and hones your thinking skills. 
+<div align=center><b>Key features:</b></div>
+<ul>
+<li>Thoroughly polished game balance, no useless cards
+<li>Deep cards synergy
+<li>3 different game modes:
+<ol>
+	<li>Collect cards and build your own custom deck.
+	<li>Play with random pre-built decks
+	<li>Draft tournament: draft cards from random packs and use them to build your deck
+</ol>
+<li>Sophisticated AI in addition to human rivals
+<li>Guilds: team up with other players to make your game progress faster and access advanced meta-game features
+<li>Leaderboard, Missions, Campaign and Quests
+<li>It's <span style='color:#800'>FREE to play</span> - there's nothing you can't have for free.
+</ul>
+</div>
+<div align=center><b>Watch the gameplay video:</b></div>
+<div align=center><iframe class=VideoFrame src="https://www.youtube.com/embed/mP44D1gm1PQ?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe></div>
+
+#FORUM_RULES:
+<h2>Code of Conduct</h2>
+<ul>
+<li>The "GENERAL" chapter is for game-related discussions. In "PROBLEMS/BUGS" you can discuss game-related problems with other players or check for solution of a common problem. Please note, that this chapter is not for personal support requests. For personal support please contact support@apus-software.com. Feel free to discuss any topics in "OFF-TOPIC" chapter.
+<li>Offensive, rude behaviour is forbidden. Flood / flame is forbidden, except off-topic chapter. Adverticement is forbidden, except ads in discussion form in off-topic chapter, if initiated by a registered user.			
+</ul>			
+
+#PAGE_BUY_PREMIUM:
+<h3 align=center>Buy premium status right now!</h3>
+<div align=center>
+<table width=100% align=center>
+<tr>
+ <td class=PremiumCard onClick='BuyPremium("P30")'>
+  <div class=PremiumLabel>30 DAYS</div><div class=PremiumPrice>$9.95</div>
+ <td class=PremiumCard onClick='BuyPremium("P90")'>
+  <div class=PremiumLabel>90 DAYS</div><div class=PremiumPrice>$19.95</div>
+ <td class=PremiumCard onClick='BuyPremium("P360")'>
+  <div class=PremiumLabel>360 DAYS</div><div class=PremiumPrice>$49.95</div>
+</table>
+You can also buy premium for gold inside the game.
+</div>
+
+
+#PAGE_UPLOAD_AVATAR:
+<div class=SmallFont style='font-size:15px; padding:0px 20px 0px 20px'>
+<IF_PREMIUM>
+Avatar images with the following content are forbidden:
+<ul style='margin:2px;'>
+<li>adult images
+<li>filthy language
+<li>political, religious or other propaganda
+<li>explicit offense
+</ul>
+<div style='margin-top:8px;'>Such avatars can be deleted by the game administrator without any compensation.</div>
+<div style='margin-top:8px;'>Optimal image size: 120x140 (up to 10Kb), other sizes will be scaled/cropped.
+<br>Max file size to upload - 500Kb.</div>
+<p style='margin:4px;'><input id=CUAgree type=checkbox name=CUAgree style='zoom:1.5; position:relative; top:3px;' onClick='d.getElementById("UploadCustomAvatarBtn").disabled=(!this.checked);'> <label for=CUAgree> I accept these terms</label>
+<div align=center style='margin-top:14px;'><button id=UploadCustomAvatarBtn class=MsgButton disabled onClick='AccountUploadAvatar(2)'>Upload</button></div>
+</IF_PREMIUM>
+<IFNOT_PREMIUM>
+<h3 align=center>Premium status required!</h3>
+Premium status required to upload a custom avatar image! Once uploaded, it remains active even if premium status expired.
+<br>&nbsp;
+$PAGE_BUY_PREMIUM
+</IFNOT_PREMIUM>
+</div>
+
+// Main page
+#MAINPAGE:
+<html>
+<head>
+</head>
+<body>
+ <h2 align=center>Hello, SCGI!</h2>
+ <table align=center cellpadding=2 cellspacing=0
+   style='padding:0px; background-color:#A0C0D0; border: 2px solid #202080'>
+  <tr style='background-color:#202080; color:white; font-weight:bold'><td>Header <td>Value
+  $HEADERS_LIST
+ </table>
+</body>
+</html>
+
+#PAGE_TOS:
+<div align=center>
+<div class="InnerScrollbar SmallFont" style='width:420px; height:340px; overflow-y:scroll; text-align:left; padding-right:8px; font-size:90%'>
+<b>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the Astral Heroes game client or
+http://astralheroes.com website (the "Service") operated by Ivan Polyacov, a Sole Proprietor d/b/a Apus Software ("us", "we", or "our").
+</b>
+<br><p>
+Your access to and use of the Service is conditioned on your acceptance of and compliance with
+these Terms. These Terms apply to all visitors, users and others who access or use the Service.
+By accessing or using the Service you agree to be bound by these Terms. If you disagree with
+any part of the terms then you may not access the Service.
+
+<p><b>Disclaimer</b><p>
+To the maximum extent permitted by applicable law, we exclude all representations, warranties and conditions relating to our website and the use of this website (including, without limitation, any warranties implied by law in respect of satisfactory quality, fitness for purpose and/or the use of reasonable care and skill). Nothing in this disclaimer will:
+<ol>
+<li>limit or exclude our or your liability for death or personal injury resulting from negligence;
+<li>limit or exclude our or your liability for fraud or fraudulent misrepresentation;
+<li>limit any of our or your liabilities in any way that is not permitted under applicable law; or
+<li>exclude any of our or your liabilities that may not be excluded under applicable law.
+</ol>
+The limitations and exclusions of liability set out in this Section and elsewhere in this disclaimer: (a) are subject to the preceding paragraph; and (b) govern all liabilities arising under the disclaimer or in relation to the subject matter of this disclaimer, including liabilities arising in contract, in tort (including negligence) and for breach of statutory duty.
+<p>
+To the extent that the website and the information and services on the website are provided free of charge, we will not be liable for any loss or damage of any nature.
+
+<p><b>Refund Policy</b><p>
+Within 10 days from your date of purchase you may ask to refund for any or all items/services you purchased in the following cases:
+<ul>
+<li>You made a duplicated purchase by mistake
+<li>You can't use the purchased items/services because of software compatibility issues, game failures or other similar reasons
+<li>Your account is banned or terminated
+</ul>
+
+<p><b>Termination</b><p>
+We may terminate or suspend your game account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms. Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account, you may simply discontinue using the Service.
+
+<p><b>Links To Other Web Sites</b><p>
+Our Service may contain links to third­party web sites or services that we has no control over, and assumes no responsibility for, the
+content, privacy policies, or practices of any third party web sites or services. You further
+acknowledge and agree that we shall not be responsible or liable, directly or indirectly, 
+for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such 
+content, goods or services available on or through any such web sites or services.
+<p>We strongly advise you to read the terms and conditions and privacy policies of any third­party
+web sites or services that you visit.
+
+<p><b>Governing Law</b><p>
+These Terms shall be governed and construed in accordance with the laws of the Republic of Belarus, without regard to its conflict of law provisions.
+<p>
+Our failure to enforce any right or provision of these Terms will not be considered a waiver of
+those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the
+remaining provisions of these Terms will remain in effect. These Terms constitute the entire
+agreement between us regarding our Service, and supersede and replace any prior agreements
+we might have between us regarding the Service.
+
+<p><b>Changes</b><p>
+We reserve the right, at our sole discretion, to modify or replace these Terms at any time. 
+
+<p><b>Contact Us</b><p>
+If you have any questions about these Terms, please contact us at 
+<a href="mailto:support@astralheroes.com">support@astralheroes.com</a> or
+<a href="mailto:support@apus-software.com">support@apus-software.com</a>
+
+</div>
+</div>
+
+#PAGE_PRIVACY:
+<div align=center>
+<div class="InnerScrollbar SmallFont" style='width:420px; height:340px; overflow-y:scroll; text-align:left; padding-right:8px;'>
+<p>This privacy policy has been compiled to better serve those who are concerned with how their 'Personally Identifiable Information' (PII) is being used online. PII, as described in US privacy law and information security, is information that can be used on its own or with other information to identify, contact, or locate a single person, or to identify an individual in context. Please read our privacy policy carefully to get a clear understanding of how we collect, use, protect or otherwise handle your Personally Identifiable Information in accordance with our website.
+
+<p><b>What personal information do we collect from the people that use our website or game client app?</b><p>
+You are asked to enter your email address when you create a game account either within the game client app or through the game website. 
+Unless you verify your email address, it is not considered PII.
+
+<p><b>What other information we will collect and how we will use it?</b><p>
+The game client app provides us with technical information about your computer, such as OS version, videocard model, screen resolution. 
+This information is used to generate aggregate statistics about users system configuration in order to identify compatibility issues and 
+define the directions of further game development.
+
+<p><b>Third-party disclosure</b><p>
+We do not sell, trade, or otherwise transfer to outside parties your Personally Identifiable Information. This does not include website hosting partners and other parties who assist us in operating our website, conducting our business, or serving our users, so long as those parties agree to keep this information confidential. We may also release information when it's release is appropriate to comply with the law, enforce our site policies, or protect ours or others' rights, property or safety. 
+
+<p><b>Third-party services</b><p>
+We use third party services to process payments. These service providers have access to your PII, they are obligated not to disclose or use it for any other purpose.
+<p>We use third party embedded services to provide analytics for the game website. These services have no access to your PII, but may use cookies to track your activity on our website.
+
+<p><b>How do we use cookies?</b><p>
+Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow) that enables the site's or service provider's systems to recognize your browser and capture and remember certain information. We use cookies to connect your 
+game account and your web browser, so you don't need to log in to access every single web page. We also use cookies to store your preferences (site language).
+<p>You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies. You do this through your browser settings. Since browser is a little different, look at your browser's Help Menu to learn the correct way to modify your cookies.
+
+<p><b>How do we protect your information?</b><p>
+Your personal information is contained behind secured networks and is only accessible by a limited number of persons who have special access rights to such systems, and are required to keep the information confidential. All sensitive information is transferred only over encrypted SSL connections.
+<p>Although we strive to use commercially acceptable means to protect your Personal Information, we cannot guarantee its absolute security and shall not be liable for any security breach.
+
+<p><b>Consent</b><p>
+By using our website, you hereby consent to our Privacy Policy and agree to its Terms and Service.
+
+</div>
+</div>
+
+#PAGE_LEGAL:
+<div align=center class=MainFont>
+ Astral Heroes online game<br>
+ and its website http://astralheroes.com<br>
+ are owned and operated by Ivan Polyacov -<br>
+ a Sole Proprietor d/b/a Apus Software,<br>
+ registered in Minsk, Belarus.<br>
+ Reg. number: <a href="http://minsk.gov.by/ru/org/8643/attach/0041a42/18022013_1.shtml" target=_blank>191816473</a>
+ <br><br><br><br><br><br><br><br>
+</div>

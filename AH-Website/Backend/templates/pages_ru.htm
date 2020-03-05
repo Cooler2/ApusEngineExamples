@@ -1,0 +1,88 @@
+#PAGE_ABOUT_RU:
+<div style='padding:15px;'>
+<p align=justify>Astral Heroes - коллекционная карточная игра, стратегия, продолжающая серию игр "Владыки Астрала" (Astral Masters) и "Спектромансер". 
+<div align=center><b>Ключевые особенности:</b></div>
+<ul>
+<li>Тщательно проработанный игровой баланс, в игре нет ненужных карт.
+<li>Тесное взаимодействие между картами, порождающее множество комбинаций.
+<li>3 основных режима игры:
+<ol>
+	<li>Составляйте колоды из добытых карт и играйте ими. Больше побед - больше карт!
+	<li>Играйте предварительно сбалансированными случайными колодами.
+	<li>Драфт-турниры: игроки выбирают карты из общих наборов, а затем играют ими между собой.
+</ol>
+<li>Сильный AI в дополнение к живым соперникам в онлайне.
+<li>Гильдии: объединяйте усилия с другими игроками чтобы открыть для себя новые стороны игры.
+<li>Глобальный рейтинг, кампания, ежедневные задания.
+<li>Игра доступна <span style='color:#800'>бесплатно</span> - абсолютно все возможности могут быть добыты игровым путём.
+</ul>
+</div>
+<div align=center><b>Вот так выглядит игровой процесс:</b></div>
+<div align=center><iframe class=VideoFrame src="https://www.youtube.com/embed/DfWlt9c0QgA?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe></div>
+
+#FORUM_RULES_RU:
+<h2>Правила поведения</h2>
+<div style='padding:4px'>Данные правила относятся как к поведению на сайте игры (включая форумы), так и к поведению в чате игры.</div>
+<ul>
+<li>Категорически запрещены оскорбления и угрозы. Использование нецензурной брани считается оскорблением. 
+<li>Astral Heroes - не место для пропаганды политических, религиозных и прочих неоднозначных идей или убеждений. 
+Недопустимо использование провокационных сообщений, изображений аватар или подписей. Исключением является раздел форума "Оффтопик", 
+где разрешены обсуждения произвольных тем (в рамках действующего законодательства).
+<li>В случае нарушения данных правил, администраторы игры имеют право принять необходимые меры, в том числе: 
+удаление или модификация контента, запрет использования чата/форума, временная или полная блокировка аккаунта.
+</ul>				
+
+#PAGE_BUY_PREMIUM_RU:
+<h3 align=center>Купите премиум прямо сейчас!</h3>
+<div align=center>
+<table width=100% align=center>
+<tr>
+ <td class=PremiumCard onClick='BuyPremium("P30")'>
+  <div class=PremiumLabel>30 дней</div><div class=PremiumPrice>400 RUB</div>
+ <td class=PremiumCard onClick='BuyPremium("P90")'>
+  <div class=PremiumLabel>90 дней</div><div class=PremiumPrice>800 RUB</div>
+ <td class=PremiumCard onClick='BuyPremium("P360")'>
+  <div class=PremiumLabel>360 дней</div><div class=PremiumPrice>2000 RUB</div>
+</table>
+Вы также можете купить премиум за золото внутри игры.
+</div>
+
+#PAGE_UPLOAD_AVATAR_RU:
+<div class=SmallFont style='font-size:14px; padding:0px 20px 0px 20px'>
+<IF_PREMIUM>
+Не допускается использовать аватары:
+<ul style='margin:2px;'>
+<li>с неприличными изображениями (порнография и т.п)
+<li>с нецензурными текстами
+<li>содержащие пропаганду каких-либо идей или убеждений
+<li>целенаправленно оскорбляющие или унижающие соперника или других лиц
+</ul>
+<div style='margin-top:8px;'>Аватары, не соответствующие этим требованиям, могут быть удалены администратором игры без какой-либо компенсации.</div>
+<div style='margin-top:8px;'>Оптимальный размер аватары: 120x140 (10Kb), изображения другого размера будут автоматически преобразвоаны.
+<br>Максимальный размер загружаемого файла - 500Kb.</div>
+<p style='margin:4px;'><input id=CUAgree type=checkbox name=CUAgree style='zoom:1.5; position:relative; top:3px;' onClick='d.getElementById("UploadCustomAvatarBtn").disabled=(!this.checked);'> <label for=CUAgree> я согласен с данными правилами</label>
+<div align=center style='margin-top:14px;'><button id=UploadCustomAvatarBtn class=MsgButton disabled onClick='AccountUploadAvatar(2)'>Загрузить</button></div>
+</IF_PREMIUM>
+<IFNOT_PREMIUM>
+<h3 align=center>Необходим премиум!</h3>
+Загрузка собственных аватар доступна премиум-аккаунтам! Загруженная аватара остаётся и после истечения срока действия премиума. 
+<br>&nbsp;
+$PAGE_BUY_PREMIUM
+
+</IFNOT_PREMIUM>
+</div>
+
+// Main page
+#MAINPAGE:
+<html>
+<head>
+</head>
+<body>
+ <h2 align=center>Hello, SCGI!</h2>
+ <table align=center cellpadding=2 cellspacing=0
+   style='padding:0px; background-color:#A0C0D0; border: 2px solid #202080'>
+  <tr style='background-color:#202080; color:white; font-weight:bold'><td>Header <td>Value
+  $HEADERS_LIST
+ </table>
+</body>
+</html>

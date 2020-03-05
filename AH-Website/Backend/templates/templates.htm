@@ -1,0 +1,231 @@
+#DOWNLOAD_URL:http://astralheroes.com/files/AHsetup.exe
+#CLIENT_SIZE_AND_VERSION: 60 Mb
+
+#FORUM_THREAD_ITEM:
+<div id=ThreadBlock$THREAD_ID>
+   <a href='/$LANG_LC/forum/thread/$THREAD_ID'><div class=ThreadItem><div class="ThreadName ThreadNameHasNew">$THREAD_NAME</div>
+   <div class=ThreadDesc>$MSGCOUNT msg$NEWMSG, last: $LAST_UPDATE</div></div></a>
+</div>
+#FORUM_THREAD_ITEM_READ:
+<div id=ThreadBlock$THREAD_ID>
+   <a href='/$LANG_LC/forum/thread/$THREAD_ID'><div class=ThreadItem><div class=ThreadName >$THREAD_NAME</div>
+   <div class=ThreadDesc>$MSGCOUNT msg, last: $LAST_UPDATE</div></div></a>
+</div>
+#FORUM_PINNED_MARK:<span class=ThreadIcon title='$THREAD_PINNED'>&#xf08d;</span>
+#FORUM_GUILD_MARK:<span class=ThreadGuildIcon title='$THREAD_GUILD_PRIVATE'>G</span>
+#FORUM_GUILD_MARK_BIG:<span class=ThreadGuildIconBig title='$THREAD_GUILD_PRIVATE'>G</span>
+#FORUM_PINNED_MARK_BIG:<span class=ThreadIconBig title='$THREAD_PINNED'>&#xf08d;</span>
+#FORUM_CLOSED_MARK_BIG:<span class=ThreadIconBig title='$THREAD_CLOSED'>&#xf023;</span>
+#FORUM_HIDDEN_MARK_BIG:<span class=ThreadIconBig title='$THREAD_HIDDEN'>&#xf070;</span>
+#FORUM_SKIPPED_MSGS:<div align=center class="ForumPseudoLink ShowOmited" onClick="ShowOmitedMessages(this,$THREAD_ID,'$SKIPPED_RANGE')">$SKIPPED_MSGS</div>
+#ATTACHMENTS:<table class=ForumAttach><tr>
+#AUTHOR_ADMIN_MARK:<span class=AuthorIcon title="$MSG_FORUM_ADMIN">&#xf005;</span>
+#AUTHOR_MODERATOR_MARK:<span class=AuthorIcon title="$MSG_FORUM_MOD">&#xf006;</span>
+#FORUM_MESSAGE:
+<div id=FMSG$MSG_ID>
+   <table class=ForumMsg>
+      <tr height=9><td rowspan=4 class=MsgAvatar style="background-image:url('/faces/s-$FACE_ID.jpg');"><img src='/img/msg_frame.png'></td>
+      <tr class=MsgHeader>
+         <td>$AUTHOR
+         <td><span class=VoteUp title='$HINT_LIKE'>&#xf087;</span><span id=MSGRATE$MSG_ID>$MSGRATE</span><span class=VoteDown title='$HINT_DISLIKE'>&#xf088;</span>
+         <td><IF_IS_NEWMSG>NEW</IF_IS_NEWMSG><td width=170 align=right>$CREATED
+      <tr><td colspan=4 class=MsgText id=MsgText$MSG_ID>$MSGTEXT
+      <tr><td colspan=4 class=MsgButtons>
+         <IF_MODERATOR><input class=SelMsg type=checkbox id=SELMSG$MSG_ID></IF_MODERATOR>
+         <IF_CAN_EDIT>
+         <input type="button" class=MsgButtonSmall value="&#xf014;" title="$BTN_DELETE" onclick="ForumDeletePost($MSG_ID,$THREAD_ID)"> &nbsp;
+         <input type="button" class=MsgButtonSmall value="&#xf044;" title="$BTN_EDIT" onclick="ForumEditPost($MSG_ID,$THREAD_ID)"> &nbsp;
+         </IF_CAN_EDIT>
+         <IFNOT_THREAD_CLOSED><input type="button" class=MsgButton name="BTNR$THREAD_ID" value="$BTN_REPLY" onclick="ForumReply($MSG_ID,$THREAD_ID)"> <input type="button" class=MsgButton name="BTNQ$THREAD_ID" style="display:none" value="$BTN_QUOTE" onclick="ForumQuote($MSG_ID,$THREAD_ID)"></IFNOT_THREAD_CLOSED>
+   </table>
+</div><!--MSGEND-->
+#THREAD_FOOTER:
+<img id="TSPLIT$THREAD_ID" src="/img/split2.gif" width="100%" height="4" style="display:block; margin-top:6px;">
+<div id="ADDBTN$THREAD_ID" align="center" class=ThreadButtons>
+<IFNOT_THREAD_CLOSED>
+   <input type="button" class="btn4" value="$BTN_ADD_MESSAGE" onclick="ForumReply(0,$THREAD_ID)">
+   <input type=file style='display:none' id=UploadAndAttachFile$THREAD_ID accept='.gif,.jpg,.jpeg,.png,.pdf,.rar,.zip,.7z,.txt,.log,.bmp,.tga,image/*' onChange='UploadAndAttachFile(this.files); this.value=null;'>
+   <input type=file style='display:none' id=UploadImageFile$THREAD_ID accept='.gif,.jpg,.jpeg,.png' onChange='UploadImageFile(this.files); this.value=null;'>
+</IFNOT_THREAD_CLOSED>
+<IF_MODERATOR>
+   &nbsp;
+   <input type="button" class=MsgButtonSmall value="&#xf014;" title="Delete all selected messages in this thread" onclick="ForumDeleteAll($THREAD_ID)"> &nbsp;
+   <input type="button" class=MsgButtonSmall value="&#xf0d0;" title="Move all selected messages from all threads to this thread" onclick="ForumMoveAll($THREAD_ID)">
+</IF_MODERATOR>
+<IF_THREAD_CLOSED>
+ $MSG_THREAD_CLOSED
+</IF_THREAD_CLOSED>
+</div>
+<div id="EDITOR$THREAD_ID" class=ForumEditor></div>
+
+#NEWSFEED_ITEM:
+<div class=NewsHeader><a href='/$LANG_LC/forum/thread/$NEWS_ID'><IF_NEWS_PINNED>[TOP] &nbsp;</IF_NEWS_PINNED>$NEWS_DATE &nbsp; $NEWS_TITLE</a></div>
+<div class=NewsText>$NEWS_TEXT
+ <div align=right style='margin:1px 4px 6px 0px;'><a href='/$LANG_LC/forum/thread/$NEWS_ID'>$COMMENTS</a></div>
+</div>
+
+#FORUM_HOME_LINK:<a href="/$LANG_LC/forum" class=dottedBottom>$LABEL_FORUMS</a>
+#FORUM_CHAPTER_LINK1:<a href="/$LANG_LC/forum/general" class=dottedBottom>$CHAPTER1</a>
+#FORUM_CHAPTER_LINK2:<a href="/$LANG_LC/forum/problems" class=dottedBottom>$CHAPTER2</a>
+#FORUM_CHAPTER_LINK3:<a href="/$LANG_LC/forum/offtopic" class=dottedBottom>$CHAPTER3</a>
+#FORUM_CHAPTER_LINK4:<a href="/$LANG_LC/forum/news" class=dottedBottom>$CHAPTER4</a>
+#FORUM_CHAPTER_LINK5:<a href="/$LANG_LC/forum/suggestions" class=dottedBottom>$CHAPTER5</a>
+#FORUM_CHAPTER_LINK6:<a href="/$LANG_LC/forum/guilds" class=dottedBottom>$CHAPTER6</a>
+#FORUM_CHAPTER_LINK7:<a href="/$LANG_LC/forum/tournaments" class=dottedBottom>$CHAPTER7</a>
+#FORUM_TITLE_ARROW:&#x2192;
+#EMPTY_CHAPTER:<tr><td><td colspan=3 style='background-color:transparent;'>There are no threads here... Be the first to create one!
+#FORUM_CHAPTER:
+<table width=100%><tr>
+ <td width=160>
+ <td align=center>$FORUM_PAGE_TITLE</td>
+ <td width=160 align=right><IF_CAN_POST><input type="button" class="btn4" value="$BTN_CREATE_THREAD" onclick="CreateThread()"></IF_CAN_POST></td>
+</table>
+<table align=center class=ChapterTable>
+  <thead><tr class=ChapterHeader><td><td>$COL_SUBJECT <td>$COL_COMMENTS <td>$COL_LAST_POST</thead>
+  <tbody class=ChapterTableBody>
+  $CHAPTER_THREADS
+  </tbody>
+</table>
+
+#EMAIL_NOT_VERIFIED:<div style='color:#209020'>$MSG_EMAIL_NOT_VERIFIED (<a href="">$MSG_VERIFY_EMAIL</a>)</div>
+
+#ACCOUNT_BLOCK:
+<div style='break-inside:avoid; -webkit-column-break-inside: avoid; page-break-inside: avoid;'>
+<h4 style='color:#322; padding:4px 10px 2px 10px; text-align:left; border-bottom:3px solid rgba(55,30,20,0.5); background-color: rgba(55,30,20,0.1); margin-bottom:0px;'>$BLOCK_TITLE</h4>
+$BLOCK_CONTENT
+</div>
+
+#ACCOUNT_PAGE:
+ $ACCOUNT_BLOCK_GOLD
+ $ACCOUNT_BLOCK_STATS
+ $ACCOUNT_BLOCK_ABOUT
+ $ACCOUNT_BLOCK_NOTIFICATIONS
+ $ACCOUNT_BLOCK_AVATAR
+
+
+#ACCOUNT_EDIT_BTN:<button class=IconBtn style='background-color:#345' title='$MSG_EDIT_ICON' onClick='AccountEdit("$P1",1)'>&#xf040;</button>
+#ACCOUNT_EDIT_FIELD:
+<div id=EditAccount$P1 style='width:220px; min-width:220px; display:none'><input id='AccountInput$P1' type=text maxlength=45 class="InputField SmallFont">
+<button class=IconBtn style='background-color:#080;text-indent:-1px;' title='$BTN_SAVE' onClick='AccountEditSave("$P1")'>&#xf00c;</button>
+<button class=IconBtn style='background-color:#800' title='$BTN_CANCEL'  onClick='AccountEdit("$P1",0)'>&#xf00d;</button></div>
+<div id=EditAccountError$P1 style='display:none'><span id='EditAccountErrorText$P1'></span><button class=IconBtn style='background-color:#800' title='$BTN_CANCEL'  onClick='AccountEdit("$P1",0)'>&#xf00d;</button></div>
+
+#ACCOUNT_BLOCK_NOTIFICATIONS_HTML_RU:
+<div style='padding:8px; font-size:90%'>
+Режим email-оповещений:<br>
+<select id=NotificationMode nMode="$ACCOUNT_NMODE" size=1 onChange='AccountSaveValue("notify",this.value,"NModeStatus")' style='width:100%; height:27px; background-color:#E8E0D0;margin-top:5px;margin-bottom:3px;'>
+<option value='N'>$NOTIFY_ITEM_N</option>
+<option value='Y'>$NOTIFY_ITEM_Y</option>
+<option value='1'>$NOTIFY_ITEM_1</option>
+<option value='2'>$NOTIFY_ITEM_2</option>
+</select>
+<div align=center id=NModeStatus style='display:none;font-size:85%;'></div>
+<IF_EMAIL_UNVERIFIED><span class="TextIcon" style="color:#c14000" title="$NOTIFY_UNVERIFIED"></span> $NOTIFY_UNVERIFIED</IF_EMAIL_UNVERIFIED>
+</div>
+
+#ACCOUNT_BLOCK_NOTIFICATIONS_HTML:
+<div>
+
+</div>
+
+
+#ACCOUNT_BLOCK_STATS_HTML:
+<div align=center style='padding: 0px 0px 8px 0px;'>
+<table cellpadding=1 cellspacing=0 class=Profile1 style='width:100%'>
+<thead>
+<tr class=TableHeader>
+   <th style='height:25px;'>
+   <th width=50>Level
+   <th width=60>Fame
+   <th width=90>Wins&nbsp;/&nbsp;Loses
+   <th width=60>Place
+</thead>
+<tbody>
+   <tr class=ProfileRow><td>$LABEL_CUSTOMDECKS:<td>$LEVEL_CUSTOM <td>$FAME_CUSTOM <td>$WINS_CUSTOM / $LOSES_CUSTOM <td>$PLACE_CUSTOM
+   <tr class=ProfileRow><td>$LABEL_RANDOMDECKS:<td>$LEVEL_RANDOM <td>$FAME_RANDOM <td>$WINS_RANDOM / $LOSES_RANDOM <td>$PLACE_RANDOM
+   <tr class=ProfileRow><td>$LABEL_DRAFTS:     <td>$LEVEL_DRAFT  <td>$FAME_DRAFT  <td>$WINS_DRAFT  / $LOSES_DRAFT  <td>$PLACE_DRAFT
+   <tr class="ProfileRow ProfileTotal"><td>$LABEL_TOTAL:<td>$LEVEL_TOTAL <td>$FAME_TOTAL <td>$WINS_TOTAL  / $LOSES_TOTAL  <td>$PLACE_TOTAL
+</tbody>
+</table>
+</div>
+
+#EMAIL_NOT_VERIFIED:<div id=AccountVerifyEmail style='font-weight:normal; font-size:90%; color:#300;'><span class=TextIcon style='color:#c14000' title="$HINT_EMAIL_NOT_VERIFIED">&#xf071;</span> $VERIFY_EMAIL</div>
+
+#ACCOUNT_BLOCK_ABOUT_HTML:
+<table width=100% style='font-size:90%' cellpadding=4>
+   <tr><td align=right>$LABEL_REGDATE
+    <td width=50% style='min-width:250px;'><b>$REGDATE</b>
+   <tr><td align=right>$LABEL_EMAIL:
+    <td><div id=AccountEmail><b id=AccountEmailValue>$USEREMAIL</b>
+    <IF_EMAIL_VERIFIED><span class=TextIcon style='color:#070' title="$HINT_EMAIL_VERIFIED">&#xf05d;</span></IF_EMAIL_VERIFIED>
+    $ACCOUNT_EDIT_BTN{P1=Email}
+    <IFNOT_EMAIL_VERIFIED>$EMAIL_NOT_VERIFIED</IFNOT_EMAIL_VERIFIED>
+    </div> $ACCOUNT_EDIT_FIELD{P1=Email}
+   <!--<tr><td align=right>$LABEL_PASSWORD:
+    <td><div id=AccountPassword><b id=AccountPasswordValue>*****</b> </div> $ACCOUNT_EDIT_FIELD{P1=Password} -->
+   <tr><td align=right>$LABEL_REALNAME
+    <td><div id=AccountRealname><b id=AccountRealnameValue>$REALNAME</b> $ACCOUNT_EDIT_BTN{P1=Realname}</div> $ACCOUNT_EDIT_FIELD{P1=Realname}
+   <tr><td align=right>$LABEL_LOCATION
+    <td><div id=AccountLocation><b id=AccountLocationValue>$LOCATION</b> $ACCOUNT_EDIT_BTN{P1=Location}</div> $ACCOUNT_EDIT_FIELD{P1=Location}
+</table>
+
+#ACCOUNT_BLOCK_AVATAR_HTML:
+<div align=center>
+<input type=file style='display:none' id=UploadAvatarFile accept='image/*' onChange='AccountHandleFile(this.files); this.value=null;'>
+<table style='font-size:90%; width:200px; margin:10px;' cellpadding=0 cellspacing=0>
+   <tr>
+    <td width=40 align=center valign=middle><div class="ArrowBtn NoSelect" style='transform:none;' onclick="AccountChangeFace(-1)">&#xf0a8;</div></td>
+    <td id="AccountAvatar" style='width: 132px; height: 152px; background: url("/faces/face$USERAVATAR.jpg") center no-repeat;'><img src="/img/face_border.png"></td>
+    <td width=40 align=center valign=middle><div class="ArrowBtn NoSelect" style='transform:none;' onclick="AccountChangeFace(1)">&#xf0a9;</div></td>
+   <tr><td colspan=3 align=center>
+    <button class=MsgButton onClick='AccountUploadAvatar(1)' id=AccountAvatarUploadBtn title="$HINT_UPLOADCUSTOM">$BTN_UPLOAD</button> &nbsp;
+    <button class=MsgButton onClick='AccountSaveAvatar()' id=AccountAvatarSave disabled title="$HINT_SAVECHANGES">$BTN_ACCEPT</button>
+</table>
+</div>
+
+#ACCOUNT_BLOCK_GOLD_HTML:
+<div align=center style='padding-bottom: 10px'>
+<table style='width:240px; font-size:130%'>
+   <tr>
+      <td width=120><img src='/img/iconGold.png' valign=middle style='vertical-align:middle' title='Gold'>$GOLD
+      <td width=120><img src='/img/iconCrystals.png' valign=middle style='vertical-align:middle' title='Crystals'>$CRYSTALS
+</table>
+</div>
+
+#ACCOUNT_BLOCK_PREMIUM_HTML:
+<div align=center style='padding-bottom: 10px'>
+<table style='width:200px'>
+   <tr>
+      <td width=100><img src='/img/iconGold.png' valign=middle>100
+      <td width=100><img src='/img/iconCrystals.png' valign=middle>200
+</table>
+</div>
+
+#ACCOUNT_BLOCK_CRAFTED_HTML:
+<div align=center style='padding-bottom: 10px'>
+<table style='width:200px'>
+   <tr>
+      <td width=100><img src='/img/iconGold.png'>100
+      <td width=100><img src='/img/iconCrystals.png'>200
+</table>
+</div>
+
+#SEARCH_RESULTS_FORUM_ITEM:
+<div score='$SEARCH_MSGSCORE' class=SmallFont style='padding-bottom:4px;'>
+<div class=ThreadFound>$LABEL_THREAD: <a href='/$LANG_LC/forum/$SEARCH_CHAPTER_URL/'>$CHAPTER$SEARCH_CHAPTER</a> &#x2192; <a href='/$LANG_LC/forum/thread/$SEARCH_THREADID'>$SEARCH_THREADNAME</a></div>
+<div style='margin:4px; color:#030;'>
+ <a href='javascript:ShowPlayerProfile("$SEARCH_MSGAUTHOR")'><b>$SEARCH_MSGAUTHOR</b></a> $LABEL_POSTED_AGO
+ <a href='/$LANG_LC/forum/thread/$SEARCH_THREADID#FMSG$SEARCH_MSGID' style='text-decoration:none'>
+ <div style='color:#000; margin-top:3px' class=SearchQuote>$SEARCH_MSG_QUOTE</div></a>
+</div>
+</div>
+
+#SEARCH_RESULTS_SHORT:
+<div align=left style='margin:8px 0.6em 0px 0.6em'>
+<h4 style='color:#322; padding:4px 10px 2px 10px; text-align:left; border-bottom:3px solid rgba(55,30,20,0.5); background-color: rgba(55,30,20,0.1);'>Forum messages:</h4>
+<div align=left style='margin: 8px'>
+$SEARCH_RESULTS_FORUM
+</div>
+</div>
+<!-- time:$SEARCH_TIME -->
+

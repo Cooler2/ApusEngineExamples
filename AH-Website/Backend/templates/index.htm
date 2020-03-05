@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="UTF-8">
+ <title>$PAGE_TITLE</title>
+ <meta name="description" content="$PAGE_DESCRIPTION">
+ <meta name="keywords" content="Astral Heroes,online,CCG,TCG,strategy,game,Astral Masters,AM2,MtG,Spectromancer,deck building,Hearthstone">
+ <meta name="author" content="Apus Software">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta property="og:title" content="Astral Heroes"/>
+ <meta property="og:locale" content="en_US"> 
+ <meta property="og:locale:alternate" content="ru_RU" />
+ <meta property="og:type" content="article"/>
+ <meta property="og:url" content="http://astralheroes.com"/>
+ <meta property="og:image" content="http://astralheroes.com/img/og/image1.jpg"/>
+ <meta property="og:image" content="http://astralheroes.com/img/og/icon.png"/>
+ <meta property="og:description" content="$PAGE_DESCRIPTION"/> 
+ <link rel="stylesheet" href="/styles.css?19">
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed"> 
+ <link rel="shortcut icon" href="/icon.png" />  
+ <link rel="image_src" href="/img/assets/icon2s.png" /> 
+ <script type="text/javascript" src="/common.js?18"></script>
+ <script type="text/javascript" src="/site.js?46"></script>
+</head>
+
+<body onResize="onResize()" onLoad="onLoad()" <IF_LOGGED>style="overflow-y:scroll;"</IF_LOGGED>>
+<script type='text/javascript'>
+ var authorized=false;
+ <IF_MAINMODE> mainMode=true; </IF_MAINMODE> 
+ <IF_LOGGED> userID=$USERID; userName='$USERNAME'; userAvatar=$USERAVATAR; userGuild='$USERGUILD'; authorized=true; formSignature='$USERSIGN'; </IF_LOGGED>
+ tempLogin=false;
+ pageMode='$MODE';
+ userLang='$LANG';
+ SetCookie('LANG','$LANG'); 
+ $INITIAL_SCRIPT
+ var str=new Array();
+ $LANGUAGE_$LANG
+ 
+ function ReportDL() {
+  fbq('track', 'Lead'); 
+  ga('send','event','Download','Download','Download');
+  yaCounter37179525.reachGoal('Download');
+  //goog_report_conversion('http://astralheroes.com/files/ahsetup.exe');
+ }
+</script>
+
+ <!-- Fullscreen landing page above menu -->
+ <div id=LandingContainer>
+ <IFNOT_LOGGED>
+ <div id=Landing>
+  <div id=Logo></div>
+  <div id=Motto>
+   <div class="shadow1">$MOTTO_LINE1<br>$MOTTO_LINE2</div>
+  </div>
+	
+  <div id=SocialBar>	
+   <IF_MODEA>
+   <div class="shadow1">$STAY_TUNED</div>   
+   </IF_MODEA>
+   <IFNOT_MODEA>
+   <div class="shadow1">$STAY_TUNED2</div>   
+   </IFNOT_MODEA>	
+	<table align=center cellpadding=0 cellspacing=4>
+	 <tr>
+		<td align=center class="FollowBtn FollowBtnPos1"><a href='https://www.facebook.com/astralheroes/' target=_blank title='Facebook'><div class=FollowBtnSpacer></div></a></td>
+		<td align=center class="FollowBtn FollowBtnPos2"><a href='https://vk.com/astralheroes' target=_blank title='VK'><div class=FollowBtnSpacer></div></a></td>
+		<td align=center class="FollowBtn FollowBtnPos3"><a href='https://twitter.com/AstralHeroes' target=_blank title='Twitter'><div class=FollowBtnSpacer></div></a></td>
+		<td align=center class="FollowBtn FollowBtnPos4"><a href='https://www.youtube.com/c/Astralheroes' target=_blank title='YouTube'><div class=FollowBtnSpacer></div></a></td>
+	 </tr>
+	</table>
+  </div>  
+
+  <div id=PlayBtnContainer align=center style='display:block'>  
+   <a href='$DOWNLOAD_URL?m=$MODE' onClick="ReportDL()" style='text-decoration:none;'>
+	<IF_MODEA>
+		<div id=PlayBtn>$PLAY_BTN_CAPTION</div></a>
+		<div id='PlayDesc'>$GAME_CLIENT_DEF $CLIENT_SIZE_AND_VERSION</div>	
+	</IF_MODEA>
+	<IFNOT_MODEA>
+		<div id=PlayBtn>$PLAY_BTN_CAPTION2</div></a>
+		<div id='PlayDesc'>$GAME_CLIENT_DEF2 $CLIENT_SIZE_AND_VERSION</div>	
+	</IFNOT_MODEA>	
+  </div> 
+  
+  <div id=MediaContainer align=center style='display:block'>
+   <IF_MODEA>
+	<!--
+   <table cellpadding=0 cellspacing=0><tr>
+   <td>
+	 <a href='https://www.youtube.com/watch?v=mP44D1gm1PQ' target=blank_ onClick="PlayVideo(); return false;">
+    <div class=MediaFrame style='width:294px; height:190px; background:url("/img/videoButton1.png") center center no-repeat;'><div class=PlayVideoBtn></div></div></a>
+   </table>
+	-->
+	</IF_MODEA>
+  </div>
+  <table cellpadding=0 cellspacing=0 style='position:fixed; left:88%; top:70%; width:12%; height:25%;'><tr>
+   <td align=right valign=bottom><a href='http://xsolla.com' title='Xsolla - кросс-платформенное биллинговое и аналитическое решение для глобальных издателей видеоигр.'><img src='/img/xsolla-main.svg' style='border:none; width:5em; height:5em; margin-right:2em;margin-bottom:2em;vertical-align:bottom'></a>
+  </table>
+ </div>
+ </IFNOT_LOGGED> 
+ </div> <!-- End of landing part --> 
+ 
+ <IFNOT_MAINMODE>
+ <div id=MainBackground class="MainBackgroundDelayed Animated"></div> 
+ </IFNOT_MAINMODE>
+ <IF_MAINMODE>
+ <div id=MainBackground class="MainBackground Animated" style='top:0px;'></div> 
+ </IF_MAINMODE>
+ 
+ <!-- All main part content is here -->
+ <div id=MainContent class=MainContent style='display:none;'>
+  <!-- Home screen -->
+  <div id=HomeScreen style="display:none;">
+		<div id=HomeNews class="Paper ContentItem Animated">
+			<h3>$TITLE_NEWS</h3>
+			$NEWSFEED
+		</div>  		
+		<div id=HomeAbout class="ContentItem Animated">
+			$PAGE_HOMEHEAD
+			<div class="Paper">
+				<h2>$TITLE_ABOUT</h2>
+				$PAGE_ABOUT
+			</div>  		
+		</div>
+		<div id=PageFooter>
+			<a href=# onCLick='ShowWindowWithPage("Terms of Service","TOS")' style='color:inherit'>Terms of Service</a> &nbsp; &nbsp;
+			<a href=# onCLick='ShowWindowWithPage("Privacy Policy","PRIVACY")' style='color:inherit'>Privacy Policy</a> &nbsp; &nbsp;
+			<a href=# onCLick='ShowWindowWithPage("Legal Info","LEGAL")' style='color:inherit'>Legal Info</a> &nbsp; &nbsp;
+			Support: <a href='mailto:support@astralheroes.com' style='color:inherit'>support@astralheroes.com</a>
+		</div>
+  </div>
+  <!-- Ranking screen -->
+  <div id=LeaderboardScreen style="display:none;">
+		<div id=RankingSel class=AnimatedH style='background-color:rgba(0,0,0,0.2); border:rgba(240,210,180,0.5) 2px solid; border-radius:20px; position:fixed; top:62px; height:60px; left:20%; width:30%; display:none'>
+		</div>
+		<div id=RankingNav align=center style='position:fixed; left:0px; top:68px; width:100%; height:80px;'>
+			<table class=RankNav>
+			<tr>
+			 <td id=RankNav1 width=90 onClick='FollowVirtualLink("/leaderboard#1")'><h4>$TITLE_BEST_PLAYERS</h4>
+			 <td id=RankNav2 width=90 onClick='FollowVirtualLink("/leaderboard#2")'><h4>$TITLE_BEST_PLAYERS1</h4>
+			 <td id=RankNav3 width=90 onClick='FollowVirtualLink("/leaderboard#3")'><h4>$TITLE_BEST_PLAYERS2</h4>
+			 <td id=RankNav4 width=90 onClick='FollowVirtualLink("/leaderboard#4")'><h4>$TITLE_BEST_PLAYERS3</h4>
+			 <td id=RankNav5 width=90 onClick='FollowVirtualLink("/leaderboard#5")'><h4>$TITLE_BEST_GUILDS</h4>			 
+			</table>
+		</div>
+		<div id=RankingContainer style='position:fixed; overflow:hidden;'>
+		<div id=Ranking0 class="Paper AnimatedH">
+			<table align=center cellpadding=0 cellspacing=0 class=RankInnerTab>
+				<thead>
+					<tr><td colspan=6 style='border-bottom: 2px solid rgba(90,30,0,0.4);'><h3>$TITLE_BEST_PLAYERS</h3>
+					<tr class=TableHeader><th width=40>$COL_PLACE <th width=115 style='text-align:left'>$COL_NAME <th width=40>$COL_LEVEL <th width=50>$COL_FAME <th width=110>$COL_WINLOSS
+				</thead>
+				<tfoot>
+					<tr class=RankingTableFooter><td colspan=2><!--<input type=search class=InputField placeholder='Find player'> -->
+						<td id=RankingPages0 colspan=4 align=right>$RANKING_PAGES0
+				</tfoot>				
+				<tbody>
+					<tr><td colspan=6 valign=top>
+						<div class="RankingTableBody InnerScrollbar Animated" style='height:100%; width:100%; overflow-y:auto;'>
+							<table id=RankingTable0 class="ContentTable RankingTable" cellspacing=0 cellpadding=2 style='width:100%; padding:0px; margin:0px;'>
+$RANKING_TYPE0
+								<tr><td width=40><td width=120><td width=40><td width=50><td width=90>								
+							</table>
+						</div>
+				</tbody>
+			</table>
+		</div>	
+		<div id=Ranking2 class="Paper AnimatedH">
+			<table align=center cellpadding=0 cellspacing=0 class=RankInnerTab>
+				<thead>
+					<tr><td colspan=6 style='border-bottom: 2px solid rgba(90,30,0,0.4);'><h3>$TITLE_BEST_PLAYERS2</h3>
+					<tr class=TableHeader><th width=40>$COL_PLACE <th width=120 style='text-align:left'>$COL_NAME <th width=40>$COL_LEVEL <th width=50>$COL_FAME <th width=100>$COL_WINLOSS					
+				</thead>
+				<tfoot>
+					<tr class=RankingTableFooter><td colspan=2><!--<input type=search class=InputField placeholder='Find player'> -->
+						<td id=RankingPages2 colspan=3 align=right>$RANKING_PAGES2
+				</tfoot>				
+				<tbody>
+					<tr><td colspan=6 valign=top>
+						<div class="RankingTableBody InnerScrollbar Animated" style='height:100%; width:100%; overflow-y:auto;'>
+							<table id=RankingTable2 class="ContentTable RankingTable" cellspacing=0 cellpadding=2 style='width:100%; padding:0px; margin:0px;'>
+$RANKING_TYPE2
+								<tr><td width=40><td width=120><td width=40><td width=50><td width=90>								
+							</table>
+						</div>
+				</tbody>
+			</table>
+		</div>	
+		<div id=Ranking1 class="Paper AnimatedH">
+			<table align=center cellpadding=0 cellspacing=0 class=RankInnerTab>
+				<thead>
+					<tr><td colspan=6 style='border-bottom: 2px solid rgba(90,30,0,0.4);'><h3>$TITLE_BEST_PLAYERS1</h3>
+					<tr class=TableHeader><th width=40>$COL_PLACE <th width=120 style='text-align:left'>$COL_NAME <th width=40>$COL_LEVEL <th width=50>$COL_FAME <th width=100>$COL_WINLOSS					
+				</thead>
+				<tfoot>
+					<tr class=RankingTableFooter><td colspan=2><!--<input type=search class=InputField placeholder='Find player'> -->
+						<td id=RankingPages1 colspan=4 align=right>$RANKING_PAGES1
+				</tfoot>				
+				<tbody>
+					<tr><td colspan=6 valign=top>
+						<div class="RankingTableBody InnerScrollbar Animated" style='height:100%; width:100%; overflow-y:auto;'>
+							<table id=RankingTable1 class="ContentTable RankingTable" cellspacing=0 cellpadding=2 style='width:100%; padding:0px; margin:0px;'>
+$RANKING_TYPE1
+								<tr><td width=40><td width=120><td width=40><td width=50><td width=90>								
+							</table>
+						</div>
+				</tbody>
+			</table>
+		</div>	
+		<div id=Ranking3 class="Paper AnimatedH">
+			<table align=center cellpadding=0 cellspacing=0 class=RankInnerTab>
+				<thead>
+					<tr><td colspan=6 style='border-bottom: 2px solid rgba(90,30,0,0.4);'><h3>$TITLE_BEST_PLAYERS3</h3>
+					<tr class=TableHeader><th width=40>$COL_PLACE <th width=120 style='text-align:left'>$COL_NAME <th width=40>$COL_LEVEL <th width=50>$COL_FAME <th width=100>$COL_WINLOSS					
+				</thead>
+				<tfoot>
+					<tr class=RankingTableFooter><td colspan=2><!--<input type=search class=InputField placeholder='Find player'> -->
+						<td id=RankingPages3 colspan=4 align=right>$RANKING_PAGES3
+				</tfoot>				
+				<tbody>
+					<tr><td colspan=6 valign=top>
+						<div class="RankingTableBody InnerScrollbar Animated" style='height:100%; width:100%; overflow-y:auto;'>
+							<table id=RankingTable3 class="ContentTable RankingTable" cellspacing=0 cellpadding=2 style='width:100%; padding:0px; margin:0px;'>
+$RANKING_TYPE3
+								<tr><td width=40><td width=120><td width=40><td width=50><td width=90>								
+							</table>
+						</div>
+				</tbody>
+			</table>
+		</div>
+		<div id=Ranking4 class="Paper AnimatedH">
+			<table align=center cellpadding=0 cellspacing=0 class=RankInnerTab>
+				<thead>
+					<tr><td colspan=6 style='border-bottom: 2px solid rgba(90,30,0,0.4);'><h3>$TITLE_BEST_GUILDS</h3>
+					<tr class=TableHeader><th width=40>$COL_PLACE <th width=110 style='text-align:left'>$COL_NAME <th width=40>$COL_LEVEL <th width=50>$COL_EXP <th width=120>$COL_LEADER
+				</thead>
+				<tfoot>
+					<tr class=RankingTableFooter><td colspan=2><!--<input type=search class=InputField placeholder='Find player'> -->
+						<td id=RankingPages4 colspan=4 align=right>$RANKING_PAGES_GUILDS
+				</tfoot>				
+				<tbody>
+					<tr><td colspan=6 valign=top>
+						<div class="RankingTableBody InnerScrollbar Animated" style='height:100%; width:100%; overflow-y:auto;'>
+							<table id=RankingTable4 class="ContentTable RankingTable" cellspacing=0 cellpadding=2 style='width:100%; padding:0px; margin:0px;'>
+$RANKING_GUILDS
+								<tr><td width=40><td width=120><td width=40><td width=50><td width=90>								
+							</table>
+						</div>
+				</tbody>
+			</table>
+		</div>		
+	</div>
+	</div>
+	
+   <!-- Forum screen -->
+   <div id=ForumScreen style="display:none">		
+		<div id=ForumThreadsPage class="Paper ContentItemFixed Animated" style='transition: top 400ms ease-out; left:50px; top:50px; width:350px; height:auto;'>
+			<div id=ForumThreads class=ForumTopics>
+$SUGGESTED_THREADS			
+			</div>			
+		</div>
+		
+		<div id=ForumMain class="Paper ContentItem Animated" style='transition: top 400ms ease-out; left:450px; top:50px; width:1100px; height:auto; text-align:justify; padding:5px;'>
+			<div id=ForumHome>				
+				$FORUM_PAGE_HOME									
+			</div>	
+		</div>
+   </div>
+	
+<IF_LOGGED>	
+  <!-- Account -->
+  <div id=AccountScreen style="display:none;">
+		<div id=MyAccountPage class="Paper ContentItem Animated EditAccount" style='transition: top 400ms ease-out; height:auto; top:50px; padding:5px 20px 5px 20px;'>
+		 <h2 align=center style='margin-bottom:10px; padding:2px 0px 4px 0px; background-color: rgba(30,20,20,0.1)'>$USERNAME</h2>
+		 <div id=MyAccountMain style='column-width:400px; -moz-column-width:400px; column-count:3; -moz-column-count:3; column-gap:40px; -moz-column-gap:40px;'>
+		 </div>		 
+		</div>  
+  </div>
+</IF_LOGGED>
+
+</div>
+ 
+<!-- Pop-under controls -->
+<div id='CardHint' class=SmallFont style='padding:4px; display:none; position:absolute; border:1px solid #754; box-shadow: 2px 3px 8px #222; background-color:#e8d8c0; border-radius:5px;'></div>
+
+<div id=CurForumThread class="Paper" style='position:fixed; left:0px; top:-140px; padding-top:60px; transition: top 250ms ease-in-out; text-align:center'>
+<div id=CurForumThreadTitle style='position:relative; left:0px; top:2px;'></div>
+</div>
+
+<div id=SearchBar align=center style='position:fixed; left:0px; width:100%; top:-160px; transition: top 250ms ease-in-out; text-align:center'>
+<div align=center>
+<div align=center class="Paper MainFont AlterColor" style='padding-top:64px; width:90%; max-width:900px;'>
+<input type=search class="InputField MainFont" placeholder="$LABEL_SEARCH" id=SearchInput style='position:relative; left:0px; top:2px; width:96%; height:26px; max-width:800px;'><span title="$LABEL_CLEAR" style='position:absolute; left:-20px;'></span>
+<div id=SearchResults></div>
+</div></div></div>
+
+
+<div id=Navigator style='display:none'>
+<div class=NavButton style='background-image:url("/img/navTop.png");' onClick='window.scrollTo(0,0);' title="$MSG_SCROLL_TOP"></div>
+<div class=NavButton style='background-image:url("/img/navBottom.png");' onCLick='window.scrollTo(0,GetDocHeight());' title="$MSG_SCROLL_BOTTOM"></div>
+</div>
+ 
+<!-- Menu bar --> 
+<div id=MenuBar align=center class=Animated style='display:none'>
+<nav>
+ <table cellpadding=0 cellspacing=0 width=100%><tr><td id=UserAccUI width="30%" align=left <IF_NEWUSER>style='visibility:hidden'</IF_NEWUSER>>
+	<!-- User account, login/logout -->
+	<table cellpadding=0 cellspacing=0 style='height:48px;'><tr>
+		<IFNOT_LOGGED>
+		<td class=MenuPart1><div class='MenuBtn MenuBtnWide' style="background-image: url('/img/menubtn_green.png');" onClick="ShowLogin();">$BTN_LOGIN</div></td>
+		<td width=20>&nbsp;</td>
+		<td><div class='MenuBtn MenuBtnWide' style="background-image: url('/img/menubtn.png');" onClick="ShowSignup()">$BTN_SIGNUP</div></td>
+		</IFNOT_LOGGED>
+		<IF_LOGGED>
+		<td class=MenuPart1 style="padding-top:1px;"><div id=PlayerFaceIcon style="background: url('/faces/s-$USERAVATAR.jpg') center no-repeat; background-size: 40px 45px; cursor:pointer;"><div class=AvatarFrame onClick="FollowVirtualLink('/account')"></div></div></td>
+		<td class='MenuItem' style="padding:0px 1.5em 0px 0.5em;" onClick="FollowVirtualLink('/account')">$USERNAME</td>
+		<td style='display:none'><div class='MenuBtn MenuBtnSmall' style="background-image: url('/img/menubtn_small_cyan.png'); font-family:FontAwesome" onClick="EditProfile()" title="Account Settings">&#xf013;</div></td>
+		<td><div id=LogoutBtn class='MenuBtn MenuBtnSmall' style="background-image: url('/img/menubtn_small_red.png'); font-family:FontAwesome" onClick="Logout()" title="$BTN_LOGOUT">&#xf011;</div></td>
+		</IF_LOGGED>
+	</table>	
+ <td width="40%" align=center>
+	<!-- Main navigation -->
+	<table cellpadding=0 cellspacing=1 style='height:48px;'><tr>
+		<td class='MenuItem' id='MenuItemHome' onCLick='FollowVirtualLink("/$LANG_LC/home")'>
+			<a href='/$LANG_LC/home' style='color:inherit'><IF_LOGGED><span class=FontAwesome style='font-size:130%'>&#xf015;</span></IF_LOGGED><IFNOT_LOGGED>$LABEL_ABOUT</IFNOT_LOGGED></a></td>
+		<td class='MenuSplitter'></td>
+		<td class='MenuItem' id='MenuItemLeaderboard' onCLick='FollowVirtualLink("/$LANG_LC/leaderboard")'>
+			<a href='/$LANG_LC/leaderboard' style='color:inherit'>$LABEL_LEADERBOARD</a></td>
+		<td class='MenuSplitter'></td>	  
+		<td class='MenuItem' id='MenuItemForum' onCLick='FollowVirtualLink("/$LANG_LC/forum")'>
+			<a href='/$LANG_LC/forum'  style='color:inherit'>$LABEL_FORUMS</a></td>
+		
+	</table>
+  <td width="25%" align=right>
+	<table cellpadding=0 cellspacing=0 style='height:44px;'><tr>
+		<td id=MenuSearchItem title='$LABEL_SEARCH' onClick='SearchBar()' class=MenuItem style='padding:0px 0.6em 0px 0.6em; font-family:FontAwesome;'><span style='font-size:115%'>&#xf002;</span></td>
+		<td class='MenuSplitter'></td>	  
+		<td><select id=SelectLang size=1 onchange='LangChanged(this)' style='margin:2px 20px 2px 10px;'>
+			<option value='EN'>English</option>
+			<option value='RU'>Русский</option>
+		</select></td>
+	</table>
+ </table> 
+</nav>
+</div> 
+
+<!-- Pop-Ups -->
+<div id='AddQuotePopup' onMouseDown='ForumQuote(0)' class=PopUpBox style='cursor:pointer;'>$BTN_ADDQUOTE</div>
+ 
+ 
+<div id="ScreenOverlay" onClick='HideWindowIfNeeded(event)'
+ style='display:none; transition:background-color 350ms; background-color:rgba(50,50,50,0); position:fixed; left:0px; top:0px; width:100%; height:100%;'> 
+<table width=100% height=100%><tr><td align=center valign=center>
+<IFNOT_MAINMODE>
+ <!-- Video player -->
+ <table cellpadding=0 cellspacing=0 id='VideoPlayerWindow' class=OverlayWindow>
+  <tr><td style='width:666px; height:391px; vertical-align:top; background:url("/img/bigframe.png") center; padding: 18px 0px 0px 13px;'>
+   <div id=VideoPlayerContainer></div>  
+ </table> 
+ 
+ <table cellpadding=0 cellspacing=0 id='VideoPlayerWindowBig' class=OverlayWindow>
+  <tr><td style='width:1332px; height:780px; vertical-align:top; background:url("/img/bigframe.png") center; background-size:100% 100%; padding: 35px 0px 0px 26px;'>
+   <div id=VideoPlayerContainerBig></div>
+ </table> 
+</IFNOT_MAINMODE> 
+  
+ <IFNOT_LOGGED> 
+ <!-- Login window -->
+ <table cellpadding=0 cellspacing=0 id="LoginWindow" onClick="return StopPropagation(event)" class=OverlayWindow style='width:380px; height:352px; background:url("/img/login_window.png") center center no-repeat;'>
+   <tr><td align=center class="WindowTitle" style='height:62px'>$TITLE_LOGIN
+   <tr><td align=center class=MainText>
+     $LABEL_LOGIN1
+	 <div style='margin:15px;'><span id=LoginErrorMsg style='color:#900'></span>
+	   <form autocomplete="on" style='padding:0px; margin:0px;'>
+		<input id='loginWnd_login' class="InputField LoginField" name="email" type=email placeholder="$LABEL_EMAIL" onkeydown="if (event.keyCode==13) d.getElementById('loginWnd_password').focus();"><br>
+		<input id='loginWnd_password' class="InputField LoginField" name="password" type=password  placeholder="$LABEL_PASSWORD" onKeyDown="if (event.keyCode==13) Login();">
+		</form>
+	 </div><!--
+	 ...or sign in with your external account:
+	 <div style='margin-top:16px; margin-left:12px;'>
+<div id="uLogin" data-ulogin="display=panel;fields=first_name,last_name;providers=facebook,vkontakte,google,twitter,steam;hidden=linkedin,liveid,odnoklassniki,tumblr,googleplus,vimeo,instagram;redirect_uri=http%3A%2F%2Fastralheroes.com"></div>	 -->
+	 
+   <tr><td align=center style='height:92px'>
+    <div id=LoginBtnMain class="WndButton2 ButtonText" onClick='Login();'>$BTN_ENTER</div>
+  </table>
+  
+ <!-- Signup window -->  
+  <table cellpadding=0 cellspacing=0 id="SignupWindow" onClick="return StopPropagation(event)" class=OverlayWindow style='width:380px; height:352px; background:url("/img/login_window.png") center center no-repeat; '>
+   <tr><td align=center class="WindowTitle" style='height:62px'>$TITLE_NEW_ACCOUNT
+   <tr><td align=center class=MainText>
+	 <div id=SignupPage1>
+    $LABEL_NEWACC1
+	 <table align=center cellpadding=0 cellspacing=2 style='margin:10px;'>
+		<tr><td width=20>
+		<td><input id='signupWnd_login' class="InputField LoginField" type=text placeholder="$LABEL_EMAIL" onkeydown="if (event.keyCode==13) d.getElementById('signupWnd_password').focus();" onBlur="SignupValidate(1)">
+	   <td width=20><span id=Valid1 class=FieldValid>&#xf058;</span><span id=NotValid1 class=FieldNotValid onClick="alert(title)">&#xf057;</span>
+		<tr><td width=20>
+		<td><input id='signupWnd_password' class="InputField LoginField" type=password  placeholder="$LABEL_PASSWORD" onKeyDown="if (event.keyCode==13) d.getElementById('signupWnd_password2').focus();" onBlur="SignupValidate(2)">
+		<td width=20><span id=Valid2 class=FieldValid>&#xf058;</span><span id=NotValid2 class=FieldNotValid onClick="alert(title)">&#xf057;</span>
+		<tr><td width=20>
+		<td><input id='signupWnd_password2' class="InputField LoginField" type=password  placeholder="$LABEL_PASSWORD2" onKeyDown="if (event.keyCode==13) d.getElementById('signupWnd_name').focus();" onBlur="SignupValidate(3)">
+		<td width=20><span id=Valid3 class=FieldValid>&#xf058;</span><span id=NotValid3 class=FieldNotValid onClick="alert(title)">&#xf057;</span>
+		<tr><td width=20>
+		<td><input id='signupWnd_name' class="InputField LoginField" type=text  placeholder="$LABEL_ACCNAME" onKeyDown="if (event.keyCode==13) SignupValidate(4);" onBlur="SignupValidate(4)">
+		<td width=20><span id=Valid4 class=FieldValid>&#xf058;</span><span id=NotValid4 class=FieldNotValid onClick="alert(title)">&#xf057;</span>
+	 </table>
+	 </div>
+	 <div id=SignupPage2>
+		$LABEL_NEWACC2
+		<table style='margin-top:6px;' align=center>
+			<tr>
+			<td><div class="ArrowBtn NoSelect" onClick=SignupChangeFace(-1)>&#xf0a8;</div>
+			<td><div id=SignupFace style='width:132px; height:152px; background: url("/faces/face1.jpg") center no-repeat;'><img src="/img/face_border.png"></div>
+			<td><div class="ArrowBtn NoSelect" onClick=SignupChangeFace(1)>&#xf0a9;</div>
+		</table>
+	 </div>
+	 <div id=SignupPage3>	 
+		$LABEL_NEWACC3
+		<table align=center style='width:280px; margin-top:6px; border: 1px solid #A98; border-radius: 9px; background-color: #D8CAB8; height:40px; '>
+			<tr>
+			<td><div class="ArrowBtn NoSelect" onClick="SignupChangeSpec(-1)" width=40 align=center>&#xf0a8;</div>
+			<td id=SignupSpecName align=center width=200 style="font-size:20px;">
+			<td><div class="ArrowBtn NoSelect" onClick="SignupChangeSpec(1)"  width=40 align=center>&#xf0a9;</div>
+		</table>
+		<div id=SignupSpecDesc align=center style="padding:10px; height:80px;"></div>
+
+	 </div>
+	 <div id=SignupPage4 align=center>
+	 </div>
+   <tr><td align=center style='height:92px'>
+    <div id=SignupBtnMain class="WndButton2 ButtonText" onClick='Signup();'>$BTN_NEWACC</div>
+  </table> 
+ </IFNOT_LOGGED>
+ 
+ <IF_MODERATOR>
+ <!-- Thread moderator window -->
+ <table cellpadding=0 cellspacing=0 id="ModThreadWindow" class=OverlayWindow style='width:380px; height:352px; background:url("/img/login_window.png") center center no-repeat;'>
+   <tr><td align=center class="WindowTitle" style='height:62px'>MOD THREAD
+   <tr><td align=center class=MainText id=ModThreadMain>
+
+   <tr><td align=center style='height:92px'>
+    <div id=LoginBtnMain class="WndButton2 ButtonText" onClick='ModThreadApply();'>Apply</div>
+  </table>
+
+ </IF_MODERATOR>
+ 
+ <!-- Arbitrary window -->
+ <div cellpadding=0 cellspacing=0 id="JustWindow" onClick="" class=OverlayWindow style='width:510px; height:470px; background:url("/img/profile_paper.png") center center no-repeat; padding:30px;'>
+	<table cellpadding=0 cellspacing=0 style="width:100%; height:100%" align=center border=0>
+		<tr style="height:32px;"><td colspan=2 align=center valign=top><h2 id=JustWindowTitle></h2>
+		<tr><td style='height:360px' id=JustWindowContent valign=middle>
+	</table>
+ </div> 
+
+
+ <!-- Player profile window -->
+ <div cellpadding=0 cellspacing=0 id="ProfileWindow" onClick="return StopPropagation(event)" class=OverlayWindow style='width:510px; height:470px; background:url("/img/profile_paper.png") center center no-repeat; padding:30px;'>
+	<table id=PlayerProfile cellpadding=0 cellspacing=0 style="width:100%; height:100%" align=center border=0>
+		<tr style="height:45px;"><td colspan=2 align=center valign=bottom><h2 id=PlayerProfile_Name>Player</h2>
+		<tr style="height:160px;">
+			<td style="width:180px; padding:6px;" align=right valign=top><div id=ProfileAvatar style="width:132px; height:152px; background: url('/img/face_border.png'), url('/faces/face1.jpg') 6px 6px no-repeat;">&nbsp;</div>
+			<td style='padding:8px;' align=left valign=top>
+				<table cellpadding=1 cellspacing=1 width=100% class=Profile1>
+					<tr><td class=Profile2>$LABEL_TITLE<td id=PlayerProfileTitle class=Profile3>
+					<tr><td class=Profile2>$LABEL_GUILD<td id=PlayerProfileGuild class=Profile3>
+					<tr><td class=Profile2>$LABEL_REALNAME<td id=PlayerProfileRN class=Profile3>
+					<tr><td class=Profile2>$LABEL_LOCATION<td id=PlayerProfileLoc class=Profile3>
+				</table>
+		<tr><td colspan=2 align=center style='padding-bottom:16px;'>
+			<table cellpadding=1 cellspacing=0 class=Profile1>
+				<thead>
+					<tr class=TableHeader>
+						<th style='height:25px;'>
+						<th width=50>$COLUMN_LEVEL
+						<th width=60>$COLUMN_FAME
+						<th width=90>$COLUMN_W_L 
+						<th width=60>$COLUMN_PLACE
+				</thead>
+				<tbody>
+					<tr class=ProfileRow><td>$LABEL_CUSTOMDECKS:<td id=PlayerProfile11> <td id=PlayerProfile12> <td id=PlayerProfile13> <td id=PlayerProfile14>
+					<tr class=ProfileRow><td>$LABEL_RANDOMDECKS:<td id=PlayerProfile21> <td id=PlayerProfile22> <td id=PlayerProfile23> <td id=PlayerProfile24> 
+					<tr class=ProfileRow><td>$LABEL_DRAFTS:<td id=PlayerProfile31> <td id=PlayerProfile32> <td id=PlayerProfile33> <td id=PlayerProfile34> 
+					<tr class="ProfileRow ProfileTotal"><td>$LABEL_TOTAL:<td id=PlayerProfile41> <td id=PlayerProfile42> <td id=PlayerProfile43> <td id=PlayerProfile44>
+				</tbody>
+			</table>
+	</table>
+ </div>
+
+</table> 
+</div>
+
+<script type="text/JavaScript">Initialize();</script>
+
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', '229005720793045');
+fbq('track', "PageView");</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=229005720793045&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code --> 
+
+<!-- Google Analytics counter -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-193244-6', 'auto');
+  ga('send', 'pageview');
+</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter37179525 = new Ya.Metrika({
+                    id:37179525,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true,						  
+                    trackHash:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/37179525" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+<!-- VK counter -->
+<script type="text/javascript">(window.Image ? (new Image()) : document.createElement('img')).src = location.protocol + '//vk.com/rtrg?r=tZaePj4oRYDxRlon05fr31b6rW5iQxyUxv2*a3SllK4XLhEHUESE1VfRPy0rW47FC*8fEbLY8Ot3JLgytGqJqen15URtTcULouLDCGcDjYWljEaq0AxNxHDMXKnSy/M7D2U7zH3dgf*7XNBliTGRpSB2zV072/Nonu7w3VuUp6k-';</script>
+
+<!-- Rating@Mail.ru counter -->
+<script type="text/javascript">
+var _tmr = window._tmr || (window._tmr = []);
+_tmr.push({id: "2783462", type: "pageView", start: (new Date()).getTime()});
+(function (d, w, id) {
+  if (d.getElementById(id)) return;
+  var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+  ts.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//top-fwz1.mail.ru/js/code.js";
+  var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+  if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+})(document, window, "topmailru-code");
+</script><noscript><div style="position:absolute;left:-10000px;">
+<img src="//top-fwz1.mail.ru/counter?id=2783462;js=na" style="border:0;" height="1" width="1" alt="Рейтинг@Mail.ru" />
+</div></noscript>
+<!-- //Rating@Mail.ru counter -->
+
+<!-- Google Code for AH Download Conversion Page
+In your html page, add the snippet and call
+goog_report_conversion when someone clicks on the
+chosen link or button. -->
+<script type="text/javascript">
+  /* <![CDATA[ */
+  goog_snippet_vars = function() {
+    var w = window;
+    w.google_conversion_id = 1067002381;
+    w.google_conversion_label = "a9rzCOWn2WcQjdTk_AM";
+    w.google_remarketing_only = false;
+  }
+  // DO NOT CHANGE THE CODE BELOW.
+  goog_report_conversion = function(url) {
+    goog_snippet_vars();
+    window.google_conversion_format = "3";
+    var opt = new Object();
+    opt.onload_callback = function() {
+    if (typeof(url) != 'undefined') {
+      window.location = url;
+    }
+  }
+  var conv_handler = window['google_trackConversion'];
+  if (typeof(conv_handler) == 'function') {
+    conv_handler(opt);
+  }
+}
+/* ]]> */
+</script>
+<script type="text/javascript"
+  src="//www.googleadservices.com/pagead/conversion_async.js">
+</script>
+<!-- End of AdWords Google Code -->
+
+<IF_AUTHLOGIN>
+<script type='text/javascript'>
+ // Autologin
+ if (!authorized) setTimeout('tempLogin=true; loginWndLogin.value="AUTO:$AUTHLOGIN";  loginWndPassword.value="$AUTHPWD"; Login();',100);
+</script>
+</IF_AUTHLOGIN>
+
+</body>
+</html>
+
+
+#FORUM_PAGE_HOME:
+	$FORUM_RULES 
+	<h2>$LABEL_SELCHAPTER</h2>
+	<table align=center cellspacing=10 class=ForumChapters><tr>
+		<td><a href="/$LANG_LC/forum/general"><div>
+			<h3>$CHAPTER1</h3>
+			$CHAPTER1_DESC
+			</div></a>
+		<td style='visibility:hidden; width:10px;'>
+		<td><a href="/$LANG_LC/forum/news"><div>
+			<h3>$CHAPTER4</h3>
+			$CHAPTER4_DESC
+			</div>
+		<td style='visibility:hidden; width:10px;'>
+		<td><a href="/$LANG_LC/forum/suggestions"><div>
+			<h3>$CHAPTER5</h3>
+			$CHAPTER5_DESC
+			</div></a>
+	</table>		
+	<table align=center cellspacing=10 class=ForumChapters style='width:60%; min-width:500px;'><tr>
+		<td style='width:50%'><a href="/$LANG_LC/forum/guilds"><div>
+			<h3>$CHAPTER6</h3>
+			$CHAPTER6_DESC
+			</div>
+		<td style='visibility:hidden; width:10px;'></td>						
+		<td style='width:50%'><a href="/$LANG_LC/forum/tournaments"><div>
+			<h3>$CHAPTER7</h3>
+			$CHAPTER7_DESC
+			</div>													
+	</table>		
+	<table align=center cellspacing=10 class=ForumChapters style='width:60%; min-width:500px;'><tr>
+		<td style='width:50%'><a href="/$LANG_LC/forum/problems"><div>
+			<h3>$CHAPTER2</h3>
+			$CHAPTER2_DESC
+			</div>													
+		<td style='visibility:hidden; width:10px;'></td>						
+		<td style='width:50%'><a href="/$LANG_LC/forum/offtopic"><div>
+			<h3>$CHAPTER3</h3>
+			$CHAPTER3_DESC
+			</div>													
+	</table>			
+
+	

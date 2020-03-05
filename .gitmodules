@@ -1,0 +1,4 @@
+[submodule "Engine3"]
+	path = Engine3
+	url = https://github.com/Cooler2/ApusGameEngine
+	branch = master
