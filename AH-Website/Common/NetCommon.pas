@@ -13,7 +13,7 @@ type
   spellpower,mana:smallint;
   level:smallint;
   numdeckcards,numhandcards:shortint;
-  handcards:array[1..8] of smallint;  
+  handcards:array[1..8] of smallint;
   faceNum:integer;
  end;
 
@@ -213,7 +213,7 @@ begin
  if (length(chars)<4) or (max-min<8) then begin
   result:='^Password is too simple!^';
   exit;
- end; 
+ end;
 end;
 
 function IsValidName(wname:WideString;allowSpaces:boolean=false):string;
@@ -260,10 +260,6 @@ begin
  wname:=lowercase(wname);
  if (copy(wname,1,5)='admin') or
     (copy(wname,1,9)='moderator') then result:='^This name is not allowed^';
- if (posFrom('pizd',wname,1,true)>0) or
-    (posFrom('fuck',wname,1,true)>0) or
-    (posFrom('(Bot)',wname,1,true)>0) or
-    (posFrom('pidor',wname,1,true)>0) then result:='^This name is not allowed^';
 end;
 
 initialization
