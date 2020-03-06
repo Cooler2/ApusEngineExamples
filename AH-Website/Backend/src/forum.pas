@@ -1,4 +1,4 @@
-unit forum;
+п»їunit forum;
 interface
  uses MyServis,site;
 
@@ -15,25 +15,25 @@ interface
 
   chapterURL:array[1..7] of AnsiString=('general','problems','offtopic','news','suggestions','guilds','tournaments');
 
- // Форматирует список рекомендуемых тем (html)
+ // Р¤РѕСЂРјР°С‚РёСЂСѓРµС‚ СЃРїРёСЃРѕРє СЂРµРєРѕРјРµРЅРґСѓРµРјС‹С… С‚РµРј (html)
  function FormatSuggestedThreads(const profile:TUserProfile):AnsiString;
- // Форматирует сообщения темы (html)
+ // Р¤РѕСЂРјР°С‚РёСЂСѓРµС‚ СЃРѕРѕР±С‰РµРЅРёСЏ С‚РµРјС‹ (html)
  function FormatThread(id:integer;const profile:TUserProfile;start,count,msgToShow:integer):AnsiString;
-  // Форматирует список тем
+  // Р¤РѕСЂРјР°С‚РёСЂСѓРµС‚ СЃРїРёСЃРѕРє С‚РµРј
  function FormatChapter(id,skip,count:integer;const profile:TUserProfile):AnsiString;
 
  function FormatNews(const profile:TUserProfile):AnsiString;
 
- // Форматирует сообщения по заданному SQL-условию (html)
- // если cutNearMsgID>0 - сокращает (вырезает) сообщения вокруг указанного (или ближайшего к указанному)
+ // Р¤РѕСЂРјР°С‚РёСЂСѓРµС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ SQL-СѓСЃР»РѕРІРёСЋ (html)
+ // РµСЃР»Рё cutNearMsgID>0 - СЃРѕРєСЂР°С‰Р°РµС‚ (РІС‹СЂРµР·Р°РµС‚) СЃРѕРѕР±С‰РµРЅРёСЏ РІРѕРєСЂСѓРі СѓРєР°Р·Р°РЅРЅРѕРіРѕ (РёР»Рё Р±Р»РёР¶Р°Р№С€РµРіРѕ Рє СѓРєР°Р·Р°РЅРЅРѕРјСѓ)
  function FormatForumMessages(condition:AnsiString;const profile:TUserProfile;cutNearMsgID:integer=-1):AnsiString;
 
- // Возвращает текст ошибки либо пустую строку
+ // Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСЃС‚ РѕС€РёР±РєРё Р»РёР±Рѕ РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
  function CreateForumThread(chapter,guild:integer;title,lang:AnsiString;const profile:TUserProfile;out threadID:integer):AnsiString;
 // function UpdateForumMessage(msgid:integer;msgtext,attachments:AnsiString;const profile:TUserProfile):AnsiString;
  function AddForumMessage(threadid:integer;msgtext,attachments:AnsiString;flags:integer;const profile:TUserProfile;var msgid:integer):AnsiString;
 
- // закрывает незакрытые теги, закрытие которых обязательно
+ // Р·Р°РєСЂС‹РІР°РµС‚ РЅРµР·Р°РєСЂС‹С‚С‹Рµ С‚РµРіРё, Р·Р°РєСЂС‹С‚РёРµ РєРѕС‚РѕСЂС‹С… РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
  function CompleteHTML(st:AnsiString):AnsiString;
 
  procedure ValidateForumMessage(msg:AnsiString);
@@ -44,14 +44,14 @@ implementation
  uses SysUtils,TextUtils,SCGI,UCalculating,Logging,structs,Variants,RegExpr,database,Search,ranking,cnsts,UDict;
 
  const
-  // список слов, которых внутри названий карт быть не может
-  noCardWords:array[1..15] of WideString=('другой','другие','лично','светлый','светлые','светлая','светлое',
-   'лицо','банки','монет','личка','фамилия','curve','close','молчит');
+  // СЃРїРёСЃРѕРє СЃР»РѕРІ, РєРѕС‚РѕСЂС‹С… РІРЅСѓС‚СЂРё РЅР°Р·РІР°РЅРёР№ РєР°СЂС‚ Р±С‹С‚СЊ РЅРµ РјРѕР¶РµС‚
+  noCardWords:array[1..15] of WideString=('РґСЂСѓРіРѕР№','РґСЂСѓРіРёРµ','Р»РёС‡РЅРѕ','СЃРІРµС‚Р»С‹Р№','СЃРІРµС‚Р»С‹Рµ','СЃРІРµС‚Р»Р°СЏ','СЃРІРµС‚Р»РѕРµ',
+   'Р»РёС†Рѕ','Р±Р°РЅРєРё','РјРѕРЅРµС‚','Р»РёС‡РєР°','С„Р°РјРёР»РёСЏ','curve','close','РјРѕР»С‡РёС‚');
  var
-  // названия карт на различных языках - в нижнем регистре
+  // РЅР°Р·РІР°РЅРёСЏ РєР°СЂС‚ РЅР° СЂР°Р·Р»РёС‡РЅС‹С… СЏР·С‹РєР°С… - РІ РЅРёР¶РЅРµРј СЂРµРіРёСЃС‚СЂРµ
   cardNames:array[1..numcards,1..2] of WideString;
 
-  // исходная и переведённая строка
+  // РёСЃС…РѕРґРЅР°СЏ Рё РїРµСЂРµРІРµРґС‘РЅРЅР°СЏ СЃС‚СЂРѕРєР°
   hintedStrings:array[0..255,0..1] of AnsiString;
   hintedIdx:integer;
 
@@ -159,7 +159,7 @@ implementation
    end;
   end;
 
- // Заменяет названия карт в тексте на <dfn ...>...</dfn>
+ // Р—Р°РјРµРЅСЏРµС‚ РЅР°Р·РІР°РЅРёСЏ РєР°СЂС‚ РІ С‚РµРєСЃС‚Рµ РЅР° <dfn ...>...</dfn>
  function InsertCardHints(const msgText:AnsiString):AnsiString;
   var
    i,j,k,l,m,p,f,d1,d2,w,words:integer;
@@ -169,7 +169,7 @@ implementation
   begin
    gSect.Enter;
    try
-    // Поиск в кэше
+    // РџРѕРёСЃРє РІ РєСЌС€Рµ
     for i:=0 to high(hintedStrings) do
      if hintedStrings[i,0]=msgText then begin
       result:=hintedStrings[i,1];
@@ -179,7 +179,7 @@ implementation
     gSect.Leave;
    end;
 
-   // Трансляция 
+   // РўСЂР°РЅСЃР»СЏС†РёСЏ 
    text:=DecodeUTF8(msgText);
    i:=0; inTag:=false;
    while i<length(text)-4 do begin
@@ -187,10 +187,10 @@ implementation
     if text[i]='<' then inTag:=true;
     if text[i]='>' then inTag:=false;
     if inTag then continue;
-    // может ли с i-й позиции начинаться название карты?
+    // РјРѕР¶РµС‚ Р»Рё СЃ i-Р№ РїРѕР·РёС†РёРё РЅР°С‡РёРЅР°С‚СЊСЃСЏ РЅР°Р·РІР°РЅРёРµ РєР°СЂС‚С‹?
     if text[i]<'A' then continue;
     if (i>1) and ((text[i-1]>='A') or (text[i-1] in ['0'..'9'])) then continue;
-    // если может - попробуем все варианты названий карт на всех языках
+    // РµСЃР»Рё РјРѕР¶РµС‚ - РїРѕРїСЂРѕР±СѓРµРј РІСЃРµ РІР°СЂРёР°РЅС‚С‹ РЅР°Р·РІР°РЅРёР№ РєР°СЂС‚ РЅР° РІСЃРµС… СЏР·С‹РєР°С…
     s1:=WideLowercase(copy(text,i,3));
     for j:=1 to high(noCardWords) do
      if pos(noCardWords[j],s1)>0 then continue;
@@ -201,11 +201,11 @@ implementation
 
     for j:=1 to high(cardNames) do
      for k:=1 to 2 do begin
-      // Проверим, совпадают ли первые 3 буквы (с точностью до регистра)
-      if s1<>copy(cardNames[j,k],1,3) then continue; // не совпадают - значит нет смысла проверять дальше
+      // РџСЂРѕРІРµСЂРёРј, СЃРѕРІРїР°РґР°СЋС‚ Р»Рё РїРµСЂРІС‹Рµ 3 Р±СѓРєРІС‹ (СЃ С‚РѕС‡РЅРѕСЃС‚СЊСЋ РґРѕ СЂРµРіРёСЃС‚СЂР°)
+      if s1<>copy(cardNames[j,k],1,3) then continue; // РЅРµ СЃРѕРІРїР°РґР°СЋС‚ - Р·РЅР°С‡РёС‚ РЅРµС‚ СЃРјС‹СЃР»Р° РїСЂРѕРІРµСЂСЏС‚СЊ РґР°Р»СЊС€Рµ
       cardname:=cardNames[j,k];
-      // для некоторых карт требуется совпадение более чем 3-х начальных символов
-      if (cardname='друид') or (cardname='монах') then begin
+      // РґР»СЏ РЅРµРєРѕС‚РѕСЂС‹С… РєР°СЂС‚ С‚СЂРµР±СѓРµС‚СЃСЏ СЃРѕРІРїР°РґРµРЅРёРµ Р±РѕР»РµРµ С‡РµРј 3-С… РЅР°С‡Р°Р»СЊРЅС‹С… СЃРёРјРІРѕР»РѕРІ
+      if (cardname='РґСЂСѓРёРґ') or (cardname='РјРѕРЅР°С…') then begin
        if WideLowercase(copy(text,i,4))<>copy(cardNames[j,k],1,4) then continue;
       end;
       m:=i+length(cardname);
@@ -216,10 +216,10 @@ implementation
       s2:=WideLowercase(copy(text,i,m-i));
 
       d1:=GetWordsDistance(s2,cardname);
-      // для английского допустима разница в 1 символ, для русского - кол-во слов+1
+      // РґР»СЏ Р°РЅРіР»РёР№СЃРєРѕРіРѕ РґРѕРїСѓСЃС‚РёРјР° СЂР°Р·РЅРёС†Р° РІ 1 СЃРёРјРІРѕР», РґР»СЏ СЂСѓСЃСЃРєРѕРіРѕ - РєРѕР»-РІРѕ СЃР»РѕРІ+1
       if (d1>words+1) or ((d1>1) and (k=1)) then continue;
 
-      // Слово больше похоже на нормальное, чем на карту?
+      // РЎР»РѕРІРѕ Р±РѕР»СЊС€Рµ РїРѕС…РѕР¶Рµ РЅР° РЅРѕСЂРјР°Р»СЊРЅРѕРµ, С‡РµРј РЅР° РєР°СЂС‚Сѓ?
       skip:=false;
       for l:=1 to high(noCardWords) do
        if GetWordsDistance(s2,noCardWords[l])<d1 then begin
@@ -228,7 +228,7 @@ implementation
        end;
       if skip then continue; 
 
-      // Теперь сделаем замену
+      // РўРµРїРµСЂСЊ СЃРґРµР»Р°РµРј Р·Р°РјРµРЅСѓ
       Insert('</dfn>',text,m);
       s2:='<dfn onMouseOver="ShowCardHint(this,'+inttostr(j)+')" onMouseOut="HideCardHint()">';
       Insert(s2,text,i);
@@ -240,7 +240,7 @@ implementation
 
    gSect.Enter;
    try
-    // Сохранение в кэше
+    // РЎРѕС…СЂР°РЅРµРЅРёРµ РІ РєСЌС€Рµ
     hintedStrings[hintedIdx,0]:=msgText;
     hintedStrings[hintedIdx,1]:=result;
     inc(hintedIdx);
@@ -270,29 +270,29 @@ implementation
   begin
    try
    moderator:=IsModerator(profile);
-   // Получим все сообщения по переданному условию
+   // РџРѕР»СѓС‡РёРј РІСЃРµ СЃРѕРѕР±С‰РµРЅРёСЏ РїРѕ РїРµСЂРµРґР°РЅРЅРѕРјСѓ СѓСЃР»РѕРІРёСЋ
    db.QueryHash(messages,'messages','id','msg,created,author,authorname,flags,score,topic',condition);
-   // требуется урезание?
+   // С‚СЂРµР±СѓРµС‚СЃСЏ СѓСЂРµР·Р°РЅРёРµ?
    skipFrom:=0; skipTo:=0; skipAfter:=99999;
    if (messages.count>40) and (cutNearMsgID>=0) then begin
-    // 1. Найти индекс сообщения в списке
+    // 1. РќР°Р№С‚Рё РёРЅРґРµРєСЃ СЃРѕРѕР±С‰РµРЅРёСЏ РІ СЃРїРёСЃРєРµ
     key:=IntToStr(cutNearMsgID);
     n:=0;
     while n<messages.count-1 do
      if messages.keys[n]=key then break
       else inc(n);
-    // 2. Удалить сообщения ПЕРЕД указанным сообщением, если это необходимо
+    // 2. РЈРґР°Р»РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ РџР•Р Р•Р” СѓРєР°Р·Р°РЅРЅС‹Рј СЃРѕРѕР±С‰РµРЅРёРµРј, РµСЃР»Рё СЌС‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ
     if n>24 then begin
      skipFrom:=1;
      skipTo:=n-1;
      if skipTo>messages.count-9 then skipTo:=messages.count-9; 
     end;
-    // 3. Удалить сообщения ПОСЛЕ указанного, если это необходимо
+    // 3. РЈРґР°Р»РёС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ РџРћРЎР›Р• СѓРєР°Р·Р°РЅРЅРѕРіРѕ, РµСЃР»Рё СЌС‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ
     if messages.count>n+30 then
      skipAfter:=n+20;
    end;
 
-   // Прикреплённые файлы (если есть)
+   // РџСЂРёРєСЂРµРїР»С‘РЅРЅС‹Рµ С„Р°Р№Р»С‹ (РµСЃР»Рё РµСЃС‚СЊ)
    attachments.Init(true);
    lastread.Init(true);
    n:=-1;
@@ -315,7 +315,7 @@ implementation
    db.QueryValues(attachments,'attachments','id','msg,filename,filesize,thumbnail,th_width,th_height,filetype');
    db.QueryValues(lastRead,'lastread','topic','msg',false,'user='+IntToStr(userID));
 
-   // перечислим всех авторов, имеющихся в теме
+   // РїРµСЂРµС‡РёСЃР»РёРј РІСЃРµС… Р°РІС‚РѕСЂРѕРІ, РёРјРµСЋС‰РёС…СЃСЏ РІ С‚РµРјРµ
    profiles.Init(true);
    n:=-1;
    for key in messages.keys do begin
@@ -323,10 +323,10 @@ implementation
     if (n>=skipFrom) and (n<skipTo) or (n>skipAfter) then continue;
     profiles.Put(messages.Get(key,2),0,true);
    end;
-   // запросим инфу об этих авторах
+   // Р·Р°РїСЂРѕСЃРёРј РёРЅС„Сѓ РѕР± СЌС‚РёС… Р°РІС‚РѕСЂР°С…
    db.QueryValues(profiles,'profiles','id','name,playerID,network,networkid,avatar,flags');
 
-   // Кто из авторов имеет игровой аккаунт?
+   // РљС‚Рѕ РёР· Р°РІС‚РѕСЂРѕРІ РёРјРµРµС‚ РёРіСЂРѕРІРѕР№ Р°РєРєР°СѓРЅС‚?
    players.Init(true);
    for key in profiles.keys do begin
     plrID:=profiles.Get(key,1);
@@ -334,7 +334,7 @@ implementation
    end;
    db.QueryValues(players,'players','id','level,name,CardsCount(cards),avatar');
 
-   // Регэкспы
+   // Р РµРіСЌРєСЃРїС‹
    r1:=TRegExpr.Create;
    r1.Expression:='<blockquote title="(.*?),(.*?)">(.*?)<\/blockquote>';
    r1.ModifierI:=true;
@@ -344,13 +344,13 @@ implementation
    r2.Expression:='<!-- UPDATED:(.+):(.+) -->';
    r2.ModifierI:=true;
 
-   // Сформировать список сообщений, вставив в шаблон необходимые значения
+   // РЎС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃРїРёСЃРѕРє СЃРѕРѕР±С‰РµРЅРёР№, РІСЃС‚Р°РІРёРІ РІ С€Р°Р±Р»РѕРЅ РЅРµРѕР±С…РѕРґРёРјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
    levelLabel:=BuildTemplate('$LABEL_LEVEL');
    n:=-1;
    for key in messages.keys do begin
      inc(n);
      if (n>=skipFrom) and (n<skipTo) then begin
-      // Нужно вставить разрывы
+      // РќСѓР¶РЅРѕ РІСЃС‚Р°РІРёС‚СЊ СЂР°Р·СЂС‹РІС‹
       if n=skipFrom then begin
        cnt:=skipTo-skipFrom;
        i:=skipFrom;
@@ -387,7 +387,7 @@ implementation
      plrID:=profiles.Get(profileID,1);
      pFlags:=profiles.Get(profileID,5);
      if plrID>0 then begin
-      // Профиль соответствует аккаунту игрока
+      // РџСЂРѕС„РёР»СЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ Р°РєРєР°СѓРЅС‚Сѓ РёРіСЂРѕРєР°
       face:=players.Get(plrID,3);
       author:=author+', '+levelLabel+' '+VarToStr(players.Get(plrID,0));
       author:='<a href=''javascript:ShowPlayerProfile("'+players.Get(plrID,1)+'")''>'+author+'</a>';
@@ -411,15 +411,15 @@ implementation
      end;
      msgtext:=messages.Get(key,0);
      msgText:=InsertCardHints(msgText);
-     // Цитаты
+     // Р¦РёС‚Р°С‚С‹
      msgText:=r1.Replace(msgText,'<div class=QuoteAuthor> <span>$1 wrote:</span></div><blockquote>$3</blockquote>',true);
-     // Обновления
+     // РћР±РЅРѕРІР»РµРЅРёСЏ
      if r2.Exec(msgText) then begin
        date:=ParseTimeStamp(r2.Substitute('$2'));
        msgText:=r2.Replace(msgText,'<div class="small gray">Updated by $1 on '+FormatDate(date)+'UTC </div>',true);
      end;
 
-     // Аттачи
+     // РђС‚С‚Р°С‡Рё
      attList:='';
      for key2 in attachments.keys do
       if attachments.Get(key2,0)=key then begin
@@ -456,7 +456,7 @@ implementation
    lastRead:=0;
    guild:=0;
    if id>0 then begin
-    // Реальная тема
+    // Р РµР°Р»СЊРЅР°СЏ С‚РµРјР°
     if userID>0 then begin
       sa:=db.Query('SELECT msg FROM lastread WHERE topic=%d AND user=%d',[id,userID]);
       if db.rowCount>0 then lastRead:=StrToIntDef(sa[0],0);
@@ -475,13 +475,13 @@ implementation
       exit;
      end;
    end else begin
-    // Виртуальная тема: создание новой темы
+    // Р’РёСЂС‚СѓР°Р»СЊРЅР°СЏ С‚РµРјР°: СЃРѕР·РґР°РЅРёРµ РЅРѕРІРѕР№ С‚РµРјС‹
     SetLength(sa,3);
     sa[0]:=BuildTemplate('$TITLE_NEW_THREAD');
     sa[1]:=''; sa[2]:=IntToStr(IntParam('chapter'));
    end;
    if count=0 then begin
-    // Вся тема (возможно сокращенная)
+    // Р’СЃСЏ С‚РµРјР° (РІРѕР·РјРѕР¶РЅРѕ СЃРѕРєСЂР°С‰РµРЅРЅР°СЏ)
     // Thread title
     title:=HTMLString(sa[0]);
     if guild>0 then title:=BuildTemplate('$FORUM_GUILD_MARK_BIG')+title;
@@ -491,7 +491,7 @@ implementation
     if msgToShow>0 then lastRead:=msgToShow;
     result:=result+FormatForumMessages('topic='+inttostr(id)+' ORDER BY id',profile,lastRead);
    end else begin
-    // Отдельный диапазон сообщений
+    // РћС‚РґРµР»СЊРЅС‹Р№ РґРёР°РїР°Р·РѕРЅ СЃРѕРѕР±С‰РµРЅРёР№
     result:=FormatForumMessages('topic='+inttostr(id)+' ORDER BY id LIMIT '+inttostr(start)+','+inttostr(count),profile);
    end;
   end;
@@ -578,13 +578,13 @@ implementation
   begin
    result:='';
    try
-    // 1. Составить список новых тем (скрытые темы будут выкинуты позднее)
+    // 1. РЎРѕСЃС‚Р°РІРёС‚СЊ СЃРїРёСЃРѕРє РЅРѕРІС‹С… С‚РµРј (СЃРєСЂС‹С‚С‹Рµ С‚РµРјС‹ Р±СѓРґСѓС‚ РІС‹РєРёРЅСѓС‚С‹ РїРѕР·РґРЅРµРµ)
     sa:=db.Query('SELECT id,title,flags,msgcount,updated,chapter,lang,lastmsg,guild '+
       'FROM topics WHERE lang in ('+AllowedLangs+') AND (flags & 10=0) ORDER BY (flags & 4) DESC,updated DESC LIMIT 30');
     cnt:=db.rowCount;
     cols:=db.colCount;
 
-    // 2. Юзер авторизован? Узнать какие темы и насколько он прочитал
+    // 2. Р®Р·РµСЂ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ? РЈР·РЅР°С‚СЊ РєР°РєРёРµ С‚РµРјС‹ Рё РЅР°СЃРєРѕР»СЊРєРѕ РѕРЅ РїСЂРѕС‡РёС‚Р°Р»
     newCnt.Init(40); // threadID -> number of new messages
     lastRead.Init(40); 
     if userID>0 then begin
@@ -604,12 +604,12 @@ implementation
       lastRead.Put(StrToIntDef(sb[i*2],0),StrToIntDef(sb[i*2+1],0));
     end;
 
-    // 3. Отформатировать список тем
+    // 3. РћС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°С‚СЊ СЃРїРёСЃРѕРє С‚РµРј
     for i:=0 to cnt-1 do begin
      id:=StrToIntDef(sa[i*cols],0);
      flags:=StrToIntDef(sa[i*cols+2],0);
      guild:=StrToIntDef(sa[i*cols+8],0);
-     if guild>0 then // видно если ЛИБО админ ЛИБО название гильдии совпадает с гильдией визитора 
+     if guild>0 then // РІРёРґРЅРѕ РµСЃР»Рё Р›РР‘Рћ Р°РґРјРёРЅ Р›РР‘Рћ РЅР°Р·РІР°РЅРёРµ РіРёР»СЊРґРёРё СЃРѕРІРїР°РґР°РµС‚ СЃ РіРёР»СЊРґРёРµР№ РІРёР·РёС‚РѕСЂР° 
       if not (IsAdmin(profile) or (profile.guild<>'') and (allGuilds[guild].name=profile.guild)) then continue; // not allowed to see this guild
      temp.Put('THREAD_ID',sa[i*cols],true);
      tname:=HtmlString(sa[i*cols+1]);
@@ -629,7 +629,7 @@ implementation
      if (newCount>0) or (not lastRead.HasValue(id)) then
       result:=result+BuildTemplate('#FORUM_THREAD_ITEM')
      else
-      result:=result+BuildTemplate('#FORUM_THREAD_ITEM_READ'); // в теме всё прочитано
+      result:=result+BuildTemplate('#FORUM_THREAD_ITEM_READ'); // РІ С‚РµРјРµ РІСЃС‘ РїСЂРѕС‡РёС‚Р°РЅРѕ
     end;
 
    except
@@ -637,7 +637,7 @@ implementation
    end;
   end;
 
- // Обработка сообщения, если что не так - кинет исключение с текстом
+ // РћР±СЂР°Р±РѕС‚РєР° СЃРѕРѕР±С‰РµРЅРёСЏ, РµСЃР»Рё С‡С‚Рѕ РЅРµ С‚Р°Рє - РєРёРЅРµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ СЃ С‚РµРєСЃС‚РѕРј
  procedure ValidateForumMessage(msg:AnsiString);
   const
    alpha=['A'..'Z','a'..'z'];
@@ -668,14 +668,14 @@ implementation
    end;
   procedure CheckValue;
    begin
-    // Допустимы только локальные адреса
+    // Р”РѕРїСѓСЃС‚РёРјС‹ С‚РѕР»СЊРєРѕ Р»РѕРєР°Р»СЊРЅС‹Рµ Р°РґСЂРµСЃР°
     if attribute='src' then begin
      if (length(value)<3) or (value[1]<>'/') or not (value[2] in alphanum) then begin
        LogMsg('Unallowed src value: '+value,logInfo);
        raise Exception.Create('Unallowed HTML code (src="'+value+'" not allowed)');
      end;
     end;
-    // Недопустим никакой код
+    // РќРµРґРѕРїСѓСЃС‚РёРј РЅРёРєР°РєРѕР№ РєРѕРґ
     if attribute='href' then begin
      value:=lowercase(value);
      if pos('http://',value)=1 then exit;
@@ -685,7 +685,7 @@ implementation
     end;
    end;
   begin
-   state:=0; // текст
+   state:=0; // С‚РµРєСЃС‚
    countA:=0; countBQ:=0;
    for i:=1 to length(msg) do begin
     case state of
@@ -767,7 +767,7 @@ implementation
    end;
   end;
 
- // Процессинг текста сообщения перед отправкой
+ // РџСЂРѕС†РµСЃСЃРёРЅРі С‚РµРєСЃС‚Р° СЃРѕРѕР±С‰РµРЅРёСЏ РїРµСЂРµРґ РѕС‚РїСЂР°РІРєРѕР№
  procedure PreprocessMessage(var msg:AnsiString);
   var
    r:TRegExpr;
@@ -789,7 +789,7 @@ implementation
    end;
    r.Free;
 
-   // всякая ненужная фигня (удалить)
+   // РІСЃСЏРєР°СЏ РЅРµРЅСѓР¶РЅР°СЏ С„РёРіРЅСЏ (СѓРґР°Р»РёС‚СЊ)
    msg:=ReplaceRegExpr('<div>(\s|&nbsp;)*<\/div>',msg,'<br>',false);
    msg:=ReplaceRegExpr('<div>(\s|&nbsp;)*<\/div>\s*$',msg,'',false);
 
@@ -804,7 +804,7 @@ implementation
     i:=r.MatchPos[2]+r.matchLen[2];
     LogMsg('Link replacement: '+r.Match[1]+r.Match[2]);
     ps:=i; suffix:='';
-    // ссылка в кавычках либо в тэге <a> - не обрабатывать
+    // СЃСЃС‹Р»РєР° РІ РєР°РІС‹С‡РєР°С… Р»РёР±Рѕ РІ С‚СЌРіРµ <a> - РЅРµ РѕР±СЂР°Р±Р°С‚С‹РІР°С‚СЊ
     if (i<length(msg)) and
      ((msg[i]='"') or (copy(msg,i,4)='</a>')) then continue;
     href:=r.Substitute('$1')+r.Substitute('$2');
@@ -897,7 +897,7 @@ implementation
     end;
     ForumChanged(20);
 
-    // Аттачи
+    // РђС‚С‚Р°С‡Рё
     attList:=StrToArray(attachments,';');
     if length(attList)>0 then begin
       db.Query('DELETE FROM attachments WHERE msg=%d AND id NOT IN (%s)',[msgid,ArrayToStr(attList)]);
@@ -907,8 +907,8 @@ implementation
     result:='';
 
     if not edited then begin
-     // Уведомления
-     // 1. Всем, кто подписался на тему
+     // РЈРІРµРґРѕРјР»РµРЅРёСЏ
+     // 1. Р’СЃРµРј, РєС‚Рѕ РїРѕРґРїРёСЃР°Р»СЃСЏ РЅР° С‚РµРјСѓ
      notify2.Init(50);
      sa:=db.Query('SELECT author,flags FROM messages WHERE topic=%d AND flags&3>0');
      for i:=0 to db.rowCount-1 do begin
@@ -916,7 +916,7 @@ implementation
       if f and 2>0 then notify2.Put(sa[i*2],2);
       if f and 1>0 then notify1.Put(sa[i*2],1);
      end;
-     // 2. Всем, кто указан в цитатах
+     // 2. Р’СЃРµРј, РєС‚Рѕ СѓРєР°Р·Р°РЅ РІ С†РёС‚Р°С‚Р°С…
     end;
 
    except

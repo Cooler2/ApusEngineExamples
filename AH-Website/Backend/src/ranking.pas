@@ -1,4 +1,4 @@
-unit ranking;
+п»їunit ranking;
 interface
  uses MyServis;
 
@@ -6,7 +6,7 @@ type
   // Compatibility
   StringArr=AStringArr;
 
-  // Кэшированная информация об игроке
+  // РљСЌС€РёСЂРѕРІР°РЅРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± РёРіСЂРѕРєРµ
   TPlayerRec=record
    id:integer;
    name,guild:string[31];
@@ -20,7 +20,7 @@ type
   end;
   TPlayerArr=array of TPlayerRec;
 
-  // Информация о гильдиях
+  // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РіРёР»СЊРґРёСЏС…
   TGuildRec=record
    name:string[31];
    size,level,mCount:shortint;
@@ -42,16 +42,16 @@ var
   allGuilds:array of TGuildRec;
 //  allPlayersHash:THash; // (lowercase) playername -> playerID
 
-  // Индексы в массиве allPlayers (хранятся только игроки с ненулевой славой)
+  // РРЅРґРµРєСЃС‹ РІ РјР°СЃСЃРёРІРµ allPlayers (С…СЂР°РЅСЏС‚СЃСЏ С‚РѕР»СЊРєРѕ РёРіСЂРѕРєРё СЃ РЅРµРЅСѓР»РµРІРѕР№ СЃР»Р°РІРѕР№)
   customRanking,classicRanking,draftRanking,totalRanking:IntArray;
-  // Индексы в массиве allGuilds [место]->guildID
+  // РРЅРґРµРєСЃС‹ РІ РјР°СЃСЃРёРІРµ allGuilds [РјРµСЃС‚Рѕ]->guildID
   guildRanking:IntArray;
   rankingTime:TDateTime;
 
  function FormatRankingTable(dt:TDuelType;players:TPlayerArr;hlName:AnsiString):AnsiString;
  function FormatGuildsRankingTable(guilds:TGuildArr;hlName:AnsiString):AnsiString;
  
- // pages - ссылки на страницы рейтинга
+ // pages - СЃСЃС‹Р»РєРё РЅР° СЃС‚СЂР°РЅРёС†С‹ СЂРµР№С‚РёРЅРіР°
  function GetRanking(dt:TDuelType;start,count:integer;out pages:AnsiString):TPlayerArr;
  function GetGuildRanking(start,count:integer;out pages:AnsiString):TGuildArr;
 
@@ -251,11 +251,11 @@ implementation
    if Now<rankingTime+15/86400 then exit; // 15 seconds
    LogMsg('Ranking obsolete: '+FormatDateTime('hh:nn:ss.zzz',Now)+' > '+FormatDateTime('hh:nn:ss.zzz',rankingTime+10/86400),logDebug);
    try
-    // Загрузка информации обо всех игроках
+    // Р—Р°РіСЂСѓР·РєР° РёРЅС„РѕСЂРјР°С†РёРё РѕР±Рѕ РІСЃРµС… РёРіСЂРѕРєР°С…
     LogMsg('Updating players info',logInfo);
     sa:=db.Query('SELECT max(id) FROM players');
     count:=StrToIntDef(sa[0],0)+1;
-    if db.rowCount>0 then begin // не было ошибки?
+    if db.rowCount>0 then begin // РЅРµ Р±С‹Р»Рѕ РѕС€РёР±РєРё?
 
      sa:=db.Query('SELECT id,name,guild,email,customFame,customLevel,classicFame,classicLevel,draftFame,draftLevel,level,'+
        'customWins,customLoses,classicWins,classicLoses,draftWins,draftLoses,'+
@@ -442,7 +442,7 @@ implementation
      dtDraft:ranking:=@DraftRanking;
     end;
     SetLength(result,count);
-    // посчитаем сколько страниц вообще в рейтинге есть
+    // РїРѕСЃС‡РёС‚Р°РµРј СЃРєРѕР»СЊРєРѕ СЃС‚СЂР°РЅРёС† РІРѕРѕР±С‰Рµ РІ СЂРµР№С‚РёРЅРіРµ РµСЃС‚СЊ
     pCount:=1;
     while pCount*100<=high(ranking^) do begin
      with allPlayers[ranking^[pCount*100]] do
@@ -470,9 +470,9 @@ implementation
    page:=1+start div 100;
    for i:=1 to pCount do begin
     if pCount>8 then begin
-     // страниц больше 8 - тогда 2 варианта:
-     if (page<=6) and (i>8) then break; // текущая страница - до 4-й, значит рисуем до 6-й включительно
-     if (page>6) and (i>1) and (abs(i-page)>3) then begin // показывать 1-ю страницу а также +/- 3 от текущей
+     // СЃС‚СЂР°РЅРёС† Р±РѕР»СЊС€Рµ 8 - С‚РѕРіРґР° 2 РІР°СЂРёР°РЅС‚Р°:
+     if (page<=6) and (i>8) then break; // С‚РµРєСѓС‰Р°СЏ СЃС‚СЂР°РЅРёС†Р° - РґРѕ 4-Р№, Р·РЅР°С‡РёС‚ СЂРёСЃСѓРµРј РґРѕ 6-Р№ РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ
+     if (page>6) and (i>1) and (abs(i-page)>3) then begin // РїРѕРєР°Р·С‹РІР°С‚СЊ 1-СЋ СЃС‚СЂР°РЅРёС†Сѓ Р° С‚Р°РєР¶Рµ +/- 3 РѕС‚ С‚РµРєСѓС‰РµР№
       continue;
      end;
     end;
@@ -492,7 +492,7 @@ implementation
    cSect.Enter;
    try
     SetLength(result,count);
-    // посчитаем сколько страниц вообще в рейтинге есть
+    // РїРѕСЃС‡РёС‚Р°РµРј СЃРєРѕР»СЊРєРѕ СЃС‚СЂР°РЅРёС† РІРѕРѕР±С‰Рµ РІ СЂРµР№С‚РёРЅРіРµ РµСЃС‚СЊ
     pCount:=(length(guildRanking)-2) div 100;
     place:=start;
     c:=0;
@@ -509,9 +509,9 @@ implementation
    page:=1+start div 100;
    for i:=1 to pCount do begin
     if pCount>8 then begin
-     // страниц больше 8 - тогда 2 варианта:
-     if (page<=6) and (i>8) then break; // текущая страница - до 4-й, значит рисуем до 6-й включительно
-     if (page>6) and (i>1) and (abs(i-page)>2) then begin // показывать 1-ю страницу а также +/- 2 от текущей
+     // СЃС‚СЂР°РЅРёС† Р±РѕР»СЊС€Рµ 8 - С‚РѕРіРґР° 2 РІР°СЂРёР°РЅС‚Р°:
+     if (page<=6) and (i>8) then break; // С‚РµРєСѓС‰Р°СЏ СЃС‚СЂР°РЅРёС†Р° - РґРѕ 4-Р№, Р·РЅР°С‡РёС‚ СЂРёСЃСѓРµРј РґРѕ 6-Р№ РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ
+     if (page>6) and (i>1) and (abs(i-page)>2) then begin // РїРѕРєР°Р·С‹РІР°С‚СЊ 1-СЋ СЃС‚СЂР°РЅРёС†Сѓ Р° С‚Р°РєР¶Рµ +/- 2 РѕС‚ С‚РµРєСѓС‰РµР№
       if i=1 then pages:=pages+' .. ';
       continue;
      end;

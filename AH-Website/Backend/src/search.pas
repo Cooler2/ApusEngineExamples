@@ -1,15 +1,15 @@
-unit search;
+п»їunit search;
 interface
 
- // Производит поиск (везде) и формирует HTML-код кратких результатов поиска (не более count шт) 
+ // РџСЂРѕРёР·РІРѕРґРёС‚ РїРѕРёСЃРє (РІРµР·РґРµ) Рё С„РѕСЂРјРёСЂСѓРµС‚ HTML-РєРѕРґ РєСЂР°С‚РєРёС… СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РїРѕРёСЃРєР° (РЅРµ Р±РѕР»РµРµ count С€С‚) 
  function RunSearch(query:AnsiString;count:integer):AnsiString;
 
- // Загрузка и индексация полного содержимого форума
- // Пока что индексация изменений на лету не проводится, вместо этого периодически индексируется весь форум
+ // Р—Р°РіСЂСѓР·РєР° Рё РёРЅРґРµРєСЃР°С†РёСЏ РїРѕР»РЅРѕРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРіРѕ С„РѕСЂСѓРјР°
+ // РџРѕРєР° С‡С‚Рѕ РёРЅРґРµРєСЃР°С†РёСЏ РёР·РјРµРЅРµРЅРёР№ РЅР° Р»РµС‚Сѓ РЅРµ РїСЂРѕРІРѕРґРёС‚СЃСЏ, РІРјРµСЃС‚Рѕ СЌС‚РѕРіРѕ РїРµСЂРёРѕРґРёС‡РµСЃРєРё РёРЅРґРµРєСЃРёСЂСѓРµС‚СЃСЏ РІРµСЃСЊ С„РѕСЂСѓРј
  procedure IndexAllForum;
 
- // Сообщение о том, что на форуме что-то изменилось.
- // при достижении 100 - немедленная переиндексация
+ // РЎРѕРѕР±С‰РµРЅРёРµ Рѕ С‚РѕРј, С‡С‚Рѕ РЅР° С„РѕСЂСѓРјРµ С‡С‚Рѕ-С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ.
+ // РїСЂРё РґРѕСЃС‚РёР¶РµРЅРёРё 100 - РЅРµРјРµРґР»РµРЅРЅР°СЏ РїРµСЂРµРёРЅРґРµРєСЃР°С†РёСЏ
  procedure ForumChanged(rate:integer);
 
 implementation
@@ -36,7 +36,7 @@ implementation
 
   TWord=record
    word:WideString; // lowercase
-   msglist:IntArray; // список ID сообщений, в которых данное слово встречается
+   msglist:IntArray; // СЃРїРёСЃРѕРє ID СЃРѕРѕР±С‰РµРЅРёР№, РІ РєРѕС‚РѕСЂС‹С… РґР°РЅРЅРѕРµ СЃР»РѕРІРѕ РІСЃС‚СЂРµС‡Р°РµС‚СЃСЏ
    ignore:boolean;
   end;
 
@@ -46,8 +46,8 @@ implementation
   topics:array of TForumTopic; // [id]
   messages:array of TForumMessage; // [id]
   words:array of TWord;
-  wordHash:THash; // слово -> индекс в words
-  ignoreWords:THash; // эти слова слишком частые - их нужно игнорить
+  wordHash:THash; // СЃР»РѕРІРѕ -> РёРЅРґРµРєСЃ РІ words
+  ignoreWords:THash; // СЌС‚Рё СЃР»РѕРІР° СЃР»РёС€РєРѕРј С‡Р°СЃС‚С‹Рµ - РёС… РЅСѓР¶РЅРѕ РёРіРЅРѕСЂРёС‚СЊ
 
   changes:integer;
   lastIndexed:TDateTime;
@@ -57,11 +57,11 @@ implementation
  procedure ForumChanged(rate:integer);
   begin
    inc(changes,rate);
-   // Переиндексировать раз в час минут или если накопилось много изменений
+   // РџРµСЂРµРёРЅРґРµРєСЃРёСЂРѕРІР°С‚СЊ СЂР°Р· РІ С‡Р°СЃ РјРёРЅСѓС‚ РёР»Рё РµСЃР»Рё РЅР°РєРѕРїРёР»РѕСЃСЊ РјРЅРѕРіРѕ РёР·РјРµРЅРµРЅРёР№
    if (changes>=100) or (Now>lastIndexed+60/1440) then AddTask('/IndexForum');
   end;
 
- // Возвращает список ID сообщений, более-менее соответствующих запросу
+ // Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє ID СЃРѕРѕР±С‰РµРЅРёР№, Р±РѕР»РµРµ-РјРµРЅРµРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… Р·Р°РїСЂРѕСЃСѓ
  function FindForumMessages(query:WStringArr):IntArray;
   var
    i,j,k,d,l,lw,lq,n,penalty:integer;
@@ -71,12 +71,12 @@ implementation
   begin
    SetLength(result,0);
    SetLength(rates,length(messages));
-   // Пройдёмся по всем словам, дадим им оценку и выберем сообщения, в которых они присутствуют
+   // РџСЂРѕР№РґС‘РјСЃСЏ РїРѕ РІСЃРµРј СЃР»РѕРІР°Рј, РґР°РґРёРј РёРј РѕС†РµРЅРєСѓ Рё РІС‹Р±РµСЂРµРј СЃРѕРѕР±С‰РµРЅРёСЏ, РІ РєРѕС‚РѕСЂС‹С… РѕРЅРё РїСЂРёСЃСѓС‚СЃС‚РІСѓСЋС‚
    for i:=0 to high(words) do begin
     if words[i].ignore then continue;
     for j:=0 to high(query) do begin
      if length(query[j])<2 then continue;
-     // насколько слово соответствует слову запроса
+     // РЅР°СЃРєРѕР»СЊРєРѕ СЃР»РѕРІРѕ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ СЃР»РѕРІСѓ Р·Р°РїСЂРѕСЃР°
      ia:=GetMaxSubsequence(query[j],words[i].word);
 
      penalty:=0;
@@ -105,12 +105,12 @@ implementation
    if n=0 then exit;
    rate:=round(0.8*sqrt(rate/n));
 
-   // Корректировка порога если результатов сликом много/мало
+   // РљРѕСЂСЂРµРєС‚РёСЂРѕРІРєР° РїРѕСЂРѕРіР° РµСЃР»Рё СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ СЃР»РёРєРѕРј РјРЅРѕРіРѕ/РјР°Р»Рѕ
    n:=0;
    for i:=1 to high(rates) do
     if rates[i]>rate then
      inc(n);
-   // так делать нельзя: если много результатов с примерно одинаковой оценкой, то при увеличени оценки они ВСЕ! отсекаются
+   // С‚Р°Рє РґРµР»Р°С‚СЊ РЅРµР»СЊР·СЏ: РµСЃР»Рё РјРЅРѕРіРѕ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ СЃ РїСЂРёРјРµСЂРЅРѕ РѕРґРёРЅР°РєРѕРІРѕР№ РѕС†РµРЅРєРѕР№, С‚Рѕ РїСЂРё СѓРІРµР»РёС‡РµРЅРё РѕС†РµРЅРєРё РѕРЅРё Р’РЎР•! РѕС‚СЃРµРєР°СЋС‚СЃСЏ
    //if n>100 then rate:=round(rate*1.3);
    if n>100 then rate:=round(rate*0.6+maxRate*0.4);
    if n<10 then rate:=round(rate*0.8);
@@ -120,7 +120,7 @@ implementation
      AddInteger(result,i);
   end;
 
- // Оценивает сообщение и формирует вырезку из него, наиболее близкую к запросу
+ // РћС†РµРЅРёРІР°РµС‚ СЃРѕРѕР±С‰РµРЅРёРµ Рё С„РѕСЂРјРёСЂСѓРµС‚ РІС‹СЂРµР·РєСѓ РёР· РЅРµРіРѕ, РЅР°РёР±РѕР»РµРµ Р±Р»РёР·РєСѓСЋ Рє Р·Р°РїСЂРѕСЃСѓ
  function RateForumMessage(query:WStringArr;msgText,title,author:WideString;out quote:WideString;explain:boolean=false):single;
   var
    i,j,k,d,l,best,bestS,bestE:integer;
@@ -136,20 +136,20 @@ implementation
    SortStrings(txt);
    for i:=0 to high(query) do
     for j:=0 to high(txt) do begin
-     // Слова неподходящей длины?
+     // РЎР»РѕРІР° РЅРµРїРѕРґС…РѕРґСЏС‰РµР№ РґР»РёРЅС‹?
      l:=length(txt[j]);
      if (l<2) or (l>40) then continue;
      l:=length(query[i]);
      if (l<2) or (l>30) then continue;
 
-     // повторяющееся слово?
+     // РїРѕРІС‚РѕСЂСЏСЋС‰РµРµСЃСЏ СЃР»РѕРІРѕ?
      if (j>0) and (txt[j]=txt[j-1]) then begin
       rate:=rate/3.5;
       result:=result+rate;
       if explain and (rate>0.01) then exp:=exp+Format('  [rep:%s] +%.2f ->%.2f;'#13#10,[txt[j],rate,result]);
       continue;
      end;
-     // слово еще не встречалось
+     // СЃР»РѕРІРѕ РµС‰Рµ РЅРµ РІСЃС‚СЂРµС‡Р°Р»РѕСЃСЊ
      d:=GetWordsDistance(query[i],txt[j]);
      if (length(query[i])>4) and (d>1) then dec(d);
 
@@ -165,7 +165,7 @@ implementation
       exp:=exp+Format('  [%s]~[%s] +%.2f ->%.2f'#13#10,[query[i],txt[j],rate,result]);
 
      if rate>4 then begin
-      // Отметим места в тексте, где данное слово присутствует
+      // РћС‚РјРµС‚РёРј РјРµСЃС‚Р° РІ С‚РµРєСЃС‚Рµ, РіРґРµ РґР°РЅРЅРѕРµ СЃР»РѕРІРѕ РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚
       l:=1;
       repeat
        d:=PosFrom(txt[j],msgtext,l,true);
@@ -183,42 +183,42 @@ implementation
 
    quote:=msgText;
    if length(quote)<=250 then exit;
-   // Выделить цитату длиной не более 250 символов
+   // Р’С‹РґРµР»РёС‚СЊ С†РёС‚Р°С‚Сѓ РґР»РёРЅРѕР№ РЅРµ Р±РѕР»РµРµ 250 СЃРёРјРІРѕР»РѕРІ
    i:=1; j:=220;
-   // Поиск и оценка начальной цитаты
+   // РџРѕРёСЃРє Рё РѕС†РµРЅРєР° РЅР°С‡Р°Р»СЊРЅРѕР№ С†РёС‚Р°С‚С‹
    while (j>i+1) and (quote[j]<>' ') do dec(j);
    d:=0;
    for k:=i to j-1 do inc(d,hl[k]);
-   // теперь будем скользить пока не найдём наилучший вариант
+   // С‚РµРїРµСЂСЊ Р±СѓРґРµРј СЃРєРѕР»СЊР·РёС‚СЊ РїРѕРєР° РЅРµ РЅР°Р№РґС‘Рј РЅР°РёР»СѓС‡С€РёР№ РІР°СЂРёР°РЅС‚
    best:=d; bestS:=i; bestE:=j;
    repeat
-    // Сдвинем правую границу на 1 слово (или до конца строки)
+    // РЎРґРІРёРЅРµРј РїСЂР°РІСѓСЋ РіСЂР°РЅРёС†Сѓ РЅР° 1 СЃР»РѕРІРѕ (РёР»Рё РґРѕ РєРѕРЅС†Р° СЃС‚СЂРѕРєРё)
     inc(j);
     while (j<=length(quote)) and (quote[j]<>' ') do begin
      inc(d,hl[j]); inc(j);
     end;
-    // Сдвинем левую границу, чтобы длина цитаты была допустимой
+    // РЎРґРІРёРЅРµРј Р»РµРІСѓСЋ РіСЂР°РЅРёС†Сѓ, С‡С‚РѕР±С‹ РґР»РёРЅР° С†РёС‚Р°С‚С‹ Р±С‹Р»Р° РґРѕРїСѓСЃС‚РёРјРѕР№
     while (j-i>220) do begin
      dec(d,hl[i]); inc(i);
     end;
-    // Теперь сдвинем левую границу к началу слова
+    // РўРµРїРµСЂСЊ СЃРґРІРёРЅРµРј Р»РµРІСѓСЋ РіСЂР°РЅРёС†Сѓ Рє РЅР°С‡Р°Р»Сѓ СЃР»РѕРІР°
     while (i>1) and (i<j-1) and (quote[i-1]<>' ') do begin
      dec(d,hl[i]); inc(i);
     end;
-    // Сравним оценку и если надо - запомним
+    // РЎСЂР°РІРЅРёРј РѕС†РµРЅРєСѓ Рё РµСЃР»Рё РЅР°РґРѕ - Р·Р°РїРѕРјРЅРёРј
     if d>=best then begin
      best:=d;
      bestS:=i; bestE:=j;
     end;
    until j>=length(quote);
-   // Попробуем отодвинуть левую границу к началу предложения
+   // РџРѕРїСЂРѕР±СѓРµРј РѕС‚РѕРґРІРёРЅСѓС‚СЊ Р»РµРІСѓСЋ РіСЂР°РЅРёС†Сѓ Рє РЅР°С‡Р°Р»Сѓ РїСЂРµРґР»РѕР¶РµРЅРёСЏ
    i:=bestS;
    while (i>0) and (not (quote[i] in ['.',',','!','?'])) do dec(i);
    if bestS-i<50 then bestS:=i+1;
    quote:=copy(quote,bestS,bestE-bestS);
   end;
 
- // Производит поиск по форуму и форматирует результат в виде HTML
+ // РџСЂРѕРёР·РІРѕРґРёС‚ РїРѕРёСЃРє РїРѕ С„РѕСЂСѓРјСѓ Рё С„РѕСЂРјР°С‚РёСЂСѓРµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІ РІРёРґРµ HTML
  function SearchForum(query:WStringArr;src:WideString;count:integer):AnsiString;
   var
    i,j,item,msgID,threadID:integer;
@@ -230,10 +230,10 @@ implementation
   begin
    cSect.Enter;
    try
-    // 1. Выбрать сообщения, потенциально подходящие запросу
+    // 1. Р’С‹Р±СЂР°С‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ, РїРѕС‚РµРЅС†РёР°Р»СЊРЅРѕ РїРѕРґС…РѕРґСЏС‰РёРµ Р·Р°РїСЂРѕСЃСѓ
     list:=FindForumMessages(query);
 
-    // 2. Оценить сообщения
+    // 2. РћС†РµРЅРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёСЏ
     SetLength(quotes,length(list));
     SetLength(rates,length(list));
     SetLength(rates2,length(list));
@@ -243,16 +243,16 @@ implementation
      rates[i]:=RateForumMessage(query,messages[msgID].text,topics[threadID].title,
        messages[msgID].authorName,quotes[i]);
      rates2[i]:=rates[i];
-     // коррекция оценки исходя из голосования
+     // РєРѕСЂСЂРµРєС†РёСЏ РѕС†РµРЅРєРё РёСЃС…РѕРґСЏ РёР· РіРѕР»РѕСЃРѕРІР°РЅРёСЏ
      rates[i]:=rates[i]*(1+sat(messages[msgid].score,-10,15)/30);
-     // ответы админов всегда в плюсе
+     // РѕС‚РІРµС‚С‹ Р°РґРјРёРЅРѕРІ РІСЃРµРіРґР° РІ РїР»СЋСЃРµ
      if (messages[msgid].authorName='Cooler') or (messages[msgid].authorName='Estarh') then
       rates[i]:=rates[i]*1.15+1;
-     // Старые сообщения менее интересны
+     // РЎС‚Р°СЂС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ РјРµРЅРµРµ РёРЅС‚РµСЂРµСЃРЅС‹
      rates[i]:=rates[i]-0.5*sqrt(Now-messages[msgid].created);
     end;
 
-    // 3. Отсортировать по оценке
+    // 3. РћС‚СЃРѕСЂС‚РёСЂРѕРІР°С‚СЊ РїРѕ РѕС†РµРЅРєРµ
     SetLength(order,length(list));
     for i:=0 to high(list) do order[i]:=i;
     for i:=0 to high(list)-1 do
@@ -261,7 +261,7 @@ implementation
 
     if length(order)>0 then maxrate:=rates[order[0]] else maxrate:=0;
 
-    // Если запрос начинается с ??? - вывести в лог подробное описание оценки лучших постов
+    // Р•СЃР»Рё Р·Р°РїСЂРѕСЃ РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ ??? - РІС‹РІРµСЃС‚Рё РІ Р»РѕРі РїРѕРґСЂРѕР±РЅРѕРµ РѕРїРёСЃР°РЅРёРµ РѕС†РµРЅРєРё Р»СѓС‡С€РёС… РїРѕСЃС‚РѕРІ
     if pos(WideString('???'),src)=1 then begin
      for i:=0 to 9 do
       if i<=high(list) then begin
@@ -275,7 +275,7 @@ implementation
       end;
     end;
 
-    // 4. Отформатировать результат
+    // 4. РћС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚
     if count>high(list) then count:=high(list)+1;
 
     while (count>0) and (rates[order[count-1]]<maxrate*0.5) do dec(count);
@@ -334,13 +334,13 @@ implementation
    LogMsg('Building words list');
    cSect.Enter;
    try
-    // Составляем глобальный список слов и указателей на сообщения, в которых они встречаются
+    // РЎРѕСЃС‚Р°РІР»СЏРµРј РіР»РѕР±Р°Р»СЊРЅС‹Р№ СЃРїРёСЃРѕРє СЃР»РѕРІ Рё СѓРєР°Р·Р°С‚РµР»РµР№ РЅР° СЃРѕРѕР±С‰РµРЅРёСЏ, РІ РєРѕС‚РѕСЂС‹С… РѕРЅРё РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ
     ignoreWords.Init(false);
     wordHash.Init(false);
     SetLength(words,0);
     for i:=1 to high(messages) do begin
      if messages[i].topic=0 then continue;
-     // Надо будет еще учитывать веса слов и добавлять слова из названия темы и имя автора
+     // РќР°РґРѕ Р±СѓРґРµС‚ РµС‰Рµ СѓС‡РёС‚С‹РІР°С‚СЊ РІРµСЃР° СЃР»РѕРІ Рё РґРѕР±Р°РІР»СЏС‚СЊ СЃР»РѕРІР° РёР· РЅР°Р·РІР°РЅРёСЏ С‚РµРјС‹ Рё РёРјСЏ Р°РІС‚РѕСЂР°
      st:=WideLowerCase(messages[i].text+' '+topics[messages[i].topic].title+' '+DecodeUTF8(messages[i].authorName));
      sa:=SplitToWords(st);
      try
@@ -350,9 +350,9 @@ implementation
        LogMsg('ERR'+inttostr(i));
      end;
      for j:=0 to high(sa) do begin
-      if (j>0) and (sa[j]=sa[j-1]) then continue; // слово уже было
+      if (j>0) and (sa[j]=sa[j-1]) then continue; // СЃР»РѕРІРѕ СѓР¶Рµ Р±С‹Р»Рѕ
       k:=length(sa[j]);
-      if (k<2) or (k>40) then continue; // Слишком длинные или короткие слова
+      if (k<2) or (k>40) then continue; // РЎР»РёС€РєРѕРј РґР»РёРЅРЅС‹Рµ РёР»Рё РєРѕСЂРѕС‚РєРёРµ СЃР»РѕРІР°
       us:=EncodeUTF8(sa[j]);
       if not wordHash.HasKey(us) then begin
        wIdx:=length(words);
@@ -371,7 +371,7 @@ implementation
       maxuse:=max2(maxUse,length(words[wIdx].msglist));
      end;
     end;
-    // Слишком частые слова - в игнор-лист
+    // РЎР»РёС€РєРѕРј С‡Р°СЃС‚С‹Рµ СЃР»РѕРІР° - РІ РёРіРЅРѕСЂ-Р»РёСЃС‚
     LogMsg('Optimizing words');
     j:=max2(50,high(messages) div 8);
     for i:=0 to high(words) do begin
@@ -379,7 +379,7 @@ implementation
       ignoreWords.Put(EncodeUtf8(words[i].word),true);
       words[i].ignore:=true;
      end;
-     // редкое слово - опечатка?
+     // СЂРµРґРєРѕРµ СЃР»РѕРІРѕ - РѕРїРµС‡Р°С‚РєР°?
 //     if length(words[i].msglist)<3 then
     end;
    finally
@@ -414,11 +414,11 @@ implementation
    date:TDateTime;
    txt:AnsiString;
   begin
-   if Now<lastIndexed+5/1440 then exit; // Слишком часто! Не запускать чаще чем раз в 5 минут
+   if Now<lastIndexed+5/1440 then exit; // РЎР»РёС€РєРѕРј С‡Р°СЃС‚Рѕ! РќРµ Р·Р°РїСѓСЃРєР°С‚СЊ С‡Р°С‰Рµ С‡РµРј СЂР°Р· РІ 5 РјРёРЅСѓС‚
    changes:=0;
    lastIndexed:=Now;
    LogMsg('Loading all forum data');
-   // Загрузка всех тем форума, кроме скрытых, удалённых и гильдейских
+   // Р—Р°РіСЂСѓР·РєР° РІСЃРµС… С‚РµРј С„РѕСЂСѓРјР°, РєСЂРѕРјРµ СЃРєСЂС‹С‚С‹С…, СѓРґР°Р»С‘РЅРЅС‹С… Рё РіРёР»СЊРґРµР№СЃРєРёС…
    sa:=db.Query('SELECT id,title,chapter,lang,flags FROM topics WHERE flags&10=0 AND guild=0 ORDER BY id DESC');
    if db.lastErrorCode=0 then begin
     cSect.Enter;
@@ -437,7 +437,7 @@ implementation
      cSect.Leave;
     end;
    end;
-   // Загрузка всех сообщений форума (и обновление параметрв соответствующих тем
+   // Р—Р°РіСЂСѓР·РєР° РІСЃРµС… СЃРѕРѕР±С‰РµРЅРёР№ С„РѕСЂСѓРјР° (Рё РѕР±РЅРѕРІР»РµРЅРёРµ РїР°СЂР°РјРµС‚СЂРІ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… С‚РµРј
    sa:=db.Query('SELECT id,msg,topic,created,author,authorname,score FROM messages ORDER BY id DESC');
    if db.lastErrorCode=0 then begin
     cSect.Enter;
@@ -447,13 +447,13 @@ implementation
       n:=i*db.colCount;
       id:=StrToIntDef(sa[n],0);
       topic:=StrToIntDef(sa[n+2],0);
-      // Проверка допустимости темы
+      // РџСЂРѕРІРµСЂРєР° РґРѕРїСѓСЃС‚РёРјРѕСЃС‚Рё С‚РµРјС‹
       if (topic<0) or (topic>high(topics)) then continue;
       if topics[topic].title='' then continue;
 
       if id>high(messages) then SetLength(messages,id+1);
       txt:=sa[n+1];
-      // удалить цитаты
+      // СѓРґР°Р»РёС‚СЊ С†РёС‚Р°С‚С‹
       RemoveQuotes(txt);
       txt:=ExtractPlainText(txt);
       messages[id].text:=DecodeUTF8(txt);
@@ -475,7 +475,7 @@ implementation
     end;
    end;
    LogMsg('Forum data loaded');
-   // Индексация
+   // РРЅРґРµРєСЃР°С†РёСЏ
    IndexForumData;
   end;
 

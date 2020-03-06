@@ -1,11 +1,11 @@
-// Common routines (must be thread-safe)
+п»ї// Common routines (must be thread-safe)
 unit site;
 interface
  uses windows,MyServis,SCGI,Database,structs;
  type
-  // Профиль пользователя
+  // РџСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
   TUserProfile=record
-    id:integer;  // 0 - неавторизованный юзер
+    id:integer;  // 0 - РЅРµР°РІС‚РѕСЂРёР·РѕРІР°РЅРЅС‹Р№ СЋР·РµСЂ
     email,name,guild:AnsiString;
     VID:int64;
     playerID:integer;
@@ -14,11 +14,11 @@ interface
     flags,realname,location:AnsiString;
     created:TDateTime;
     premium:boolean;
-    session:integer; // текущий номер сессии, в которой авторизован юзер
+    session:integer; // С‚РµРєСѓС‰РёР№ РЅРѕРјРµСЂ СЃРµСЃСЃРёРё, РІ РєРѕС‚РѕСЂРѕР№ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ СЋР·РµСЂ
     notificationMode:char;
   end;
 
-  // Кэшированная информация о сессиях (из БД)
+  // РљСЌС€РёСЂРѕРІР°РЅРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРµСЃСЃРёСЏС… (РёР· Р‘Р”)
   TSessionCache=record
    profileID:integer;
    sessions:array[0..4] of integer;
@@ -26,34 +26,34 @@ interface
   end;
 
  var
-  // Любые глобальные переменные (кроме thread-safe) можно использовать ТОЛЬКО под защитой глобальной критсекции
+  // Р›СЋР±С‹Рµ РіР»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ (РєСЂРѕРјРµ thread-safe) РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РўРћР›Р¬РљРћ РїРѕРґ Р·Р°С‰РёС‚РѕР№ РіР»РѕР±Р°Р»СЊРЅРѕР№ РєСЂРёС‚СЃРµРєС†РёРё
   gSect:TMyCriticalSection;
   //sessions:TSimpleHash;
 
-  // Кэшированная информация о сессиях (из БД). 
+  // РљСЌС€РёСЂРѕРІР°РЅРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРµСЃСЃРёСЏС… (РёР· Р‘Р”). 
   sessionCache:array[0..255] of TSessionCache;
 
   vid:int64; // Visitor ID
-  pageAB:char; // A или B
+  pageAB:char; // A РёР»Рё B
 
  function InitSite:AnsiString; stdcall;
 
- // Самая главная страница, включающая в общем-то всё
+ // РЎР°РјР°СЏ РіР»Р°РІРЅР°СЏ СЃС‚СЂР°РЅРёС†Р°, РІРєР»СЋС‡Р°СЋС‰Р°СЏ РІ РѕР±С‰РµРј-С‚Рѕ РІСЃС‘
  function IndexPage:AnsiString; stdcall;
 
- // /ranking, параметры: mode - тип боёв (0..3), start - начальная позиция рейтинга,
- // count - кол-во мест, plrname - выделить строку с именем данного игрока
- // Результат: 1-я строка - список страниц, остальные строки - '<tr><td>...'
+ // /ranking, РїР°СЂР°РјРµС‚СЂС‹: mode - С‚РёРї Р±РѕС‘РІ (0..3), start - РЅР°С‡Р°Р»СЊРЅР°СЏ РїРѕР·РёС†РёСЏ СЂРµР№С‚РёРЅРіР°,
+ // count - РєРѕР»-РІРѕ РјРµСЃС‚, plrname - РІС‹РґРµР»РёС‚СЊ СЃС‚СЂРѕРєСѓ СЃ РёРјРµРЅРµРј РґР°РЅРЅРѕРіРѕ РёРіСЂРѕРєР°
+ // Р РµР·СѓР»СЊС‚Р°С‚: 1-СЏ СЃС‚СЂРѕРєР° - СЃРїРёСЃРѕРє СЃС‚СЂР°РЅРёС†, РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЃС‚СЂРѕРєРё - '<tr><td>...'
  function RankingRequest:AnsiString; stdcall;
- // параметры: name=xxx, либо id=xxx
+ // РїР°СЂР°РјРµС‚СЂС‹: name=xxx, Р»РёР±Рѕ id=xxx
  function ProfileRequest:AnsiString; stdcall;
- // Аккаунт текущего игрока
+ // РђРєРєР°СѓРЅС‚ С‚РµРєСѓС‰РµРіРѕ РёРіСЂРѕРєР°
  function AccountRequest:AnsiString; stdcall;
- // id = topic.id, [msgid=id сообщения, которое не надо сворачивать]
+ // id = topic.id, [msgid=id СЃРѕРѕР±С‰РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ РЅРµ РЅР°РґРѕ СЃРІРѕСЂР°С‡РёРІР°С‚СЊ]
  function ThreadRequest:AnsiString; stdcall;
 
  function ChapterRequest:AnsiString; stdcall;
- // p=TEMPLATE - запрос страницы по шаблону
+ // p=TEMPLATE - Р·Р°РїСЂРѕСЃ СЃС‚СЂР°РЅРёС†С‹ РїРѕ С€Р°Р±Р»РѕРЅСѓ
  function PageRequest:AnsiString; stdcall;
  // File={uploaded file}
  function AttachFileRequest:AnsiString; stdcall;
@@ -66,26 +66,26 @@ interface
  function SearchRequest:AnsiString; stdcall;
 
  function PostMsgRequest:AnsiString; stdcall;
- // Запрос на авторизацию: параметры: login и password, возвращает куку TOKEN (http-only)
+ // Р—Р°РїСЂРѕСЃ РЅР° Р°РІС‚РѕСЂРёР·Р°С†РёСЋ: РїР°СЂР°РјРµС‚СЂС‹: login Рё password, РІРѕР·РІСЂР°С‰Р°РµС‚ РєСѓРєСѓ TOKEN (http-only)
  function LoginRequest:AnsiString; stdcall;
- // Параметр backurl - адрес редиректа на который будет перенаправление. Удаляет куку TOKEN
+ // РџР°СЂР°РјРµС‚СЂ backurl - Р°РґСЂРµСЃ СЂРµРґРёСЂРµРєС‚Р° РЅР° РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ РїРµСЂРµРЅР°РїСЂР°РІР»РµРЅРёРµ. РЈРґР°Р»СЏРµС‚ РєСѓРєСѓ TOKEN
  function LogoutRequest:AnsiString; stdcall;
  function DuelStat:AnsiString; stdcall;
  function ListHeaders:AnsiString; stdcall;
  function DumpData:AnsiString; stdcall;
  function DefaultPage:AnsiString; stdcall;
 
- // Служебный запрос
+ // РЎР»СѓР¶РµР±РЅС‹Р№ Р·Р°РїСЂРѕСЃ
  function IndexForumRequest:AnsiString; stdcall;
 
- // Проверяет наличие куки VID и в случае отсутствия - выставляет куку и заносит данные в таблицу visits 
+ // РџСЂРѕРІРµСЂСЏРµС‚ РЅР°Р»РёС‡РёРµ РєСѓРєРё VID Рё РІ СЃР»СѓС‡Р°Рµ РѕС‚СЃСѓС‚СЃС‚РІРёСЏ - РІС‹СЃС‚Р°РІР»СЏРµС‚ РєСѓРєСѓ Рё Р·Р°РЅРѕСЃРёС‚ РґР°РЅРЅС‹Рµ РІ С‚Р°Р±Р»РёС†Сѓ visits 
  procedure CheckSource;
- // Проверяет залогинен ли юзер и заполняет UserID. Также определяет язык в clientLang
+ // РџСЂРѕРІРµСЂСЏРµС‚ Р·Р°Р»РѕРіРёРЅРµРЅ Р»Рё СЋР·РµСЂ Рё Р·Р°РїРѕР»РЅСЏРµС‚ UserID. РўР°РєР¶Рµ РѕРїСЂРµРґРµР»СЏРµС‚ СЏР·С‹Рє РІ clientLang
  procedure CheckLogin;
- // Заполняет профиль юзера (если он авторизован)
+ // Р—Р°РїРѕР»РЅСЏРµС‚ РїСЂРѕС„РёР»СЊ СЋР·РµСЂР° (РµСЃР»Рё РѕРЅ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ)
  function GetUserProfile:TUserProfile;
 
- // Форматирует дату с учётом языка текущего юзера (clientLang)
+ // Р¤РѕСЂРјР°С‚РёСЂСѓРµС‚ РґР°С‚Сѓ СЃ СѓС‡С‘С‚РѕРј СЏР·С‹РєР° С‚РµРєСѓС‰РµРіРѕ СЋР·РµСЂР° (clientLang)
  function FormatDate(d:TDateTime;short:boolean=false):AnsiString;
 
  function IsAdmin(const p:TUserProfile):boolean;
@@ -95,7 +95,7 @@ implementation
  uses CrossPlatform,SysUtils,logging,dcpMD5a,ranking,UCalculating,forum,NetCommon,udict,Search;
 
  const
-  loginSalt='AstraL';
+  loginSalt='';
 
  type
   TRequestRec=record
@@ -246,7 +246,7 @@ implementation
    edit:=IntParam('edit',0)>0;
    email:='';
    emailVerify:='';
-   // Запрашивается собственный профайл?
+   // Р—Р°РїСЂР°С€РёРІР°РµС‚СЃСЏ СЃРѕР±СЃС‚РІРµРЅРЅС‹Р№ РїСЂРѕС„Р°Р№Р»?
    if edit then begin
     CheckLogin;
     profile:=GetUserProfile;
@@ -350,7 +350,7 @@ implementation
 
      // Custom avatar file
      if fName='customavatar' then begin
-      // Сохранить картинку в /faces/temp
+      // РЎРѕС…СЂР°РЅРёС‚СЊ РєР°СЂС‚РёРЅРєСѓ РІ /faces/temp
       repeat
        i:=100000+(MyTickCount+random(1000)) mod 900000;
       until (not FileExists(rootDir+'faces\temp\face'+inttostr(i)+'.jpg')) and
@@ -439,7 +439,7 @@ implementation
     exit;
    end;
    if Param('f')<>'' then begin
-    // Изменение какого-либо параметра аккаунта
+    // РР·РјРµРЅРµРЅРёРµ РєР°РєРѕРіРѕ-Р»РёР±Рѕ РїР°СЂР°РјРµС‚СЂР° Р°РєРєР°СѓРЅС‚Р°
     result:=UpdateAccount;
     result:=FormatHeaders('text/html','','')+result;
     exit;
@@ -469,7 +469,7 @@ implementation
    if userID=0 then raise E403.Create('You must be logged in to upload files');
    fileData:=Param('File');
    if fileData='' then raise E500.Create('File upload error: no data');
-   // Предварительная запись в базе
+   // РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅР°СЏ Р·Р°РїРёСЃСЊ РІ Р±Р°Р·Рµ
    fType:=Lowercase(ExtractFileExt(uploadedFileName));
    if copy(fType,1,1)='.' then delete(fType,1,1);
    if not ((fType='jpg') or
@@ -571,7 +571,7 @@ implementation
    if userID=0 then raise E403.Create('You must be logged in to upload files');
    fileData:=Param('File');
    if fileData='' then raise E500.Create('File upload error: no data');
-   // Предварительная запись в базе
+   // РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅР°СЏ Р·Р°РїРёСЃСЊ РІ Р±Р°Р·Рµ
    fType:=Lowercase(ExtractFileExt(uploadedFileName));
    if copy(fType,1,1)='.' then delete(fType,1,1);
    if not ((fType='jpg') or
@@ -626,13 +626,13 @@ implementation
   begin
    CheckLogin;
    profile:=GetUserProfile;
-   id:=IntParam('id',0); // ID темы
-   msgToSHow:=IntParam('msgid',0); // ID сообщения, которое должно быть видно
-   start:=IntParam('start',0); // порядковый номер сообщения в теме, с которого начать (0 - первое)
-   count:=IntParam('count',0); // кол-во сообщений (0 - сформировать всю тему в урезанном виде)
+   id:=IntParam('id',0); // ID С‚РµРјС‹
+   msgToSHow:=IntParam('msgid',0); // ID СЃРѕРѕР±С‰РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІРёРґРЅРѕ
+   start:=IntParam('start',0); // РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ СЃРѕРѕР±С‰РµРЅРёСЏ РІ С‚РµРјРµ, СЃ РєРѕС‚РѕСЂРѕРіРѕ РЅР°С‡Р°С‚СЊ (0 - РїРµСЂРІРѕРµ)
+   count:=IntParam('count',0); // РєРѕР»-РІРѕ СЃРѕРѕР±С‰РµРЅРёР№ (0 - СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ РІСЃСЋ С‚РµРјСѓ РІ СѓСЂРµР·Р°РЅРЅРѕРј РІРёРґРµ)
    temp.Put('THREAD_ID',id);
    result:=FormatThread(id,profile,start,count,msgToShow);
-   if count=0 then // добавим редактор в конец темы
+   if count=0 then // РґРѕР±Р°РІРёРј СЂРµРґР°РєС‚РѕСЂ РІ РєРѕРЅРµС† С‚РµРјС‹
     result:=result+#13#10+BuildTemplate('#THREAD_FOOTER');
    result:=FormatHeaders('text/html','','')+result;
   end;
@@ -699,13 +699,13 @@ implementation
     result:=FormatError(404,'Bad template: '+page);
   end;
 
- // Добавление сообщения форума
- // Параметры: topic, msg (текст сообщения), att - список id аттачей,
- //  title (если новая тема - имя темы), ch (chapter), lang (язык), msgid (если сообщение редактируется)
- // Ответ:
- // 1 строка: OK, либо текст ошибки,
- // 2 строка: параметры (зависят от запроса)
- // остальные строки: html-код сообщения (целиком)
+ // Р”РѕР±Р°РІР»РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ С„РѕСЂСѓРјР°
+ // РџР°СЂР°РјРµС‚СЂС‹: topic, msg (С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ), att - СЃРїРёСЃРѕРє id Р°С‚С‚Р°С‡РµР№,
+ //  title (РµСЃР»Рё РЅРѕРІР°СЏ С‚РµРјР° - РёРјСЏ С‚РµРјС‹), ch (chapter), lang (СЏР·С‹Рє), msgid (РµСЃР»Рё СЃРѕРѕР±С‰РµРЅРёРµ СЂРµРґР°РєС‚РёСЂСѓРµС‚СЃСЏ)
+ // РћС‚РІРµС‚:
+ // 1 СЃС‚СЂРѕРєР°: OK, Р»РёР±Рѕ С‚РµРєСЃС‚ РѕС€РёР±РєРё,
+ // 2 СЃС‚СЂРѕРєР°: РїР°СЂР°РјРµС‚СЂС‹ (Р·Р°РІРёСЃСЏС‚ РѕС‚ Р·Р°РїСЂРѕСЃР°)
+ // РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЃС‚СЂРѕРєРё: html-РєРѕРґ СЃРѕРѕР±С‰РµРЅРёСЏ (С†РµР»РёРєРѕРј)
  function PostMsgRequest:AnsiString; stdcall;
   var
    id,thread,msgid,guild,flags:integer;
@@ -724,7 +724,7 @@ implementation
    temp.Put('THREAD_ID',thread);
    error:=''; status:='';
    if thread=0 then begin
-    // новая тема
+    // РЅРѕРІР°СЏ С‚РµРјР°
     try
      ValidateForumMessage(msgtext);
     except
@@ -763,7 +763,7 @@ implementation
    newUser:=cookie('VID')='';
 
    if newUser then begin
-    // Были ли запросы с этого же IP за последний час? Если были - юзер не новый
+    // Р‘С‹Р»Рё Р»Рё Р·Р°РїСЂРѕСЃС‹ СЃ СЌС‚РѕРіРѕ Р¶Рµ IP Р·Р° РїРѕСЃР»РµРґРЅРёР№ С‡Р°СЃ? Р•СЃР»Рё Р±С‹Р»Рё - СЋР·РµСЂ РЅРµ РЅРѕРІС‹Р№
     dd:=Now-1/24;
     for i:=0 to high(lastRequests) do
      if (lastRequests[i].ip=clientIP) and
@@ -794,8 +794,8 @@ implementation
    lastRequests[nextRequest].date:=Now;
   end;
 
- // Загружает сессии из БД в кэш (предыдущее содержимое кэша для данного профиля удаляется)
- // Возвращает индекс обновлённого слота кэша (либо -1, если профиль не найден)
+ // Р—Р°РіСЂСѓР¶Р°РµС‚ СЃРµСЃСЃРёРё РёР· Р‘Р” РІ РєСЌС€ (РїСЂРµРґС‹РґСѓС‰РµРµ СЃРѕРґРµСЂР¶РёРјРѕРµ РєСЌС€Р° РґР»СЏ РґР°РЅРЅРѕРіРѕ РїСЂРѕС„РёР»СЏ СѓРґР°Р»СЏРµС‚СЃСЏ)
+ // Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ РѕР±РЅРѕРІР»С‘РЅРЅРѕРіРѕ СЃР»РѕС‚Р° РєСЌС€Р° (Р»РёР±Рѕ -1, РµСЃР»Рё РїСЂРѕС„РёР»СЊ РЅРµ РЅР°Р№РґРµРЅ)
  function CacheProfileSessions(pid:integer):integer;
   var
    i,n:integer;
@@ -804,11 +804,11 @@ implementation
    result:=-1;
    gSect.Enter;
    try
-   // удаление старых записей
+   // СѓРґР°Р»РµРЅРёРµ СЃС‚Р°СЂС‹С… Р·Р°РїРёСЃРµР№
    for i:=0 to high(sessionCache) do
     if sessionCache[i].profileID=pid then sessionCache[i].profileID:=0;
 
-   // Поиск свободного/случайного слота
+   // РџРѕРёСЃРє СЃРІРѕР±РѕРґРЅРѕРіРѕ/СЃР»СѓС‡Р°Р№РЅРѕРіРѕ СЃР»РѕС‚Р°
    n:=random(high(sessionCache));
    for i:=0 to high(sessionCache) do
     if sessionCache[i].profileID=0 then begin
@@ -837,7 +837,7 @@ implementation
    end;
   end;
 
- // Проверяет существование указанной сессии у профиля (сперва в кэше, а если в кэше нет - грузит из БД)
+ // РџСЂРѕРІРµСЂСЏРµС‚ СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ СѓРєР°Р·Р°РЅРЅРѕР№ СЃРµСЃСЃРёРё Сѓ РїСЂРѕС„РёР»СЏ (СЃРїРµСЂРІР° РІ РєСЌС€Рµ, Р° РµСЃР»Рё РІ РєСЌС€Рµ РЅРµС‚ - РіСЂСѓР·РёС‚ РёР· Р‘Р”)
  function ProfileHasSession(pid,session:integer):boolean;
   var
    i,j,n:integer;
@@ -846,7 +846,7 @@ implementation
    dt:TDateTime;
   begin
    result:=false;
-   // сперва проверим в кэше
+   // СЃРїРµСЂРІР° РїСЂРѕРІРµСЂРёРј РІ РєСЌС€Рµ
    cached:=false;
    dt:=Now;
    gSect.Enter;
@@ -865,7 +865,7 @@ implementation
     gSect.Leave;
    end;
 
-   // Если в кэше нет записей для данного профиля - загрузим их (даже если там 0)
+   // Р•СЃР»Рё РІ РєСЌС€Рµ РЅРµС‚ Р·Р°РїРёСЃРµР№ РґР»СЏ РґР°РЅРЅРѕРіРѕ РїСЂРѕС„РёР»СЏ - Р·Р°РіСЂСѓР·РёРј РёС… (РґР°Р¶Рµ РµСЃР»Рё С‚Р°Рј 0)
    if not cached then begin
     n:=CacheProfileSessions(pid);
     if n>=0 then begin
@@ -882,7 +882,7 @@ implementation
    end;
   end;
 
- // Добавление новой сессии к профилю
+ // Р”РѕР±Р°РІР»РµРЅРёРµ РЅРѕРІРѕР№ СЃРµСЃСЃРёРё Рє РїСЂРѕС„РёР»СЋ
  procedure AddSessionToProfile(pid,session:integer);
   var
    i,n:integer;
@@ -939,7 +939,7 @@ implementation
    if (clientLang='') or
       (length(clientLang)<>2) or
       (pos(clientLang,templates.Get('SUPPORTED_LANGUAGES'))=0) then begin
-    // Выберем подходящий язык по заголовкам
+    // Р’С‹Р±РµСЂРµРј РїРѕРґС…РѕРґСЏС‰РёР№ СЏР·С‹Рє РїРѕ Р·Р°РіРѕР»РѕРІРєР°Рј
     clientLang:='EN';
     al:=GetHeader(headers,'HTTP_Accept_Language');
     if pos('ru',al)>0 then clientLang:='RU';
@@ -948,12 +948,12 @@ implementation
    temp.Put('LANG_LC',lowercase(clientLang));
    token:=Cookie('TOKEN');
    if authToken<>'' then begin
-    // Авторизация по authtoken
+    // РђРІС‚РѕСЂРёР·Р°С†РёСЏ РїРѕ authtoken
     authToken:=DecodeHex(authToken);
     sa:=SplitA(#9,authtoken);
     sb:=db.Query('SELECT pwd,id FROM players WHERE email="'+SQLSafe(sa[0])+'"');
     if (db.rowCount=1) and (uppercase(sb[0])=uppercase(sa[1])) then begin
-     // Проверка IP
+     // РџСЂРѕРІРµСЂРєР° IP
      sb:=db.Query('SELECT info FROM eventlog WHERE playerid='+sb[1]+' AND event="LOGIN" ORDER BY id DESC LIMIT 1');
      if (db.rowCount=1) then
       if (pos(clientIP,sb[0])>0) then begin
@@ -965,17 +965,17 @@ implementation
     exit;
    end;
    if token='' then exit;
-   sa:=SplitA(',',token); // части token-а
+   sa:=SplitA(',',token); // С‡Р°СЃС‚Рё token-Р°
    if length(sa)<3 then exit;
-   // Проверка подписи токена
+   // РџСЂРѕРІРµСЂРєР° РїРѕРґРїРёСЃРё С‚РѕРєРµРЅР°
    p:=LastDelimiter(',',token);
    if ShortMD5(copy(token,1,p-1)+loginSalt)<>sa[high(sa)] then begin
     LogMsg('WARN: Invalid token hash! ',logWarn);
     exit;
    end;
-   // Проверка сессии
+   // РџСЂРѕРІРµСЂРєР° СЃРµСЃСЃРёРё
    id:=StrToIntDef(sa[0],0);
-   session:=StrToIntDef(sa[1],-1); // сессия из токена
+   session:=StrToIntDef(sa[1],-1); // СЃРµСЃСЃРёСЏ РёР· С‚РѕРєРµРЅР°
    if not ProfileHasSession(id,session) then begin
     LogMsg(Format('Wrong session: %d for profile %d',[session,id]),logNormal);
     exit;
@@ -1016,7 +1016,7 @@ implementation
     result.notificationMode:=CharAt(sa[9],1);
     result.guild:='';
     if (result.playerID>0) and (result.network='') then begin
-     // Юзер имеет только игровой аккаунт -
+     // Р®Р·РµСЂ РёРјРµРµС‚ С‚РѕР»СЊРєРѕ РёРіСЂРѕРІРѕР№ Р°РєРєР°СѓРЅС‚ -
      sb:=db.Query('SELECT name,email,flags,avatar,created,realname,location,premium>Now(),guild FROM players WHERE id='+inttostr(result.playerID));
      if db.rowCount=1 then begin
       result.name:=sb[0];
@@ -1045,7 +1045,7 @@ implementation
    end;
   end;
 
- // Создаёт профиль c указанными данными, возвращает его ID
+ // РЎРѕР·РґР°С‘С‚ РїСЂРѕС„РёР»СЊ c СѓРєР°Р·Р°РЅРЅС‹РјРё РґР°РЅРЅС‹РјРё, РІРѕР·РІСЂР°С‰Р°РµС‚ РµРіРѕ ID
  procedure CreateUserProfile(var profile:TUserProfile);
   var
    sa:StringArr;
@@ -1060,7 +1060,7 @@ implementation
    ASSERT(db.insertID>0,'InsertID=0!');
   end;
 
- // Возвращает профиль игрока (если его не было - создаёт новый)
+ // Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСЂРѕС„РёР»СЊ РёРіСЂРѕРєР° (РµСЃР»Рё РµРіРѕ РЅРµ Р±С‹Р»Рѕ - СЃРѕР·РґР°С‘С‚ РЅРѕРІС‹Р№)
  function GetUserProfileForPlayer(playerID:integer):TUserProfile;
   var
    sa:StringArr;
@@ -1105,7 +1105,7 @@ implementation
   begin
    token:=param('t');
    temp:=param('temp')<>'';
-   // Передан токен - нужно проверить его и если всё в порядке - установить его в качестве куки
+   // РџРµСЂРµРґР°РЅ С‚РѕРєРµРЅ - РЅСѓР¶РЅРѕ РїСЂРѕРІРµСЂРёС‚СЊ РµРіРѕ Рё РµСЃР»Рё РІСЃС‘ РІ РїРѕСЂСЏРґРєРµ - СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РµРіРѕ РІ РєР°С‡РµСЃС‚РІРµ РєСѓРєРё
    if token<>'' then begin
     result:='OK'#13#10+token;
     SetCookie('TOKEN',token,not temp);
@@ -1144,7 +1144,7 @@ implementation
     end;
     if sa[2]=ShortMD5('AH'+pwd) then proceed:=true;
     if proceed then begin
-     // Пароль подходит
+     // РџР°СЂРѕР»СЊ РїРѕРґС…РѕРґРёС‚
      userProfile:=GetUserProfileForPlayer(playerID);
      userProfile.session:=1000+random(990000);
      // Create new session
