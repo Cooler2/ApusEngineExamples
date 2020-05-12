@@ -1,0 +1,362 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+ <title>#SERVER_NAME# Management</title>
+<style type="text/css">
+<!--
+.main { font-size:13px; }
+.box { border:1px solid #8080C0; border-radius:5px; -moz-border-radius: 5px;
+       background-color:white; box-shadow: 3px 3px 5px #99A;
+       font-size:13px; margin:8px; }
+.hint { border: 1px solid #888; border-radius: 2px; -moz-border-radius: 2px;
+        position:absolute; background-color:#EEE; box-shadow: 2px 2px 4px #99A;
+        font-family: Courier; font-size:12px; padding:3px; display: none; }
+.header { font-size:14px; font-weight:bold; background-color:#8080A0; color:white;
+          height:30px; text-align: center; vertical-align: center; }
+.list { font-family:courier; text-align: left; vertical-align: top; padding:1px; }
+.line { padding: 2px; }
+.line:nth-child(even) { background-color: #E8E8F0; }
+.item { padding:0px 4px 0px 4px; margin:2px; }
+.bg1 { background-color: #DDB }
+.bg2 { background-color: #ACC }
+.bg3 { background-color: #ADA }
+.bg4 { background-color: #DAA }
+pre { margin:0px; padding:0px; }
+body { font-family:Arial; font-size:13px; background-color: #C0C8D0; }
+a:visited {  text-decoration: none }
+a:link {  text-decoration: none }
+a:hover {  text-decoration: underline }
+.Menu { border-right:2px solid #B8B0C8; width:120px; font-weight:bold; }
+.Menu div { width:120px; height:25px; padding:8px 5px 0px 0px; cursor:pointer; text-align:right; }
+.SelTab { background-color:#B8B0C8; color:white; cursor:default !important; }
+-->
+</style>
+
+</head>
+<body onLoad='onLoad()'>
+<script type='text/javascript'>
+// Users: UserID|PlayerID|name|email|flags|(5)avatar|IP|country|idle|connected|(10)AS1|AS2|AS3|gold|heroic|(15)astralPower|premium|custFame|custLevel|clsFame|(20)clslevel|drFame|drLevel|level|botLevel|(25)crystals|draftID|room|guild
+// Duels: GameID|user1|user2|gametype|training|(5)turn|turns|turnDuration|gameDuration|finished|(10)timeout|scenario
+// Drafts: DraftID|user1|user2|user3|user4|(5)stage|round|created|started|timeout
+// Caravans: GuildName|cType|duration|slot1|...|slot8
+#DATA_BLOCK#
+// Connections: ID|remIP|remPort|country|status|age|idle|user|clientType
+#CONNECTIONS_BLOCK#
+
+var d=document;
+var userList=new Array;
+
+function ShowHint(obj,text,pos) {
+ var x=obj.offsetWidth+2, y=0;
+ if (pos==2) y=obj.offsetHeight;
+ while (obj) {
+  x+=obj.offsetLeft;
+  y+=obj.offsetTop;
+  obj=obj.offsetParent;
+ }
+ var hint=d.getElementById('Hint');
+ hint.innerHTML=text;
+ hint.style.display='block';
+ hint.style.left=x;
+ hint.style.top=y;
+}
+
+function HideHint() {
+ d.getElementById('Hint').style.display='none';
+}
+
+function SafeString(str) {
+ str=str.replace(/</g,'&lt;');
+ str=str.replace(/>/g,'&gt;');
+ return str;
+}
+
+function StrPad(str,len) {
+ while (str.length<len) { str=' '+str; }
+ return SafeString(str);
+}
+function StrPadR(str,len) {
+ while (str.length<len) { str=str+' '; }
+ if (str.length>len) { str=str.substr(0,len); }
+ return SafeString(str);
+}
+
+function FillUsersList() {
+ var txt='';
+ var cnt=0;
+ if (users.length<2) txt='  No users online';
+ for (i=1;i<users.length;i++) {
+  var items=users[i].split("\|");
+  var userID=items[0];
+  userList[userID]={playerID:items[1], name:items[2], connected:items[9] };
+  var uName=StrPad(items[0],3)+' '+StrPadR(items[2],18);
+  if (items[24]<=0) { uName='<b>'+uName+'</b>'; cnt++; }
+  var loc='     ';
+  if (items[9]>0) loc=' duel';
+  txt=txt+'<div class=line onMouseOver="UserOver(this,'+i+')" onMouseOut="HideHint()">'+
+   uName+loc+StrPad(items[23],3)+' ('+items[18]+'/'+items[20]+'/'+items[22]+')'+items[4]+'</div>';
+ }
+ var userlist=d.getElementById('UsersList');
+ userlist.innerHTML='<pre>'+txt+'</pre>';
+ d.getElementById('UsersCount').innerHTML=cnt+' human, '+(users.length-1)+' total';
+}
+
+function UserName(UID) {
+ if (userList[UID]) { return SafeString(userList[UID].name); } else { return 'N/A'; }
+}
+
+function FillGamesList() {
+ var txt='';
+ if (games.length<2) txt='  There are no games';
+ for (i=1;i<games.length;i++) {
+  var items=games[i].split("\|");
+  var user1=UserName(items[1]);
+  var user2=UserName(items[2]);
+  if (items[5]==1) user1='<u>'+user1+'</u>';
+  if (items[5]==2) user2='<u>'+user2+'</u>';
+  var desc='<b>'+user1+'</b> vs <b>'+user2+'</b>';
+  txt=txt+'<div class=line onMouseOver="GameOver(this,'+i+')" onMouseOut="HideHint()">'+
+    StrPad(items[0],2)+' '+desc+', type:'+items[3]+(items[4]>0? 'T':'')+(items[9]>0? 'F':'')+', '+items[8]+'</div>';
+ }
+ var gameslist=d.getElementById('GamesList');
+ gameslist.innerHTML='<pre>'+txt+'</pre>';
+ d.getElementById('GamesCount').innerHTML=games.length-1;
+}
+
+function FillDraftsList() {
+ var txt='';
+ if (drafts.length<2) txt='  There are no drafts';
+ for (i=1;i<drafts.length;i++) {
+  var items=drafts[i].split("\|");
+  var user1=UserName(items[1]);
+  var user2=UserName(items[2]);
+  var user3=UserName(items[3]);
+  var user4=UserName(items[4]);
+  var desc=user1+','+user2+','+user3+','+user4;
+  txt=txt+'<div class=line onMouseOver="DraftOver(this,'+i+')" onMouseOut="HideHint()">'+
+    StrPad(items[0],3)+' '+items[5]+'/'+items[6]+' '+desc+'</div>';
+ }
+ var draftslist=d.getElementById('DraftsList');
+ draftslist.innerHTML='<pre>'+txt+'</pre>';
+}
+
+function FillCaravansList() {
+ var txt='';
+ if (caravans.length<2) txt='  There are no running caravans';
+ for (i=1;i<caravans.length;i++) {
+  var items=caravans[i].split("\|");
+  txt=txt+'<div class=line>Guild: "'+items[0]+'", type='+items[1]+', '+items[2];
+  for (j=1;j<=8;j++) {
+   var s=items[j+2].substr(0,1);
+   if (s=='1') items[j+2]='<b>'+items[j+2]+'</b>';
+   if (s=='2') items[j+2]='<span style="color:#070">'+items[j+2]+'</span>';
+   if (s=='3') items[j+2]='<span style="color:#700">'+items[j+2]+'</span>';
+   txt=txt+'<br> '+j+') '+items[j+2];
+  }
+ }
+ var caravanslist=d.getElementById('CaravansList');
+ caravanslist.innerHTML='<pre>'+txt+'</pre>';
+}
+
+function FillConList() {
+ var txt='', ip='', line=0;
+ for (i=1;i<connections.length;i++) {
+  var items=connections[i].split("\|");
+  if (ip != items[1]) {
+   line++; ip=items[1];
+   txt=txt+'</div><div class=line>'+line+'. '+ip+': ';
+  }
+  var cID=items[0];
+  if (items[8] != 0) cID='<b>'+cID+'</b>';
+  txt=txt+'<span class="item bg'+items[4]+'" onMouseOver="ConOver(this,'+i+')" onMouseOut="HideHint()">'+cID+'</span>';
+ }
+ txt=txt+'</div>';
+ var conlist=d.getElementById('ConList');
+ conlist.innerHTML=txt;
+ d.getElementById('ConsCount').innerHTML=connections.length-1;
+}
+
+function UserOver(obj,idx) {
+ var items=users[idx].split("\|");
+ var hp=items[14].split("/");
+ ShowHint(obj,'<pre>PlayerID:  '+items[1]+"\nGuild: "+items[28]+"\nEmail:   "+items[3]+"\nIP:     "+items[6]+
+  "\nGold:      "+items[13]+"\nCrystals:  "+items[25]+ "\nHeroic:    "+hp[0]+" / "+hp[1]+"\nAstPower:  "+items[15]+"\nPremium:   "+items[16]+
+  "\nCustom:    "+items[18]+' ('+items[17]+'f)'+' AS: '+items[10]+
+  "\nClassic:   "+items[20]+' ('+items[19]+'f)'+' AS: '+items[11]+
+  "\nDraft:     "+items[22]+' ('+items[21]+'f)'+' AS: '+items[12]+
+  '</pre>',1);
+}
+
+function GameOver(obj,idx) {
+ var items=games[idx].split("\|");
+ ShowHint(obj,'<pre>     '+items[1]+" vs "+items[2]+
+  "\nTurns:    "+items[6]+ "\nTurnTime: "+items[7]+"\nGameTime: "+items[8]+"\nTimeout:  "+items[10]+"\nFinished: "+items[9]+'</pre>',1);
+}
+
+function DraftOver(obj,idx) {
+ // not yet implemented!
+ var items=drafts[idx].split("\|");
+ ShowHint(obj,'<pre>     '+items[1]+" vs "+items[2]+
+  "\nTurns:    "+items[6]+ "\nTurnTime: "+items[7]+"\nGameTime: "+items[8]+"\nTimeout:  "+items[10]+"\nFinished: "+items[9]+'</pre>',1);
+}
+
+function Request(url,callback,postdata) {
+ ro = new XMLHttpRequest();
+ if (postdata) {
+  ro.open('POST',url);
+  ro.onreadystatechange = callback;
+  ro.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  ro.send(postdata);
+ } else {
+  ro.open('GET',url);
+  ro.onreadystatechange = callback;
+  ro.send(null);
+ }
+}
+
+var ro; // request object
+
+function onMsgToAll() {
+ if(ro.readyState == 4) {
+  var response = ro.responseText;
+  alert(response);
+ }
+}
+
+function PostMsgToAll() {
+ var msgText=d.getElementById('MsgToAll').value;
+ Request('/admincmd',onMsgToAll,'action=msgtoall&msg='+encodeURIComponent(msgText));
+}
+
+function PostMsg(nosender) {
+ var name=d.getElementById('InputPlrName1').value;
+ var msgText=d.getElementById('MsgToAll').value;
+ Request('/admincmd',onMsgToAll,'action=msgto&target='+encodeURIComponent(name)+(nosender? '&nosender=1':'')+'&msg='+encodeURIComponent(msgText));
+}
+
+function KickPlayer() {
+ var name=d.getElementById('InputPlrName1').value;
+ Request('/admincmd',onMsgToAll,'action=kickPlayer&plrname='+encodeURIComponent(name));
+}
+
+function RequestGameLog() {
+ var name=d.getElementById('InputPlrName1').value;
+ Request('/admincmd',onMsgToAll,'action=requestgamelog&plrname='+encodeURIComponent(name));
+}
+
+function Restart20() {
+ Request('/admincmd',onMsgToAll,'action=restart20');
+}
+
+function DumpData() {
+ Request('/admincmd',onMsgToAll,'action=dumpdata');
+}
+function ReloadGuilds() {
+ Request('/admincmd',onMsgToAll,'action=reloadguilds');
+}
+
+function Grant(what) {
+ var player=encodeURIComponent(d.getElementById('InputPlrName').value);
+ var amount=encodeURIComponent(d.getElementById('InputGrantAmount').value);
+ var reason=encodeURIComponent(d.getElementById('InputGrantReason').value);
+ Request('/cmd?action='+what+'&sign=EA62A85345BE&player='+player+'&p1='+amount+'&p2=0&p3='+reason,onMsgToAll);
+}
+
+var conStatus=new Array('-','Reading','Waiting','Writing','Closing');
+function ConOver(obj,idx) {
+ var items=connections[idx].split("\|");
+ ShowHint(obj,'<pre>UserID:   '+items[7]+"\nPort:     "+items[2]+
+   "\nCountry:  "+items[3]+"\nStatus:   "+conStatus[items[4]]+
+   "\nAge:      "+items[5]+"\nIdle:     "+items[6]+'</pre>',2);
+}
+
+var curBlock=1;
+function ShowBlock(n) {
+ if (n!=curBlock) {
+  d.getElementById('block'+curBlock).style.display='none';
+  d.getElementById('bTab'+curBlock).classList.remove('SelTab');
+  curBlock=n;
+  d.getElementById('block'+curBlock).style.display='block';
+  d.getElementById('bTab'+curBlock).classList.add('SelTab');
+ }
+}
+
+function onLoad() {
+ FillUsersList();
+ FillGamesList();
+ FillDraftsList();
+ FillConList();
+ FillCaravansList();
+}
+function Logout() {
+ d.cookie='AHSERVER_TOKEN=; path=/; expires=Mon, 4-Oct-2099 00:00:00 GMT';
+ window.location.reload();
+}
+
+</script>
+<table align=center>
+ <tr>
+  <td align=center valign=top rowspan=2>
+   <table class=box cellspacing=0 width=400>
+    <tr><td class=header>Users (<span id=UsersCount></span>)
+    <tr><td class=list valign=top align=left id='UsersList'>
+   </table>
+  <td colspan=2 align=center valign=top height=140>
+   <table width=800 height=140 class=box cellspacing=0 cellpadding=0>
+    <tr><td class=header colspan=2>Server management
+    <tr><td valign=top class=Menu>
+          <div id=bTab1 class=SelTab onClick='ShowBlock(1)'>Status</div>
+          <div id=bTab2 onClick='ShowBlock(2)'>Commands</div>
+          <div id=bTab3 onClick='ShowBlock(3)'>Grant</div>
+        <td valign=center align=center>
+         <div id=block1>#STATUS_BLOCK#</div>
+         <div id=block2 style='display:none;'>
+            <div style='padding:6px;padding-bottom:0px;' align=left><span style='width:90px; display:inline-block; text-align:right;'>Player:&nbsp;</span><input type=text id=InputPlrName1 style='width:105px;' name='PlayerName'> <input type=button value="Kick Player" onClick='KickPlayer()'>
+            <input type=button value="Request Log" onClick='RequestGameLog()'>
+            </div>
+            <div style='padding:6px;' align=left><span style='width:90px; display:inline-block; text-align:right;'>Message:&nbsp;</span><input type=text id=MsgToAll style='width:320px;' name='MsgText'>
+             <input type=button value='Post' onClick='PostMsg(false)'>
+             <input type=button value='Post Gray' onClick='PostMsg(true)'>
+             <input type=button value='Post to All' onClick='PostMsgToAll()'>
+            </div>
+            <div style='padding:6px;'><input type=button value="Restart in 20 min" onClick='Restart20()'> &nbsp;
+             <input type=button value="Dump Data" onClick='DumpData()'>
+             <input type=button value="Reload Guilds" onClick='ReloadGuilds()'>
+            </div>
+         </div>
+         <div id=block3 style='display:none;'>
+            <div align=center>Player: <input type=text id=InputPlrName style='width:105px;' name='PlayerName'>
+              &nbsp;&nbsp; Amount: <input type=text id=InputGrantAmount style='width:50px;'>
+              &nbsp;&nbsp; Reason: <input type=text id=InputGrantReason style='width:250px;' name='Reason'>
+            <div align=center style='padding:8px;'>
+             <input type=button value='Grant Gold' onClick='Grant("grantgold")' style='width:120px'> &nbsp;
+             <input type=button value='Grant Premium' onClick='Grant("grantpremium")' style='width:120px'>
+             <input type=button value='Debug' onClick='Grant("decreasefame")' style='width:120px'>
+         </div>
+
+   </table>
+  <tr>
+  <td align=center valign=top>
+   <table class=box cellspacing=0 width=480>
+    <tr><td class=header>Games (<span id=GamesCount></span>)
+    <tr><td class=list valign=top align=left id='GamesList'>
+   </table>
+   <br>
+   <table class=box cellspacing=0 width=480>
+    <tr><td class=header>Drafts
+    <tr><td class=list valign=top align=left id='DraftsList'>
+   </table>
+   <br>
+   <table class=box cellspacing=0 width=480>
+    <tr><td class=header>Caravans
+    <tr><td class=list valign=top align=left id='CaravansList'>
+   </table>
+  <td align=center valign=top>
+   <table class=box cellspacing=0 width=300>
+    <tr><td class=header>Connections (<span id=ConsCount></span>)
+    <tr><td class=list valign=top align=left id='ConList'>
+   </table>
+</table>
+<div id='Hint' class=hint></div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+ <title>Server Log</title>
+<style type="text/css">
+<!--
+.main { font-size:13px; }
+.toolbox { position:fixed; left:0px; top:0px; width:200px; height:1600px;
+                background-color:#B0C0D8;}
+.groupbox { border:1px solid #C8D8E8; border-radius:4px; -moz-border-radius: 4px;
+       background-color:#C8D8E8; font-size:13px; margin:8px; padding:3px; margin-bottom:20px; }
+.button { margin:5px; padding:2px; width:120px;}
+.hdr { background-color:#B0C0D8; font-weight:bold; text-align:center; padding:3px; margin-bottom:5px; }
+.item { padding-left:3px; padding-right:3px; margin:2px; border: 1px solid #D4DADF; border-radius:2px; -moz-border-radius: 2px; background-color:#D4DADF}
+.tool { margin:8px; }
+.inp1 { width:115px; }
+.fld1 { width:168px; text-align:right; padding:2px;}
+body { font-family:Arial; font-size:13px; background-color: white; }
+a:visited {  text-decoration: none }
+a:link {  text-decoration: none }
+a:hover {  text-decoration: underline }
+.c0 { color:#AAA;}
+.c1 { color:#666;}
+.c2 { color:#000;}
+.c3 { color:#000; font-weight:bold}
+.c4 { color:#800; font-weight:bold}
+.c5 { color:#A00; font-weight:bold}
+.g0 { background-color: #F0F0FF}
+.g2 { background-color: #FFF0F0}
+.g3 { background-color: #F0FFF0}
+-->
+</style>
+
+</head>
+<body onLoad='onLoad()'>
+<script type='text/javascript'>
+
+var d=document;
+var lines=new Array('');
+var ro;
+
+function handleResponse()
+{
+ if(ro.readyState == 4) {
+  response = ro.responseText;
+  response=response.replace(/</g,'&lt;');
+  response=response.replace(/>/g,'&gt;');
+  lines=response.split("\0");
+  ApplyFilter();
+  window.scrollTo(0,999999);
+ }
+}
+
+function Request() {
+ ro = new XMLHttpRequest();
+ var dateFrom=d.getElementById('dateFrom').value;
+ var dateTo=d.getElementById('dateTo').value;
+ var minLevel=d.getElementById('minLevel').value;
+ var url='log?dateFrom='+encodeURIComponent(dateFrom)+'&dateTo='+encodeURIComponent(dateTo)+'&minLevel='+minLevel;
+ ro.open('GET',url);
+ ro.onreadystatechange = handleResponse;
+ ro.send(null);
+}
+
+function onLoad() {
+ d.getElementById('ManageMemLog').value=#MANAGEMEMLOG#;
+ d.getElementById('ManageFileLog').value=#MANAGEFILELOG#;
+ Request();
+}
+
+function Logout() {
+ d.cookie='AHSERVER_TOKEN=; path=/; expires=Mon, 4-Oct-2099 00:00:00 GMT';
+ window.location.reload();
+}
+
+function SetLogLevel() {
+ ro = new XMLHttpRequest();
+ var token=d.getElementById('ManageToken').value;
+ if (token=='') {
+  alert('Please enter control token!');
+  return;
+ }
+ var memlog=d.getElementById('ManageMemLog').value;
+ var filelog=d.getElementById('ManageFileLog').value;
+ var log1=d.getElementById('ManageLog1').checked? '1':'0';
+ var log2=d.getElementById('ManageLog2').checked? '1':'0';
+ var log3=d.getElementById('ManageLog3').checked? '1':'0';
+ var url='log?token='+encodeURIComponent(token)+'&memlog='+memlog+'&filelog='+filelog+'&groups='+log1+log2+log3;
+ ro.open('GET',url);
+ ro.onreadystatechange = handleResponse2;
+ ro.send(null);
+}
+
+function handleResponse2()
+{
+ if(ro.readyState == 4) {
+  alert(ro.responseText);
+ }
+}
+
+
+function ApplyFilter() {
+ var minLevel=d.getElementById('filterLevel').value;
+ var txt='';
+ for (i=0;i<lines.length;i++) {
+  var cls='';
+  if (lines[i].match(/\d\d:\d\d:\d\d\.\d\d\d\s(\d)(\d)\s/)) {
+   if (RegExp.$2<minLevel) continue;
+   cls='class="g'+RegExp.$1+' c'+RegExp.$2+'"';
+  }
+  txt=txt+'<div '+cls+'>'+lines[i]+'</div>';
+ }
+ d.getElementById('Content').innerHTML=txt;
+}
+</script>
+<div id='Content' style='padding-left:210px'>
+</div>
+<div id='ToolBox' class=toolbox>
+ <div class=groupbox><div class=hdr>Query</div>
+  <div class=fld1>Level: <select id='minLevel'><option value=0>0 - Debug <option value=1 selected>1 - Info <option value=2>2 - Normal<option value=3>3 - Warn</select></div>
+  <div class=tool>Groups:</div>
+   <div class=fld1>From: <input id='dateFrom' type=text class=inp1 value='#DATE_FROM#'></div>
+   <div class=fld1>To: <input id='dateTo' type=text class=inp1 value='#DATE_TO#'></div>
+  <div align=center><input type=button class=button value='Load' onClick='Request()'></div>
+ </div>
+ <div class=groupbox><div class=hdr>Filter view</div>
+  <div class=fld1>Level: <select id='filterLevel' onChange="ApplyFilter()"><option value=0>0 - Debug <option value=1>1 - Info <option value=2>2 - Normal<option value=3>3 - Warn</select></div>
+  Groups:<br>
+ </div>
+ <div class=groupbox><div class=hdr>Manage</div>
+ <div class=fld1>Token: <input id='ManageToken' type=password class=inp1></div>
+ <div class=fld1>MemLog: <select id='ManageMemLog'><option value=0>0 - Debug<option value=1>1 - Info<option value=2>2 - Normal</select></div>
+ <div class=fld1>File log: <select id='ManageFileLog'><option value=0>0 - Debug<option value=1>1 - Info<option value=2>2 - Normal<option value=3>3 - Warn</select></div>
+ <div align=center><input type=checkbox id='ManageLog1' #LOG1#> HTTP <input type=checkbox id='ManageLog2' #LOG2#> SQL <input type=checkbox id='ManageLog3' #LOG3#> Tasks </div>
+  <div align=center><input type=button class=button value='Set log level' onClick='SetLogLevel()'></div>
+ </div>
+ <div class=groupbox><div class=hdr>Logout</div>
+  <div align=center><input type=button class=button value='Logout' onClick='Logout()'></div>
+ </div>
+ <div class=groupbox><div class=hdr>Info</div>
+  <div class=tool>#LOG_INFO#</div>
+ </div>
+</div>
+</body>
+</html>
