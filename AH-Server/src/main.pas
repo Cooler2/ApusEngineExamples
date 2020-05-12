@@ -1,4 +1,4 @@
-{R+}
+п»ї{R+}
 unit main;
 
 interface
@@ -228,9 +228,9 @@ procedure ServerDone(fatal:boolean=false);
   ForceLogMessage('ServerDone called');
   try
    LogMsg('ServerDone!',logImportant);
-   // Порядок имеет значение! Если А использует Б, то сначала остановить А, а потом Б
+   // РџРѕСЂСЏРґРѕРє РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёРµ! Р•СЃР»Рё Рђ РёСЃРїРѕР»СЊР·СѓРµС‚ Р‘, С‚Рѕ СЃРЅР°С‡Р°Р»Р° РѕСЃС‚Р°РЅРѕРІРёС‚СЊ Рђ, Р° РїРѕС‚РѕРј Р‘
    acceptIncomingMessages:=false;
-   // ожидание завершения выполнения тасков
+   // РѕР¶РёРґР°РЅРёРµ Р·Р°РІРµСЂС€РµРЅРёСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ С‚Р°СЃРєРѕРІ
    for i:=1 to 10 do begin
     sleep(40);
     if TaskQueueSize=0 then break;
@@ -344,8 +344,8 @@ begin
  ForceLogMessage('Main loop...');
  repeat
    ServerRun;
-   sleep(0); // задержка есть в самом ServerRun
-   ServiceThread.ProcessRequests(false); // Ключевая штука - без неё сервис не будет реагировать на команды
+   sleep(0); // Р·Р°РґРµСЂР¶РєР° РµСЃС‚СЊ РІ СЃР°РјРѕРј ServerRun
+   ServiceThread.ProcessRequests(false); // РљР»СЋС‡РµРІР°СЏ С€С‚СѓРєР° - Р±РµР· РЅРµС‘ СЃРµСЂРІРёСЃ РЅРµ Р±СѓРґРµС‚ СЂРµР°РіРёСЂРѕРІР°С‚СЊ РЅР° РєРѕРјР°РЅРґС‹
    if needExit then ServiceThread.Terminate;
  until terminated;
  except
@@ -404,7 +404,7 @@ begin
     SMServ.needrestart:=true;
     exit;
    end;
-   // Раз в минуту
+   // Р Р°Р· РІ РјРёРЅСѓС‚Сѓ
    if c mod 600=0 then try
     fname:=WorkingDir+'\logs\netstat'+FormatDateTime('mmdd',Now)+'.log';
     assign(f2,fname);
@@ -419,7 +419,7 @@ begin
    except
     on e:exception do ForceLogMessage('Error WT1: '+e.message);
    end;
-   if c mod 75=0 then try // 7.5 секунд
+   if c mod 75=0 then try // 7.5 СЃРµРєСѓРЅРґ
     append(f);
     writeln(f,FormatDateTime('hh:nn:ss.zzz',Now),' Main: ',counter,
     ', state: ',logic.serverState,'/',serverState,' MEM: ',GetMemoryState);

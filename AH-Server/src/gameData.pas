@@ -1,4 +1,4 @@
-// Ключевые типы и массивы данных, хранящие игро-специфические вещи
+п»ї// РљР»СЋС‡РµРІС‹Рµ С‚РёРїС‹ Рё РјР°СЃСЃРёРІС‹ РґР°РЅРЅС‹С…, С…СЂР°РЅСЏС‰РёРµ РёРіСЂРѕ-СЃРїРµС†РёС„РёС‡РµСЃРєРёРµ РІРµС‰Рё
 {$R+}
 unit gameData;
 interface
@@ -11,7 +11,7 @@ interface
   ufSilent  = 8;  // S  (can't chat)
   ufBanned  = 16;  // B (can't play)
   ufBot     = 32;  // #
-  ufBonus50 = 64;         // % - единовременный бонус 50% при покупке золота или премиума
+  ufBonus50 = 64;         // % - РµРґРёРЅРѕРІСЂРµРјРµРЅРЅС‹Р№ Р±РѕРЅСѓСЃ 50% РїСЂРё РїРѕРєСѓРїРєРµ Р·РѕР»РѕС‚Р° РёР»Рё РїСЂРµРјРёСѓРјР°
   ufInvalidEmail =128; // I (invalid email)
   ufHardMode         = $0100; // h - hard mode
   ufCanMakeDecks     = $0400; // d
@@ -20,7 +20,7 @@ interface
   ufHasManaStorm     = $2000; // m
   ufAdvGuildExp      = $4000; // g
   ufNotPlayed        = $8000; // n (never started campaign)
-  ufGoodnight        = $10000; // G - разрешена отправка рекламных сообщений Goodnight
+  ufGoodnight        = $10000; // G - СЂР°Р·СЂРµС€РµРЅР° РѕС‚РїСЂР°РІРєР° СЂРµРєР»Р°РјРЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ Goodnight
 
   UNSENT_RESPONSE = '#UNSENT#';
 
@@ -44,9 +44,9 @@ interface
     dtCampaign = 4);
 
   TDuelClass=(
-   dcRated     = 0,  // обычный рейтинговый бой
-   dcTraining  = 1,  // тренировка
-   dcCaravan   = 2); // грабёж каравана
+   dcRated     = 0,  // РѕР±С‹С‡РЅС‹Р№ СЂРµР№С‚РёРЅРіРѕРІС‹Р№ Р±РѕР№
+   dcTraining  = 1,  // С‚СЂРµРЅРёСЂРѕРІРєР°
+   dcCaravan   = 2); // РіСЂР°Р±С‘Р¶ РєР°СЂР°РІР°РЅР°
 
   TFriendStatus=(
     fsOffline = 0,
@@ -67,26 +67,26 @@ interface
     
   THashStr=string[11];
 
-  // кол-во карт в наличии (отрицательное число - улучшенные карты)
+  // РєРѕР»-РІРѕ РєР°СЂС‚ РІ РЅР°Р»РёС‡РёРё (РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ С‡РёСЃР»Рѕ - СѓР»СѓС‡С€РµРЅРЅС‹Рµ РєР°СЂС‚С‹)
   TCardSet=array[1..numCards] of shortint;
 
   TUser=class;
 
-  // Колода, хранимая на сервере в БД
+  // РљРѕР»РѕРґР°, С…СЂР°РЅРёРјР°СЏ РЅР° СЃРµСЂРІРµСЂРµ РІ Р‘Р”
   TGameDeck=record
-   deckID:integer; // ключ в БД
+   deckID:integer; // РєР»СЋС‡ РІ Р‘Р”
    name:AnsiString;
    cost:integer;
    cards:array[1..50] of smallint;
-   function IsValidForUser(const user:TUser):AnsiString; // проверяет допустимость колоды для юзера, возвращает описание причины недоступности
+   function IsValidForUser(const user:TUser):AnsiString; // РїСЂРѕРІРµСЂСЏРµС‚ РґРѕРїСѓСЃС‚РёРјРѕСЃС‚СЊ РєРѕР»РѕРґС‹ РґР»СЏ СЋР·РµСЂР°, РІРѕР·РІСЂР°С‰Р°РµС‚ РѕРїРёСЃР°РЅРёРµ РїСЂРёС‡РёРЅС‹ РЅРµРґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё
   end;
 
   TProposal=record
-   userID:integer; // кому предложение
-   gametype:TDuelType; // какого типа предложение
+   userID:integer; // РєРѕРјСѓ РїСЂРµРґР»РѕР¶РµРЅРёРµ
+   gametype:TDuelType; // РєР°РєРѕРіРѕ С‚РёРїР° РїСЂРµРґР»РѕР¶РµРЅРёРµ
   end;
 
-  // Кэшированная информация об игроке
+  // РљСЌС€РёСЂРѕРІР°РЅРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± РёРіСЂРѕРєРµ
   TPlayerRec=record
    name:string[23];
    guild,email:AnsiString;
@@ -95,10 +95,10 @@ interface
    draftFame,draftLevel,draftWins,draftLoses,draftPlace:integer;
    totalFame,totalLevel,place,campaignWins:integer;
    status:TPlayerStatus;
-   lastVisit:TDateTime; // когда последний раз был онлайн
+   lastVisit:TDateTime; // РєРѕРіРґР° РїРѕСЃР»РµРґРЅРёР№ СЂР°Р· Р±С‹Р» РѕРЅР»Р°Р№РЅ
   end;
 
-{  // Информация о сыгранном бое (эквивалент записи в таблице duels)
+{  // РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃС‹РіСЂР°РЅРЅРѕРј Р±РѕРµ (СЌРєРІРёРІР°Р»РµРЅС‚ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ duels)
   TDuelRec=record
    dueltype,scenario:byte;
    winner,loser:integer;
@@ -106,82 +106,82 @@ interface
   end;}
 
   TUser=class
-   userID,playerID:integer;  // playerID>0 - живой игрок, иначе - бот
-   steamID:int64; // ID игрока в Стиме
-   logged:TDateTime; // когда создан объект
-   // кэширование ответов
+   userID,playerID:integer;  // playerID>0 - Р¶РёРІРѕР№ РёРіСЂРѕРє, РёРЅР°С‡Рµ - Р±РѕС‚
+   steamID:int64; // ID РёРіСЂРѕРєР° РІ РЎС‚РёРјРµ
+   logged:TDateTime; // РєРѕРіРґР° СЃРѕР·РґР°РЅ РѕР±СЉРµРєС‚
+   // РєСЌС€РёСЂРѕРІР°РЅРёРµ РѕС‚РІРµС‚РѕРІ
    lastPostSerial,lastPollSerial:cardinal;
-   lastPollResponse:AnsiString; // До отправки содержит строку "#UNSENT#"
-   lastCommand:TDateTime; // время поступления последней команды от юзера (используется для определения AFK)
+   lastPollResponse:AnsiString; // Р”Рѕ РѕС‚РїСЂР°РІРєРё СЃРѕРґРµСЂР¶РёС‚ СЃС‚СЂРѕРєСѓ "#UNSENT#"
+   lastCommand:TDateTime; // РІСЂРµРјСЏ РїРѕСЃС‚СѓРїР»РµРЅРёСЏ РїРѕСЃР»РµРґРЅРµР№ РєРѕРјР°РЅРґС‹ РѕС‚ СЋР·РµСЂР° (РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ AFK)
 
    name,email:AnsiString;
    guild:AnsiString;
    avatar:integer;
    flags:cardinal;
-   PwdHash:THashStr; // начало хэша двойного пароля (если авторизован)
-   messages:AnsiString; // буфер исходящих сообщений для юзера
-   msgCount:integer; // кол-во сообщений в messages
-   sendASAP:boolean; // следует ли отправить исходящие сообщения сразу же, или можно подождать? (до 30 секунд)
-   timeOut:int64; // момент, после которого юзера нужно удалить по таймауту
+   PwdHash:THashStr; // РЅР°С‡Р°Р»Рѕ С…СЌС€Р° РґРІРѕР№РЅРѕРіРѕ РїР°СЂРѕР»СЏ (РµСЃР»Рё Р°РІС‚РѕСЂРёР·РѕРІР°РЅ)
+   messages:AnsiString; // Р±СѓС„РµСЂ РёСЃС…РѕРґСЏС‰РёС… СЃРѕРѕР±С‰РµРЅРёР№ РґР»СЏ СЋР·РµСЂР°
+   msgCount:integer; // РєРѕР»-РІРѕ СЃРѕРѕР±С‰РµРЅРёР№ РІ messages
+   sendASAP:boolean; // СЃР»РµРґСѓРµС‚ Р»Рё РѕС‚РїСЂР°РІРёС‚СЊ РёСЃС…РѕРґСЏС‰РёРµ СЃРѕРѕР±С‰РµРЅРёСЏ СЃСЂР°Р·Сѓ Р¶Рµ, РёР»Рё РјРѕР¶РЅРѕ РїРѕРґРѕР¶РґР°С‚СЊ? (РґРѕ 30 СЃРµРєСѓРЅРґ)
+   timeOut:int64; // РјРѕРјРµРЅС‚, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ СЋР·РµСЂР° РЅСѓР¶РЅРѕ СѓРґР°Р»РёС‚СЊ РїРѕ С‚Р°Р№РјР°СѓС‚Сѓ
    autoSearchStarted:array[TDuelType] of TDateTime;
-   boostLevel:array[tDuelType] of integer; // +/- к уровню по итогам предыдущих боёв для автопоиска
-   connected:integer; // с кем соединён (в дуэли)
-   draftID:integer; // турнир (0 - не в турнире) 
-   IP:AnsiString; // IP, с которого поступил последний запрос
-   country:String[3]; // страна (определяется по IP при логине)
-   idleSince:TDateTime; // время поступления последнего запроса от юзера
-   lang:String[3];  // язык клиента
-   botLevel:shortint;  // 0 - not a bot, 1..5 - от новичка до архмага
-   botThinking:boolean; // код AI запущен
-   thinktime:integer; // время, затраченное на размышления в бою (в секундах)
-   inCombat:boolean; // в отличие от connected этот флаг сохраняется до получения 37-го запроса от игрока
+   boostLevel:array[tDuelType] of integer; // +/- Рє СѓСЂРѕРІРЅСЋ РїРѕ РёС‚РѕРіР°Рј РїСЂРµРґС‹РґСѓС‰РёС… Р±РѕС‘РІ РґР»СЏ Р°РІС‚РѕРїРѕРёСЃРєР°
+   connected:integer; // СЃ РєРµРј СЃРѕРµРґРёРЅС‘РЅ (РІ РґСѓСЌР»Рё)
+   draftID:integer; // С‚СѓСЂРЅРёСЂ (0 - РЅРµ РІ С‚СѓСЂРЅРёСЂРµ) 
+   IP:AnsiString; // IP, СЃ РєРѕС‚РѕСЂРѕРіРѕ РїРѕСЃС‚СѓРїРёР» РїРѕСЃР»РµРґРЅРёР№ Р·Р°РїСЂРѕСЃ
+   country:String[3]; // СЃС‚СЂР°РЅР° (РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РїРѕ IP РїСЂРё Р»РѕРіРёРЅРµ)
+   idleSince:TDateTime; // РІСЂРµРјСЏ РїРѕСЃС‚СѓРїР»РµРЅРёСЏ РїРѕСЃР»РµРґРЅРµРіРѕ Р·Р°РїСЂРѕСЃР° РѕС‚ СЋР·РµСЂР°
+   lang:String[3];  // СЏР·С‹Рє РєР»РёРµРЅС‚Р°
+   botLevel:shortint;  // 0 - not a bot, 1..5 - РѕС‚ РЅРѕРІРёС‡РєР° РґРѕ Р°СЂС…РјР°РіР°
+   botThinking:boolean; // РєРѕРґ AI Р·Р°РїСѓС‰РµРЅ
+   thinktime:integer; // РІСЂРµРјСЏ, Р·Р°С‚СЂР°С‡РµРЅРЅРѕРµ РЅР° СЂР°Р·РјС‹С€Р»РµРЅРёСЏ РІ Р±РѕСЋ (РІ СЃРµРєСѓРЅРґР°С…)
+   inCombat:boolean; // РІ РѕС‚Р»РёС‡РёРµ РѕС‚ connected СЌС‚РѕС‚ С„Р»Р°Рі СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ РґРѕ РїРѕР»СѓС‡РµРЅРёСЏ 37-РіРѕ Р·Р°РїСЂРѕСЃР° РѕС‚ РёРіСЂРѕРєР°
 
    gold,heroicPoints,needHeroicPoints,astralPower,gems,optionsflags:integer;
    friendlist,blacklist:AStringArr;
-   premium:TDateTime; // Время завершения премиума (либо 0 - если его нет)
+   premium:TDateTime; // Р’СЂРµРјСЏ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРµРјРёСѓРјР° (Р»РёР±Рѕ 0 - РµСЃР»Рё РµРіРѕ РЅРµС‚)
    customFame,customLevel,classicFame,classicLevel,draftFame,draftLevel,trainFame,level:integer;
    customWins,customLoses,classicWins,classicLoses,draftWins,draftLoses,draftTourWins:integer;
-   initialHP,speciality:integer; // стартовая жизнь и выбранный игроком класс
-   curDeckID:integer; // DeckID текущей деки юзера в decks (0 - random)
-   decks:array of TGameDeck; // 1..N, ([0] - не используется)
-   ownCards:TCardSet; // кол-во карт каждого типа, имеющихся у игрока (без учёта гильдейских), отрицательное число - заапгрейдженые карты
+   initialHP,speciality:integer; // СЃС‚Р°СЂС‚РѕРІР°СЏ Р¶РёР·РЅСЊ Рё РІС‹Р±СЂР°РЅРЅС‹Р№ РёРіСЂРѕРєРѕРј РєР»Р°СЃСЃ
+   curDeckID:integer; // DeckID С‚РµРєСѓС‰РµР№ РґРµРєРё СЋР·РµСЂР° РІ decks (0 - random)
+   decks:array of TGameDeck; // 1..N, ([0] - РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ)
+   ownCards:TCardSet; // РєРѕР»-РІРѕ РєР°СЂС‚ РєР°Р¶РґРѕРіРѕ С‚РёРїР°, РёРјРµСЋС‰РёС…СЃСЏ Сѓ РёРіСЂРѕРєР° (Р±РµР· СѓС‡С‘С‚Р° РіРёР»СЊРґРµР№СЃРєРёС…), РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ С‡РёСЃР»Рѕ - Р·Р°Р°РїРіСЂРµР№РґР¶РµРЅС‹Рµ РєР°СЂС‚С‹
    campaignWins:integer;
    room:integer; // 1 - campaign, 2 - multiplayer
-   quests:array[1..6] of integer; // соперники в кампании либо квесты
-   updateQuests:boolean; // необходимо обновить квесты после ближайшего боя (любого типа)
+   quests:array[1..6] of integer; // СЃРѕРїРµСЂРЅРёРєРё РІ РєР°РјРїР°РЅРёРё Р»РёР±Рѕ РєРІРµСЃС‚С‹
+   updateQuests:boolean; // РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±РЅРѕРІРёС‚СЊ РєРІРµСЃС‚С‹ РїРѕСЃР»Рµ Р±Р»РёР¶Р°Р№С€РµРіРѕ Р±РѕСЏ (Р»СЋР±РѕРіРѕ С‚РёРїР°)
    campaignLoses:array[1..20] of integer;
-   playingDeck:AnsiString; // если игрок в кастом дуэли - здесь его колода
+   playingDeck:AnsiString; // РµСЃР»Рё РёРіСЂРѕРє РІ РєР°СЃС‚РѕРј РґСѓСЌР»Рё - Р·РґРµСЃСЊ РµРіРѕ РєРѕР»РѕРґР°
    lastLogin:TDateTime;
    proposals:array of TProposal;
-   missions:array[1..40] of integer; // Отрицательное число - миссия выполнена (в БД обозначается плюсиком)
-   lastlognum:integer; // цифра для имени файла для сохранения game.log клиента
+   missions:array[1..40] of integer; // РћС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ С‡РёСЃР»Рѕ - РјРёСЃСЃРёСЏ РІС‹РїРѕР»РЅРµРЅР° (РІ Р‘Р” РѕР±РѕР·РЅР°С‡Р°РµС‚СЃСЏ РїР»СЋСЃРёРєРѕРј)
+   lastlognum:integer; // С†РёС„СЂР° РґР»СЏ РёРјРµРЅРё С„Р°Р№Р»Р° РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ game.log РєР»РёРµРЅС‚Р°
    status:TPlayerStatus;
-   marketCards:array[1..6] of integer; // Карты в маркете (отрицательное число - карта куплена)
-   lastChatMsgTime:int64; // момент последней отправки чат-сообщения (MyTickCount)
-   chatFlood:integer; // вес флудинга
-   chatMode:byte; // 0..2 - фильтр чата (default = 1)
+   marketCards:array[1..6] of integer; // РљР°СЂС‚С‹ РІ РјР°СЂРєРµС‚Рµ (РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ С‡РёСЃР»Рѕ - РєР°СЂС‚Р° РєСѓРїР»РµРЅР°)
+   lastChatMsgTime:int64; // РјРѕРјРµРЅС‚ РїРѕСЃР»РµРґРЅРµР№ РѕС‚РїСЂР°РІРєРё С‡Р°С‚-СЃРѕРѕР±С‰РµРЅРёСЏ (MyTickCount)
+   chatFlood:integer; // РІРµСЃ С„Р»СѓРґРёРЅРіР°
+   chatMode:byte; // 0..2 - С„РёР»СЊС‚СЂ С‡Р°С‚Р° (default = 1)
    caravanPriority:integer;
-   lastDuelFinished:TDateTime; // время авершения последнего боя этим игроком
-   dontLogUntil:TDateTime; // время, раньше которого юзер не рассматривается в качестве атакующего (вернее, причина не пишется в лог)
+   lastDuelFinished:TDateTime; // РІСЂРµРјСЏ Р°РІРµСЂС€РµРЅРёСЏ РїРѕСЃР»РµРґРЅРµРіРѕ Р±РѕСЏ СЌС‚РёРј РёРіСЂРѕРєРѕРј
+   dontLogUntil:TDateTime; // РІСЂРµРјСЏ, СЂР°РЅСЊС€Рµ РєРѕС‚РѕСЂРѕРіРѕ СЋР·РµСЂ РЅРµ СЂР°СЃСЃРјР°С‚СЂРёРІР°РµС‚СЃСЏ РІ РєР°С‡РµСЃС‚РІРµ Р°С‚Р°РєСѓСЋС‰РµРіРѕ (РІРµСЂРЅРµРµ, РїСЂРёС‡РёРЅР° РЅРµ РїРёС€РµС‚СЃСЏ РІ Р»РѕРі)
 
    tipsShown:array[1..20] of byte;
-   currentTip:integer; // индекс подсказки, которая выбрана и отправлена клиенту для показа при следующем автопоиске
-   lastTip:integer; // предыдущая подсказка (для избежания повторов)
-   maxBotLevel,curBotLevel:byte; // уровни ботов в тренировках
-   timeoutWarning:boolean; // устанавливается, если игрок получил предупреждение о 15 сек до таймаута
-   trackPlayersStatus:boolean; // получать ли 76-й пакет об изменениях статуса
-   lastAdMsg:TDateTime; // когда последний раз получал сообщение с рекламой
+   currentTip:integer; // РёРЅРґРµРєСЃ РїРѕРґСЃРєР°Р·РєРё, РєРѕС‚РѕСЂР°СЏ РІС‹Р±СЂР°РЅР° Рё РѕС‚РїСЂР°РІР»РµРЅР° РєР»РёРµРЅС‚Сѓ РґР»СЏ РїРѕРєР°Р·Р° РїСЂРё СЃР»РµРґСѓСЋС‰РµРј Р°РІС‚РѕРїРѕРёСЃРєРµ
+   lastTip:integer; // РїСЂРµРґС‹РґСѓС‰Р°СЏ РїРѕРґСЃРєР°Р·РєР° (РґР»СЏ РёР·Р±РµР¶Р°РЅРёСЏ РїРѕРІС‚РѕСЂРѕРІ)
+   maxBotLevel,curBotLevel:byte; // СѓСЂРѕРІРЅРё Р±РѕС‚РѕРІ РІ С‚СЂРµРЅРёСЂРѕРІРєР°С…
+   timeoutWarning:boolean; // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ, РµСЃР»Рё РёРіСЂРѕРє РїРѕР»СѓС‡РёР» РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ Рѕ 15 СЃРµРє РґРѕ С‚Р°Р№РјР°СѓС‚Р°
+   trackPlayersStatus:boolean; // РїРѕР»СѓС‡Р°С‚СЊ Р»Рё 76-Р№ РїР°РєРµС‚ РѕР± РёР·РјРµРЅРµРЅРёСЏС… СЃС‚Р°С‚СѓСЃР°
+   lastAdMsg:TDateTime; // РєРѕРіРґР° РїРѕСЃР»РµРґРЅРёР№ СЂР°Р· РїРѕР»СѓС‡Р°Р» СЃРѕРѕР±С‰РµРЅРёРµ СЃ СЂРµРєР»Р°РјРѕР№
 
-   function FindDeckByName(name:AnsiString):integer; // возвращает индекс в массиве
+   function FindDeckByName(name:AnsiString):integer; // РІРѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ РІ РјР°СЃСЃРёРІРµ
    function FindDeckIDByName(name:AnsiString):integer;
-   function FindDeckByID(deckID:integer):integer; // возвращает индекс в массиве
+   function FindDeckByID(deckID:integer):integer; // РІРѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ РІ РјР°СЃСЃРёРІРµ
    constructor Create(ID:integer);
    destructor Destroy; override;
-   function GetUserInfo:AnsiString; // текстовое описание юзера
-   function GetUserDump:AnsiString;  // подробное описание юзера
-   function GetUserFullDump:AnsiString;  // полное описание юзера
-   function OwnedCardTypes:integer; // сколько различных карт имеет игрок
-   function OwnedCardsCount:integer; // сколько всего карт имеет игрок (включая повторы)
+   function GetUserInfo:AnsiString; // С‚РµРєСЃС‚РѕРІРѕРµ РѕРїРёСЃР°РЅРёРµ СЋР·РµСЂР°
+   function GetUserDump:AnsiString;  // РїРѕРґСЂРѕР±РЅРѕРµ РѕРїРёСЃР°РЅРёРµ СЋР·РµСЂР°
+   function GetUserFullDump:AnsiString;  // РїРѕР»РЅРѕРµ РѕРїРёСЃР°РЅРёРµ СЋР·РµСЂР°
+   function OwnedCardTypes:integer; // СЃРєРѕР»СЊРєРѕ СЂР°Р·Р»РёС‡РЅС‹С… РєР°СЂС‚ РёРјРµРµС‚ РёРіСЂРѕРє
+   function OwnedCardsCount:integer; // СЃРєРѕР»СЊРєРѕ РІСЃРµРіРѕ РєР°СЂС‚ РёРјРµРµС‚ РёРіСЂРѕРє (РІРєР»СЋС‡Р°СЏ РїРѕРІС‚РѕСЂС‹)
    function GetUserTitle:integer;
    procedure SetQuests(st:AnsiString);
    function GetQuests:AnsiString;
@@ -191,93 +191,93 @@ interface
    procedure SetCampaignLoses(st:AnsiString);
    function GetCampaignLoses:AnsiString;
    function SaveAsString:AnsiString;
-   // Применяет бонус к fame указанного типа и возвращает что в итоге получится
+   // РџСЂРёРјРµРЅСЏРµС‚ Р±РѕРЅСѓСЃ Рє fame СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‚РёРїР° Рё РІРѕР·РІСЂР°С‰Р°РµС‚ С‡С‚Рѕ РІ РёС‚РѕРіРµ РїРѕР»СѓС‡РёС‚СЃСЏ
    procedure PreviewStats(dueltype:TDuelType;fameBonus:integer;out newFame,newLevel,newTotalLevel:integer);
-   // Возвращает стоимость боя указанного типа в кристаллах
+   // Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚РѕРёРјРѕСЃС‚СЊ Р±РѕСЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‚РёРїР° РІ РєСЂРёСЃС‚Р°Р»Р»Р°С…
    function GetCostForMode(mode:TDuelType;forcePremium:integer=0):integer;
-   function GetActualLevel(gametype:TDuelType):integer; // Актуальный (соответствующий славе) уровень
+   function GetActualLevel(gametype:TDuelType):integer; // РђРєС‚СѓР°Р»СЊРЅС‹Р№ (СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ СЃР»Р°РІРµ) СѓСЂРѕРІРµРЅСЊ
    function GetFame(gametype:TDuelType):integer;
    function FindFriend(name:AnsiString):integer; // -1 - not found
    function FindInBlacklist(name:AnsiString):integer; // -1 - not found
    function FindProposal(uid:integer;mode:TDuelType):integer;
    procedure DeleteProposal(idx:integer);
    procedure AddProposal(uid:integer;mode:TDuelType);
-   // Импорт/экспорт миссий
+   // РРјРїРѕСЂС‚/СЌРєСЃРїРѕСЂС‚ РјРёСЃСЃРёР№
    procedure MissionsFromStr(st:AnsiString);
    function MissionsToStr:AnsiString;
    function GetPlayerRec:TPlayerRec;
-   // Определяет статус юзера, записывает его в поле status, а также возвращает
+   // РћРїСЂРµРґРµР»СЏРµС‚ СЃС‚Р°С‚СѓСЃ СЋР·РµСЂР°, Р·Р°РїРёСЃС‹РІР°РµС‚ РµРіРѕ РІ РїРѕР»Рµ status, Р° С‚Р°РєР¶Рµ РІРѕР·РІСЂР°С‰Р°РµС‚
    function UpdateUserStatus(forceStatus:TPlayerStatus=psDefault):TPlayerStatus;
-   procedure UpdatePlayerData; // Обновляет информацию в allPlayers
+   procedure UpdatePlayerData; // РћР±РЅРѕРІР»СЏРµС‚ РёРЅС„РѕСЂРјР°С†РёСЋ РІ allPlayers
    // Market cards
    procedure ImportMarket(st:AnsiString);
-   // Может ли игрок в настоящий момент получить награду за 1-ю победу в классике?
+   // РњРѕР¶РµС‚ Р»Рё РёРіСЂРѕРє РІ РЅР°СЃС‚РѕСЏС‰РёР№ РјРѕРјРµРЅС‚ РїРѕР»СѓС‡РёС‚СЊ РЅР°РіСЂР°РґСѓ Р·Р° 1-СЋ РїРѕР±РµРґСѓ РІ РєР»Р°СЃСЃРёРєРµ?
    function CanGetRewardForClassic:boolean;
    function CanPlayTrainingWithBot:boolean;
-   // Может ли играть с указанным игроков (не может, если последние два рейтинговых боя такого же типа были с этим же игроком)
+   // РњРѕР¶РµС‚ Р»Рё РёРіСЂР°С‚СЊ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РёРіСЂРѕРєРѕРІ (РЅРµ РјРѕР¶РµС‚, РµСЃР»Рё РїРѕСЃР»РµРґРЅРёРµ РґРІР° СЂРµР№С‚РёРЅРіРѕРІС‹С… Р±РѕСЏ С‚Р°РєРѕРіРѕ Р¶Рµ С‚РёРїР° Р±С‹Р»Рё СЃ СЌС‚РёРј Р¶Рµ РёРіСЂРѕРєРѕРј)
    function CanPlayWithPlayer(plrID:integer;dt:TDuelType):boolean;
 
-   function APlimit:integer; // максимальный AP с учётом перков
+   function APlimit:integer; // РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ AP СЃ СѓС‡С‘С‚РѕРј РїРµСЂРєРѕРІ
    procedure LoadTips(st:AnsiString);
    function TipsToStr:AnsiString;
    procedure SelectAndSendTip;
    procedure UseTipAndSelectAnother;
 
-   function MaxCardInstances:integer; // сколько экземпляров одной карты может иметь (3/6)
-   function StartLifeBoost:integer; // Кол-во дополнительной жизни в кастоме
+   function MaxCardInstances:integer; // СЃРєРѕР»СЊРєРѕ СЌРєР·РµРјРїР»СЏСЂРѕРІ РѕРґРЅРѕР№ РєР°СЂС‚С‹ РјРѕР¶РµС‚ РёРјРµС‚СЊ (3/6)
+   function StartLifeBoost:integer; // РљРѕР»-РІРѕ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕР№ Р¶РёР·РЅРё РІ РєР°СЃС‚РѕРјРµ
   end;
 
   TGame=record
-   user1,user2:integer;  // если нули - игры нет, если user2=0 - игра с ботом
+   user1,user2:integer;  // РµСЃР»Рё РЅСѓР»Рё - РёРіСЂС‹ РЅРµС‚, РµСЃР»Рё user2=0 - РёРіСЂР° СЃ Р±РѕС‚РѕРј
    gametype:TDuelType;  // 1,2,3,4
-   scenario:integer; // если gametype=dtCampaign, то тут номер противника/квеста
-   withBot:boolean; // хотя бы один из игроков - бот
-   reward:integer; // Награда за победу (в кампании/квесте)
+   scenario:integer; // РµСЃР»Рё gametype=dtCampaign, С‚Рѕ С‚СѓС‚ РЅРѕРјРµСЂ РїСЂРѕС‚РёРІРЅРёРєР°/РєРІРµСЃС‚Р°
+   withBot:boolean; // С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ РёР· РёРіСЂРѕРєРѕРІ - Р±РѕС‚
+   reward:integer; // РќР°РіСЂР°РґР° Р·Р° РїРѕР±РµРґСѓ (РІ РєР°РјРїР°РЅРёРё/РєРІРµСЃС‚Рµ)
    gameclass:TDuelClass;
-   firstPlayer:byte; // 1 или 2 (user1 или user2 ходит первым)
-   turn:byte; // чей сейчас ход: 1 или 2 (0 - бой не стартовал)
-   turns:integer; // сколько ходов уже сделано
-   turnStarted,gameStarted,turnTimeout:TDateTime; // время начала хода / создания игры / когда завершить по таймауту
-   numActions:shortint; // кол-во действий сделанных игроком за ход
-   timeout_flag:boolean; // посылалось ли предупреждение о таймауте
-   finished:boolean; // игра потенциально закончена, но результат еще неизвестен
-   time1,time2:integer; // время (в секундах) потраченное игроками
-   powers1,powers2:byte; // Какие стихии использует 1 и 2 игроки
-   // объект данных игры
+   firstPlayer:byte; // 1 РёР»Рё 2 (user1 РёР»Рё user2 С…РѕРґРёС‚ РїРµСЂРІС‹Рј)
+   turn:byte; // С‡РµР№ СЃРµР№С‡Р°СЃ С…РѕРґ: 1 РёР»Рё 2 (0 - Р±РѕР№ РЅРµ СЃС‚Р°СЂС‚РѕРІР°Р»)
+   turns:integer; // СЃРєРѕР»СЊРєРѕ С…РѕРґРѕРІ СѓР¶Рµ СЃРґРµР»Р°РЅРѕ
+   turnStarted,gameStarted,turnTimeout:TDateTime; // РІСЂРµРјСЏ РЅР°С‡Р°Р»Р° С…РѕРґР° / СЃРѕР·РґР°РЅРёСЏ РёРіСЂС‹ / РєРѕРіРґР° Р·Р°РІРµСЂС€РёС‚СЊ РїРѕ С‚Р°Р№РјР°СѓС‚Сѓ
+   numActions:shortint; // РєРѕР»-РІРѕ РґРµР№СЃС‚РІРёР№ СЃРґРµР»Р°РЅРЅС‹С… РёРіСЂРѕРєРѕРј Р·Р° С…РѕРґ
+   timeout_flag:boolean; // РїРѕСЃС‹Р»Р°Р»РѕСЃСЊ Р»Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ Рѕ С‚Р°Р№РјР°СѓС‚Рµ
+   finished:boolean; // РёРіСЂР° РїРѕС‚РµРЅС†РёР°Р»СЊРЅРѕ Р·Р°РєРѕРЅС‡РµРЅР°, РЅРѕ СЂРµР·СѓР»СЊС‚Р°С‚ РµС‰Рµ РЅРµРёР·РІРµСЃС‚РµРЅ
+   time1,time2:integer; // РІСЂРµРјСЏ (РІ СЃРµРєСѓРЅРґР°С…) РїРѕС‚СЂР°С‡РµРЅРЅРѕРµ РёРіСЂРѕРєР°РјРё
+   powers1,powers2:byte; // РљР°РєРёРµ СЃС‚РёС…РёРё РёСЃРїРѕР»СЊР·СѓРµС‚ 1 Рё 2 РёРіСЂРѕРєРё
+   // РѕР±СЉРµРєС‚ РґР°РЅРЅС‹С… РёРіСЂС‹
    duelsave:tDuelSave;
    duelSaveHash:int64;
-   //usedcards:array[1..numcards] of byte; // 0-й бит - игрок user1, 1-й - игрок user2
+   //usedcards:array[1..numcards] of byte; // 0-Р№ Р±РёС‚ - РёРіСЂРѕРє user1, 1-Р№ - РёРіСЂРѕРє user2
    gamelog:AnsiString;
-   savelog:boolean; // флаг необходимости сохранения лога
+   savelog:boolean; // С„Р»Р°Рі РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё СЃРѕС…СЂР°РЅРµРЅРёСЏ Р»РѕРіР°
    replayData:ByteArray;
    procedure SetTurnTo(userID:integer);
    function CalcTurnTimeout:double;
-   procedure Clear; // очищает запись
-   procedure SaveInitialState; // Сохранить начальное состояние дуэли в replayData
+   procedure Clear; // РѕС‡РёС‰Р°РµС‚ Р·Р°РїРёСЃСЊ
+   procedure SaveInitialState; // РЎРѕС…СЂР°РЅРёС‚СЊ РЅР°С‡Р°Р»СЊРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РґСѓСЌР»Рё РІ replayData
    procedure SaveTurnData(buf:array of integer);
    function SaveReplay:integer;
   private
    procedure AppendBytes(var bytes;count:byte);
   end;
 
-  // Драфтовый турнир
+  // Р”СЂР°С„С‚РѕРІС‹Р№ С‚СѓСЂРЅРёСЂ
   TDraft=record
-   players:array[1..4] of integer; // userID участников драфта
-   stage,round:integer; // stage=1 - вытягивание карт, 2 - создание колод, 3 - игра
+   players:array[1..4] of integer; // userID СѓС‡Р°СЃС‚РЅРёРєРѕРІ РґСЂР°С„С‚Р°
+   stage,round:integer; // stage=1 - РІС‹С‚СЏРіРёРІР°РЅРёРµ РєР°СЂС‚, 2 - СЃРѕР·РґР°РЅРёРµ РєРѕР»РѕРґ, 3 - РёРіСЂР°
    created,started,timeout,
-    timeX:TDateTime; // момент начала выбора очередной карты или момент начала составления колоды
+    timeX:TDateTime; // РјРѕРјРµРЅС‚ РЅР°С‡Р°Р»Р° РІС‹Р±РѕСЂР° РѕС‡РµСЂРµРґРЅРѕР№ РєР°СЂС‚С‹ РёР»Рё РјРѕРјРµРЅС‚ РЅР°С‡Р°Р»Р° СЃРѕСЃС‚Р°РІР»РµРЅРёСЏ РєРѕР»РѕРґС‹
    draftInfo:TDraftGeneralInfo;
 
-   function ReadyForNextCard:boolean; // Можно посылать наборы карт для выбора
-   function ReadyForNextRound:boolean; // true - можно стартовать бои очередного раунда
-   function NoPlayersAlive:boolean; // true - если остались только боты
+   function ReadyForNextCard:boolean; // РњРѕР¶РЅРѕ РїРѕСЃС‹Р»Р°С‚СЊ РЅР°Р±РѕСЂС‹ РєР°СЂС‚ РґР»СЏ РІС‹Р±РѕСЂР°
+   function ReadyForNextRound:boolean; // true - РјРѕР¶РЅРѕ СЃС‚Р°СЂС‚РѕРІР°С‚СЊ Р±РѕРё РѕС‡РµСЂРµРґРЅРѕРіРѕ СЂР°СѓРЅРґР°
+   function NoPlayersAlive:boolean; // true - РµСЃР»Рё РѕСЃС‚Р°Р»РёСЃСЊ С‚РѕР»СЊРєРѕ Р±РѕС‚С‹
 
    procedure PlayerTookCard(userID,card:integer);
    function PlayerMadeDeck(userID:integer;cards:AnsiString):integer; // 0 - OK, else - wrong card
    function GetDraftPlayer(userID:integer):PDraftPlayer;
   end;
 
-  // запись из таблицы duels (20 байт)
+  // Р·Р°РїРёСЃСЊ РёР· С‚Р°Р±Р»РёС†С‹ duels (20 Р±Р°Р№С‚)
   TDuelRec=record
    winner,loser:integer;
    date:TDateTime;
@@ -287,10 +287,10 @@ interface
   TGuildMember=record
    playerID:integer;
    name:AnsiString;
-   rank,rewards:shortint; // ранг и кол-во полученных за сутки наград
+   rank,rewards:shortint; // СЂР°РЅРі Рё РєРѕР»-РІРѕ РїРѕР»СѓС‡РµРЅРЅС‹С… Р·Р° СЃСѓС‚РєРё РЅР°РіСЂР°Рґ
    powers:String[2]; // Call to Powers
-   treasures,exp:integer; // Сколько принёс гильдии
-   rew:array[1..3] of integer; // сколько наград каждого типа за Зов получил
+   treasures,exp:integer; // РЎРєРѕР»СЊРєРѕ РїСЂРёРЅС‘СЃ РіРёР»СЊРґРёРё
+   rew:array[1..3] of integer; // СЃРєРѕР»СЊРєРѕ РЅР°РіСЂР°Рґ РєР°Р¶РґРѕРіРѕ С‚РёРїР° Р·Р° Р—РѕРІ РїРѕР»СѓС‡РёР»
    function FormatCallToPowers:AnsiString;
   end;
 
@@ -302,27 +302,27 @@ interface
   TCaravan=record
    running:boolean;
    launched:TDateTime;
-   battles:array[1..8] of shortint; // статус боя: 0 - свободен, 1 - в процессе (*), 2 атака отбита, 3 - атака успешна
-   // * это не значит, что сам бой уже идёт - фазы есть разные, нужно смотреть поля ниже
-   needBattleIn:array[1..8] of TDateTime; // таймеры слотов (статус 0 - время до перехода к статусу 1, статус 1 - время до старта с ботом)
-   propCount:array[1..8] of byte; // сколько раз уже делалось предложение этому слоту
+   battles:array[1..8] of shortint; // СЃС‚Р°С‚СѓСЃ Р±РѕСЏ: 0 - СЃРІРѕР±РѕРґРµРЅ, 1 - РІ РїСЂРѕС†РµСЃСЃРµ (*), 2 Р°С‚Р°РєР° РѕС‚Р±РёС‚Р°, 3 - Р°С‚Р°РєР° СѓСЃРїРµС€РЅР°
+   // * СЌС‚Рѕ РЅРµ Р·РЅР°С‡РёС‚, С‡С‚Рѕ СЃР°Рј Р±РѕР№ СѓР¶Рµ РёРґС‘С‚ - С„Р°Р·С‹ РµСЃС‚СЊ СЂР°Р·РЅС‹Рµ, РЅСѓР¶РЅРѕ СЃРјРѕС‚СЂРµС‚СЊ РїРѕР»СЏ РЅРёР¶Рµ
+   needBattleIn:array[1..8] of TDateTime; // С‚Р°Р№РјРµСЂС‹ СЃР»РѕС‚РѕРІ (СЃС‚Р°С‚СѓСЃ 0 - РІСЂРµРјСЏ РґРѕ РїРµСЂРµС…РѕРґР° Рє СЃС‚Р°С‚СѓСЃСѓ 1, СЃС‚Р°С‚СѓСЃ 1 - РІСЂРµРјСЏ РґРѕ СЃС‚Р°СЂС‚Р° СЃ Р±РѕС‚РѕРј)
+   propCount:array[1..8] of byte; // СЃРєРѕР»СЊРєРѕ СЂР°Р· СѓР¶Рµ РґРµР»Р°Р»РѕСЃСЊ РїСЂРµРґР»РѕР¶РµРЅРёРµ СЌС‚РѕРјСѓ СЃР»РѕС‚Сѓ
    attackers,defenders:array[1..8] of AnsiString;
    procedure Clear;
    function FormatInfo:AnsiString;
    function FormatBattleUpdate(i:integer):AnsiString;
    function FormatLog:AnsiString;
-   procedure RequestActiveSlotIn(time:integer); // запрос на активацию слота через time секунд
+   procedure RequestActiveSlotIn(time:integer); // Р·Р°РїСЂРѕСЃ РЅР° Р°РєС‚РёРІР°С†РёСЋ СЃР»РѕС‚Р° С‡РµСЂРµР· time СЃРµРєСѓРЅРґ
    procedure ResetSlot(slot:integer);
   end;
 
   TGuild=record
    id:integer;
    name,motto:AnsiString;
-   size,level,exp,treasures,daily:integer; // daily - сколько побед сегодня еще предстоит сделать, чтобы взять дейлик
-   bonuses,cards:String[20]; // '1' - элемент активен
+   size,level,exp,treasures,daily:integer; // daily - СЃРєРѕР»СЊРєРѕ РїРѕР±РµРґ СЃРµРіРѕРґРЅСЏ РµС‰Рµ РїСЂРµРґСЃС‚РѕРёС‚ СЃРґРµР»Р°С‚СЊ, С‡С‚РѕР±С‹ РІР·СЏС‚СЊ РґРµР№Р»РёРє
+   bonuses,cards:String[20]; // '1' - СЌР»РµРјРµРЅС‚ Р°РєС‚РёРІРµРЅ
    members:array of TGuildMember;
    log:array of TGuildLogRecord;
-   proposals:IntArray; // список playerID, которым предложено вступить в эту гильдию
+   proposals:IntArray; // СЃРїРёСЃРѕРє playerID, РєРѕС‚РѕСЂС‹Рј РїСЂРµРґР»РѕР¶РµРЅРѕ РІСЃС‚СѓРїРёС‚СЊ РІ СЌС‚Сѓ РіРёР»СЊРґРёСЋ
    caravans:array[1..2] of TCaravan;
 
    procedure LoadFromDB(db:TMySQLdatabase;condition:AnsiString);
@@ -332,75 +332,75 @@ interface
    function FormatMemberInfo(m:integer):AnsiString;
    function NumCards:integer;
    function NumBonuses:integer;
-   function ExpBonus:single; // мультипликатор получения экспы
+   function ExpBonus:single; // РјСѓР»СЊС‚РёРїР»РёРєР°С‚РѕСЂ РїРѕР»СѓС‡РµРЅРёСЏ СЌРєСЃРїС‹
    function GetFullDump:AnsiString;
-   function NextLaunchTime(kind:integer):TDateTime; // Когда можно будет запустить караван в следующий раз
+   function NextLaunchTime(kind:integer):TDateTime; // РљРѕРіРґР° РјРѕР¶РЅРѕ Р±СѓРґРµС‚ Р·Р°РїСѓСЃС‚РёС‚СЊ РєР°СЂР°РІР°РЅ РІ СЃР»РµРґСѓСЋС‰РёР№ СЂР°Р·
   end;
 
  var
 //  onEnterMsg:array[0..10] of AnsiString;
 
-  autosearchState:array[TDuelType] of AnsiString; // строка с описанием последнего автопоиска по каждому типу
-  uCnt:integer; // кол-во занятых (авторизованных) юзеров
+  autosearchState:array[TDuelType] of AnsiString; // СЃС‚СЂРѕРєР° СЃ РѕРїРёСЃР°РЅРёРµРј РїРѕСЃР»РµРґРЅРµРіРѕ Р°РІС‚РѕРїРѕРёСЃРєР° РїРѕ РєР°Р¶РґРѕРјСѓ С‚РёРїСѓ
+  uCnt:integer; // РєРѕР»-РІРѕ Р·Р°РЅСЏС‚С‹С… (Р°РІС‚РѕСЂРёР·РѕРІР°РЅРЅС‹С…) СЋР·РµСЂРѕРІ
   lockReplays:TMyCriticalSection;
   
   startDecks:array[1..2] of AnsiString;
   startDecksCost:array[1..2] of integer;
   startCardSets:array[1..2] of TCardSet;
 
-  lastDuels:array[0..$FFFF] of TDuelRec; // последние бои (кольцевой список)
-  lastDuelsFirst,lastDuelsLast:integer; // номера первого занятого и первого свободного элемента (если совпадают - список пуст)
+  lastDuels:array[0..$FFFF] of TDuelRec; // РїРѕСЃР»РµРґРЅРёРµ Р±РѕРё (РєРѕР»СЊС†РµРІРѕР№ СЃРїРёСЃРѕРє)
+  lastDuelsFirst,lastDuelsLast:integer; // РЅРѕРјРµСЂР° РїРµСЂРІРѕРіРѕ Р·Р°РЅСЏС‚РѕРіРѕ Рё РїРµСЂРІРѕРіРѕ СЃРІРѕР±РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° (РµСЃР»Рё СЃРѕРІРїР°РґР°СЋС‚ - СЃРїРёСЃРѕРє РїСѓСЃС‚)
 
   allPlayers:array of TPlayerRec;
   allPlayersHash:THash; // (lowercase) playername -> playerID
 
-  guilds:array[0..500] of TGuild; // кэш гильдий ([0] - служебный индекс, валидные >0)
+  guilds:array[0..500] of TGuild; // РєСЌС€ РіРёР»СЊРґРёР№ ([0] - СЃР»СѓР¶РµР±РЅС‹Р№ РёРЅРґРµРєСЃ, РІР°Р»РёРґРЅС‹Рµ >0)
 
-  caravanChallenged:THash; // TDateTime; // когда игроку последний раз предлагали пограбить караван
+  caravanChallenged:THash; // TDateTime; // РєРѕРіРґР° РёРіСЂРѕРєСѓ РїРѕСЃР»РµРґРЅРёР№ СЂР°Р· РїСЂРµРґР»Р°РіР°Р»Рё РїРѕРіСЂР°Р±РёС‚СЊ РєР°СЂР°РІР°РЅ
 
-  statusChanges:AnsiString; // содержимое 76-го ответа об изменениях статуса игроков
+  statusChanges:AnsiString; // СЃРѕРґРµСЂР¶РёРјРѕРµ 76-РіРѕ РѕС‚РІРµС‚Р° РѕР± РёР·РјРµРЅРµРЅРёСЏС… СЃС‚Р°С‚СѓСЃР° РёРіСЂРѕРєРѕРІ
 
-  // Индексы в массиве allPlayers (хранятся только игроки с ненулевой славой)
+  // РРЅРґРµРєСЃС‹ РІ РјР°СЃСЃРёРІРµ allPlayers (С…СЂР°РЅСЏС‚СЃСЏ С‚РѕР»СЊРєРѕ РёРіСЂРѕРєРё СЃ РЅРµРЅСѓР»РµРІРѕР№ СЃР»Р°РІРѕР№)
   customRanking,classicRanking,draftRanking,totalRanking:IntArray;
 
   gd_spe:AnsiString; // content of gd.spe file
  const
-  // Начальные колоды
+  // РќР°С‡Р°Р»СЊРЅС‹Рµ РєРѕР»РѕРґС‹
   InitialDecks:array[1..2] of AnsiString=(
    '35,35,31,31,5,75, 75, 70,70,70,38, 38, 38, 65, 65, 65,41, 41, 41,42, 42, 12, 12,43,43',
    '58,72,72,143,143,143,48,48,48,132,132,109,109,127,127,127,87,87,87,128,134,19,19,23,23');
 
-  // Изначально доступные карты (кроме тех, которые уже есть в начальной колоде)
+  // РР·РЅР°С‡Р°Р»СЊРЅРѕ РґРѕСЃС‚СѓРїРЅС‹Рµ РєР°СЂС‚С‹ (РєСЂРѕРјРµ С‚РµС…, РєРѕС‚РѕСЂС‹Рµ СѓР¶Рµ РµСЃС‚СЊ РІ РЅР°С‡Р°Р»СЊРЅРѕР№ РєРѕР»РѕРґРµ)
   InitialCards:array[1..2] of AnsiString=(
    '11x2,141x2,35,143x3,134x2,20x2,24x2,28,47x3,128x2,127x2,54,115x2,139,82,107,37,124x2,9x2,84,39,44,12',
    '47x3,51,73,24x2,128,115x2,54,139x2,82x2,70x3,11,12x2,65x3,37,45x2,18x2,41x2,28,20x2,103,134,142');
 
  procedure InitConsts;
  function GetUserByName(name:AnsiString):integer;
- function FindPlayerID(name:AnsiString):integer; // 0 - если не найден
+ function FindPlayerID(name:AnsiString):integer; // 0 - РµСЃР»Рё РЅРµ РЅР°Р№РґРµРЅ
  function MakeUserFlags(flags:cardinal):AnsiString;
  function ParseUserFlags(st:AnsiString):cardinal;
  function CardSetToStr(cardSet:TCardSet):AnsiString;
  procedure StrToCardSet(st:AnsiString;var cardSet:TCardSet);
  procedure AddLocalDuelRec(date:TDateTime;winner,loser,dueltype,scenario,turns,firstPlr:integer);
  procedure DumpServerData;
- // Строит рейтинг всех игроков заданного типа
+ // РЎС‚СЂРѕРёС‚ СЂРµР№С‚РёРЅРі РІСЃРµС… РёРіСЂРѕРєРѕРІ Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР°
  procedure BuildRanking(mode:TDuelType);
- // Обновляет позицию игрока в рейтинге указанного типа
+ // РћР±РЅРѕРІР»СЏРµС‚ РїРѕР·РёС†РёСЋ РёРіСЂРѕРєР° РІ СЂРµР№С‚РёРЅРіРµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‚РёРїР°
  procedure UpdatePlayerRanking(mode:TDuelType;playerID:integer);
 
- // Поиск гильдии в кэше по имени
+ // РџРѕРёСЃРє РіРёР»СЊРґРёРё РІ РєСЌС€Рµ РїРѕ РёРјРµРЅРё
  function FindGuild(name:AnsiString;raiseIfNotFound:boolean=false):integer;
  function FindGuildByID(guildID:integer;raiseIfNotFound:boolean=false):integer;
  function GuildHasPerk(name:AnsiString;idx:integer):boolean;
- // Определяет награду за Call to Powers исходя из имени гильдии и использованных стихий
- // 1 - опыт, 2 - золото, 3 - личная слава
+ // РћРїСЂРµРґРµР»СЏРµС‚ РЅР°РіСЂР°РґСѓ Р·Р° Call to Powers РёСЃС…РѕРґСЏ РёР· РёРјРµРЅРё РіРёР»СЊРґРёРё Рё РёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹С… СЃС‚РёС…РёР№
+ // 1 - РѕРїС‹С‚, 2 - Р·РѕР»РѕС‚Рѕ, 3 - Р»РёС‡РЅР°СЏ СЃР»Р°РІР°
  function GetGuildCtP(name,plrName:AnsiString;powers:byte):integer;
  
- // Находит индекс свободного элемента в кэше гильдий, если свободных нет - освобождает гильдию, игроки которой оффлайн 
+ // РќР°С…РѕРґРёС‚ РёРЅРґРµРєСЃ СЃРІРѕР±РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РІ РєСЌС€Рµ РіРёР»СЊРґРёР№, РµСЃР»Рё СЃРІРѕР±РѕРґРЅС‹С… РЅРµС‚ - РѕСЃРІРѕР±РѕР¶РґР°РµС‚ РіРёР»СЊРґРёСЋ, РёРіСЂРѕРєРё РєРѕС‚РѕСЂРѕР№ РѕС„С„Р»Р°Р№РЅ 
  function AllocGuildIndex:integer;
 
- // Чистит записи кэша гильдий, все игроки которых оффлайн
+ // Р§РёСЃС‚РёС‚ Р·Р°РїРёСЃРё РєСЌС€Р° РіРёР»СЊРґРёР№, РІСЃРµ РёРіСЂРѕРєРё РєРѕС‚РѕСЂС‹С… РѕС„С„Р»Р°Р№РЅ
  procedure FreeOfflineGuilds;
 
 implementation
@@ -443,7 +443,7 @@ begin
  lastChatMsgTime:=0;
  chatFlood:=0;
  chatMode:=1;
- status:=psOffline; // будет изменён на online позже, когда все поля будут заполнены
+ status:=psOffline; // Р±СѓРґРµС‚ РёР·РјРµРЅС‘РЅ РЅР° online РїРѕР·Р¶Рµ, РєРѕРіРґР° РІСЃРµ РїРѕР»СЏ Р±СѓРґСѓС‚ Р·Р°РїРѕР»РЅРµРЅС‹
  lastDuelFinished:=0;
  inCombat:=false;
 end;
@@ -508,9 +508,9 @@ begin
    LogMsg('Guild member not found! '+plrName+' : '+name,logWarn);
    exit;
   end;
-  // Лимит уже достигнут?
+  // Р›РёРјРёС‚ СѓР¶Рµ РґРѕСЃС‚РёРіРЅСѓС‚?
   if members[m].rewards>=5 then exit;
-  // Проверка использованных стихий
+  // РџСЂРѕРІРµСЂРєР° РёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹С… СЃС‚РёС…РёР№
   p1:=StrToInt(members[m].powers[1]);
   p2:=StrToInt(members[m].powers[2]);
   if powers and (1 shl p1)=0 then exit;
@@ -533,7 +533,7 @@ begin
     until mask and (1 shl (result-1))>0;
     LogMsg('%s CtP mode 1: %d (%d %d %d)',[plrName,result,rew[1],rew[2],rew[3]],logDebug);
    end else begin
-    // Выбор награды
+    // Р’С‹Р±РѕСЂ РЅР°РіСЂР°РґС‹
     case random(10) of
      0..3:result:=1;
      4..7:result:=2;
@@ -556,7 +556,7 @@ var
 begin
  gSect.Enter;
  try
- // 1. Список гильдий всех онлайн-игроков
+ // 1. РЎРїРёСЃРѕРє РіРёР»СЊРґРёР№ РІСЃРµС… РѕРЅР»Р°Р№РЅ-РёРіСЂРѕРєРѕРІ
  gCount:=0;
  for i:=1 to high(users) do
   if users[i]<>nil then
@@ -565,7 +565,7 @@ begin
     gList[gCount]:=users[i].guild;
    end;
 
- // 2. Выбор гильдии, которой нет в списке
+ // 2. Р’С‹Р±РѕСЂ РіРёР»СЊРґРёРё, РєРѕС‚РѕСЂРѕР№ РЅРµС‚ РІ СЃРїРёСЃРєРµ
  for i:=1 to high(guilds) do begin
   if guilds[i].name='' then continue;
   online:=false;
@@ -628,7 +628,7 @@ begin
   end;
 end;
 
-function TUser.FindDeckByID(deckID:integer):integer; // возвращает индекс в массиве
+function TUser.FindDeckByID(deckID:integer):integer; // РІРѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ РІ РјР°СЃСЃРёРІРµ
 var
  i:integer;
 begin
@@ -816,7 +816,7 @@ function TUser.FindFriend(name:AnsiString):integer; // -1 - not found
   i:integer;
  begin
   result:=-1;
-  name:=lowercase(name); // такой вариант в 6 раз быстрее, чем AnsiSameText 
+  name:=lowercase(name); // С‚Р°РєРѕР№ РІР°СЂРёР°РЅС‚ РІ 6 СЂР°Р· Р±С‹СЃС‚СЂРµРµ, С‡РµРј AnsiSameText 
   for i:=0 to high(friendlist) do
    if name=lowercase(friendlist[i]) then begin
      result:=i; exit;
@@ -955,7 +955,7 @@ function TUser.UpdateUserStatus(forceStatus:TPlayerStatus):TPlayerStatus;
    end;
    if wasStatus=psAFK then LogMsg('User not AFK: '+name,logDebug);
    if status=psAFK then LogMsg('User AFK: '+name,logDebug);
-   // Уведомить друзей и членов гильдии об изменении статуса (если только не бот)
+   // РЈРІРµРґРѕРјРёС‚СЊ РґСЂСѓР·РµР№ Рё С‡Р»РµРЅРѕРІ РіРёР»СЊРґРёРё РѕР± РёР·РјРµРЅРµРЅРёРё СЃС‚Р°С‚СѓСЃР° (РµСЃР»Рё С‚РѕР»СЊРєРѕ РЅРµ Р±РѕС‚)
    if botLevel=0 then begin
     for i:=1 to high(users) do
      if users[i]<>nil then
@@ -1063,7 +1063,7 @@ function TUser.CanPlayWithPlayer(plrID:integer;dt:TDuelType):boolean;
    dec(i);
    if i<0 then i:=high(lastDuels);
    inc(cnt2);
-   if cnt2>2000 then exit; // давно было дело, неактуально
+   if cnt2>2000 then exit; // РґР°РІРЅРѕ Р±С‹Р»Рѕ РґРµР»Рѕ, РЅРµР°РєС‚СѓР°Р»СЊРЅРѕ
    if (lastDuels[i].dueltype=byte(dt)) and
       ((lastDuels[i].winner=playerID) or (lastDuels[i].loser=playerID)) then begin
     if (lastDuels[i].winner=plrID) or (lastDuels[i].loser=plrID) then begin
@@ -1079,7 +1079,7 @@ function TUser.CanPlayWithPlayer(plrID:integer;dt:TDuelType):boolean;
  end;
 
 
-function TUser.APlimit:integer; // максимальный AP с учётом перков
+function TUser.APlimit:integer; // РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ AP СЃ СѓС‡С‘С‚РѕРј РїРµСЂРєРѕРІ
  var
   g:integer;
  begin
@@ -1123,7 +1123,7 @@ procedure TUser.SelectAndSendTip;
   i:integer;
   s,v:single;
  begin
-  // 1. Отберём те подсказки, показ которых вообще возможен
+  // 1. РћС‚Р±РµСЂС‘Рј С‚Рµ РїРѕРґСЃРєР°Р·РєРё, РїРѕРєР°Р· РєРѕС‚РѕСЂС‹С… РІРѕРѕР±С‰Рµ РІРѕР·РјРѕР¶РµРЅ
   for i:=low(p) to high(p) do p[i]:=0;
   p[1]:=1;
   p[2]:=1;
@@ -1141,14 +1141,14 @@ procedure TUser.SelectAndSendTip;
    p[13]:=1;
    p[14]:=1;
   end;
-  // Предыдущую подсказку желательно не показывать
+  // РџСЂРµРґС‹РґСѓС‰СѓСЋ РїРѕРґСЃРєР°Р·РєСѓ Р¶РµР»Р°С‚РµР»СЊРЅРѕ РЅРµ РїРѕРєР°Р·С‹РІР°С‚СЊ
   if lastTip>0 then p[lastTip]:=p[lastTip]/5;
-  // Уменьшить шансы показа того, что уже много раз показывалось
+  // РЈРјРµРЅСЊС€РёС‚СЊ С€Р°РЅСЃС‹ РїРѕРєР°Р·Р° С‚РѕРіРѕ, С‡С‚Рѕ СѓР¶Рµ РјРЅРѕРіРѕ СЂР°Р· РїРѕРєР°Р·С‹РІР°Р»РѕСЃСЊ
   for i:=1 to high(tipsShown) do
    if (p[i]>0) and (tipsShown[i]>3) then
     p[i]:=p[i]*(2/(tipsShown[i]-1));
 
-  // Нормализация шансов (чтобы их сумма была равна 1)
+  // РќРѕСЂРјР°Р»РёР·Р°С†РёСЏ С€Р°РЅСЃРѕРІ (С‡С‚РѕР±С‹ РёС… СЃСѓРјРјР° Р±С‹Р»Р° СЂР°РІРЅР° 1)
   s:=0;
   for i:=1 to high(p) do s:=s+p[i];
   for i:=1 to high(p) do begin
@@ -1234,8 +1234,8 @@ begin
   if withBot and (gametype<>dtDraft) and (gameClass<>dcCaravan) then result:=Now+30*MINUTE
    else begin
     dur:=60;
-    if turns in [0..1] then dur:=40; // Первый ход - на 20 сек короче
-    if turns in [2..3] then dur:=50; // Второй ход - на 10 сек короче
+    if turns in [0..1] then dur:=40; // РџРµСЂРІС‹Р№ С…РѕРґ - РЅР° 20 СЃРµРє РєРѕСЂРѕС‡Рµ
+    if turns in [2..3] then dur:=50; // Р’С‚РѕСЂРѕР№ С…РѕРґ - РЅР° 10 СЃРµРє РєРѕСЂРѕС‡Рµ
     u:=0;
     if (turn=1) and (user1>0) then u:=user1;
     if (turn=2) and (user2>0) then u:=user2;
@@ -1248,7 +1248,7 @@ begin
    end;
 end;
 
-procedure TGame.SaveInitialState; // Сохранить начальное состояние дуэли в replayData
+procedure TGame.SaveInitialState; // РЎРѕС…СЂР°РЅРёС‚СЊ РЅР°С‡Р°Р»СЊРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РґСѓСЌР»Рё РІ replayData
 var
  i,v:integer;
  plr:TReplayPlayerInfo;
@@ -1326,8 +1326,8 @@ begin
  end;
 end;
 
-// Вообще это дело вызывается из gSect, так что может вызывать некоторые задержки
-// Ктобы это было не смертельно, функция не должна выполняться дольше 0.1 сек
+// Р’РѕРѕР±С‰Рµ СЌС‚Рѕ РґРµР»Рѕ РІС‹Р·С‹РІР°РµС‚СЃСЏ РёР· gSect, С‚Р°Рє С‡С‚Рѕ РјРѕР¶РµС‚ РІС‹Р·С‹РІР°С‚СЊ РЅРµРєРѕС‚РѕСЂС‹Рµ Р·Р°РґРµСЂР¶РєРё
+// РљС‚РѕР±С‹ СЌС‚Рѕ Р±С‹Р»Рѕ РЅРµ СЃРјРµСЂС‚РµР»СЊРЅРѕ, С„СѓРЅРєС†РёСЏ РЅРµ РґРѕР»Р¶РЅР° РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ РґРѕР»СЊС€Рµ 0.1 СЃРµРє
 function TGame.SaveReplay:integer;
 var
  f:file;
@@ -1443,17 +1443,17 @@ begin
    players[i]:=0;
    ASSERT(false,'Invalid userID - '+inttostr(players[j]));
   end;
-  if users[players[i]].connected>0 then exit; // Игрок в бою
+  if users[players[i]].connected>0 then exit; // РРіСЂРѕРє РІ Р±РѕСЋ
  end;
 
- if stage=2 then begin // Идёт составление колод
+ if stage=2 then begin // РРґС‘С‚ СЃРѕСЃС‚Р°РІР»РµРЅРёРµ РєРѕР»РѕРґ
   result:=true;
   for i:=1 to 4 do
    if (draftInfo.Players[i].control=0) and
      ((not draftInfo.Players[i].deckBuilt) or
       (Now<draftInfo.Players[i].played)) then result:=false;
  end;
- if stage=3 then begin // Турнир уже идёт
+ if stage=3 then begin // РўСѓСЂРЅРёСЂ СѓР¶Рµ РёРґС‘С‚
   result:=true;
   for i:=1 to 4 do
    if (draftInfo.Players[i].played=0) or
@@ -1481,12 +1481,12 @@ begin
  raise EWarning.Create('User '+inttostr(userID)+' not found in draft');
 end;
 
-function TGameDeck.IsValidForUser(const user:TUser):AnsiString; // проверяет допустимость колоды для юзера
+function TGameDeck.IsValidForUser(const user:TUser):AnsiString; // РїСЂРѕРІРµСЂСЏРµС‚ РґРѕРїСѓСЃС‚РёРјРѕСЃС‚СЊ РєРѕР»РѕРґС‹ РґР»СЏ СЋР·РµСЂР°
 var
  i,g,card,count:integer;
  owned:TCardSet;
 begin
- // Проверить кол-во карт
+ // РџСЂРѕРІРµСЂРёС‚СЊ РєРѕР»-РІРѕ РєР°СЂС‚
  count:=0;
  for i:=1 to high(cards) do
   if cards[i]<>0 then inc(count);
@@ -1494,15 +1494,15 @@ begin
   result:='too few cards (25 required)';
   exit;
  end;
- // Проверить стоимость колоды
+ // РџСЂРѕРІРµСЂРёС‚СЊ СЃС‚РѕРёРјРѕСЃС‚СЊ РєРѕР»РѕРґС‹
  result:='deck cost is too high';
  cost:=CalculateDeckCost(cards,CardSetToStr(user.ownCards));
  if cost>user.APlimit then exit;
  result:='some cards are not available';
- // Проверить доступность карт
+ // РџСЂРѕРІРµСЂРёС‚СЊ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ РєР°СЂС‚
  for i:=1 to high(owned) do
   owned[i]:=abs(user.ownCards[i]);
- // Добавим гильдейские карты
+ // Р”РѕР±Р°РІРёРј РіРёР»СЊРґРµР№СЃРєРёРµ РєР°СЂС‚С‹
  if user.guild<>'' then begin
   g:=FindGuild(user.guild);
   if g>0 then
@@ -1511,7 +1511,7 @@ begin
      if cards[i]='1' then
       owned[guildcards[i]]:=3;
  end;
- // Проверим доступность карт колоды
+ // РџСЂРѕРІРµСЂРёРј РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ РєР°СЂС‚ РєРѕР»РѕРґС‹
  for i:=1 to high(cards) do begin
   card:=cards[i];
   if card>0 then begin
@@ -1631,7 +1631,7 @@ end;
   var
    i:integer;
   begin
-   // В будущем переделать на хэш!!!
+   // Р’ Р±СѓРґСѓС‰РµРј РїРµСЂРµРґРµР»Р°С‚СЊ РЅР° С…СЌС€!!!
    result:=0;
    name:=lowercase(name);
    gSect.Enter;
@@ -1758,7 +1758,7 @@ end;
    end;
   end;
 
- // Обновляет позицию игрока в рейтинге указанного типа
+ // РћР±РЅРѕРІР»СЏРµС‚ РїРѕР·РёС†РёСЋ РёРіСЂРѕРєР° РІ СЂРµР№С‚РёРЅРіРµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‚РёРїР°
  procedure UpdatePlayerRanking(mode:TDuelType;playerID:integer);
   type
    PIntArray=^IntArray;
@@ -1977,7 +1977,7 @@ procedure DumpServerData;
      members[i].rew[2]:=StrToIntDef(sb[i*col+7],0);
      members[i].rew[3]:=StrToIntDef(sb[i*col+8],0);
     end;
-    // Здесь же сортировка членов гильдии по порядку вступления
+    // Р—РґРµСЃСЊ Р¶Рµ СЃРѕСЂС‚РёСЂРѕРІРєР° С‡Р»РµРЅРѕРІ РіРёР»СЊРґРёРё РїРѕ РїРѕСЂСЏРґРєСѓ РІСЃС‚СѓРїР»РµРЅРёСЏ
     SetLength(log,logLines);
     for i:=0 to logLines-1 do begin
      log[i].date:=GetDateFromStr(sc[i*2]);
@@ -2096,7 +2096,7 @@ procedure DumpServerData;
    end;
   end;
 
- procedure TCaravan.RequestActiveSlotIn(time:integer); // запрос на активацию слота через time секунд
+ procedure TCaravan.RequestActiveSlotIn(time:integer); // Р·Р°РїСЂРѕСЃ РЅР° Р°РєС‚РёРІР°С†РёСЋ СЃР»РѕС‚Р° С‡РµСЂРµР· time СЃРµРєСѓРЅРґ
   var
    i:integer;
   begin
@@ -2145,7 +2145,7 @@ procedure DumpServerData;
    i,l,plr,lvl:integer;
   begin
    result:=1;
-   // по 5% за каждого героя в составе
+   // РїРѕ 5% Р·Р° РєР°Р¶РґРѕРіРѕ РіРµСЂРѕСЏ РІ СЃРѕСЃС‚Р°РІРµ
    for i:=0 to high(members) do begin
     plr:=members[i].playerID;
     if plr<=high(allPlayers) then
@@ -2153,11 +2153,11 @@ procedure DumpServerData;
       result:=result+0.05;
    end;
 
-   // по 1% за каждые 100 богатства
+   // РїРѕ 1% Р·Р° РєР°Р¶РґС‹Рµ 100 Р±РѕРіР°С‚СЃС‚РІР°
    if bonuses[8]='1' then
     result:=result+0.01*(treasures div 100);
 
-   // по 1% за каждый уровень сильнейшего игрока
+   // РїРѕ 1% Р·Р° РєР°Р¶РґС‹Р№ СѓСЂРѕРІРµРЅСЊ СЃРёР»СЊРЅРµР№С€РµРіРѕ РёРіСЂРѕРєР°
    if bonuses[12]='1' then begin
     l:=1;
     for i:=0 to high(members) do begin
@@ -2202,7 +2202,7 @@ procedure DumpServerData;
    result:=result+#13#10;
   end;
 
- function TGuild.NextLaunchTime(kind:integer):TDateTime; // Когда можно будет запустить караван в следующий раз
+ function TGuild.NextLaunchTime(kind:integer):TDateTime; // РљРѕРіРґР° РјРѕР¶РЅРѕ Р±СѓРґРµС‚ Р·Р°РїСѓСЃС‚РёС‚СЊ РєР°СЂР°РІР°РЅ РІ СЃР»РµРґСѓСЋС‰РёР№ СЂР°Р·
   begin
    result:=caravans[kind].launched;
    case kind of

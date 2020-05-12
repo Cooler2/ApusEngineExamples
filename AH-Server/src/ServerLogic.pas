@@ -1,7 +1,7 @@
-// В этом модуле реализована обработка стандартных запросов сервера
-// - сервисные запросы (статистика, управление сервером, подключение/отключение)
-// - запросы сообщений юзеров
-// Т.о. код этого модуля не содержит прикладной специфики
+п»ї// Р’ СЌС‚РѕРј РјРѕРґСѓР»Рµ СЂРµР°Р»РёР·РѕРІР°РЅР° РѕР±СЂР°Р±РѕС‚РєР° СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… Р·Р°РїСЂРѕСЃРѕРІ СЃРµСЂРІРµСЂР°
+// - СЃРµСЂРІРёСЃРЅС‹Рµ Р·Р°РїСЂРѕСЃС‹ (СЃС‚Р°С‚РёСЃС‚РёРєР°, СѓРїСЂР°РІР»РµРЅРёРµ СЃРµСЂРІРµСЂРѕРј, РїРѕРґРєР»СЋС‡РµРЅРёРµ/РѕС‚РєР»СЋС‡РµРЅРёРµ)
+// - Р·Р°РїСЂРѕСЃС‹ СЃРѕРѕР±С‰РµРЅРёР№ СЋР·РµСЂРѕРІ
+// Рў.Рѕ. РєРѕРґ СЌС‚РѕРіРѕ РјРѕРґСѓР»СЏ РЅРµ СЃРѕРґРµСЂР¶РёС‚ РїСЂРёРєР»Р°РґРЅРѕР№ СЃРїРµС†РёС„РёРєРё
 {$R+}
 unit ServerLogic;
 interface
@@ -21,14 +21,14 @@ interface
  // Server log
  function RequestLog(con:integer):UTF8String;
 
- // запрос сообщений, накопившихся для юзера, очищает буфер сообщений юзера
- // возвращает сообщения без заголовков
- // если их нет - пустую строку
+ // Р·Р°РїСЂРѕСЃ СЃРѕРѕР±С‰РµРЅРёР№, РЅР°РєРѕРїРёРІС€РёС…СЃСЏ РґР»СЏ СЋР·РµСЂР°, РѕС‡РёС‰Р°РµС‚ Р±СѓС„РµСЂ СЃРѕРѕР±С‰РµРЅРёР№ СЋР·РµСЂР°
+ // РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРѕРѕР±С‰РµРЅРёСЏ Р±РµР· Р·Р°РіРѕР»РѕРІРєРѕРІ
+ // РµСЃР»Рё РёС… РЅРµС‚ - РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
  function GetUserMsgs(UserID:integer):UTF8String;
 
- // Отправка сообщения юзеру. Сообщения складываются в буфер юзера
- // delayed - отправить сразу же или можно когда-нибудь потом (не влияет на порядок доставки сообщений)
- // возвращает false в случае ошибки
+ // РћС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ СЋР·РµСЂСѓ. РЎРѕРѕР±С‰РµРЅРёСЏ СЃРєР»Р°РґС‹РІР°СЋС‚СЃСЏ РІ Р±СѓС„РµСЂ СЋР·РµСЂР°
+ // delayed - РѕС‚РїСЂР°РІРёС‚СЊ СЃСЂР°Р·Сѓ Р¶Рµ РёР»Рё РјРѕР¶РЅРѕ РєРѕРіРґР°-РЅРёР±СѓРґСЊ РїРѕС‚РѕРј (РЅРµ РІР»РёСЏРµС‚ РЅР° РїРѕСЂСЏРґРѕРє РґРѕСЃС‚Р°РІРєРё СЃРѕРѕР±С‰РµРЅРёР№)
+ // РІРѕР·РІСЂР°С‰Р°РµС‚ false РІ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё
  function PostUserMsg(userID:integer;msg:UTF8String;delayed:boolean=false):boolean;
 
  // Convert values to strings and join them
@@ -36,19 +36,19 @@ interface
 
  procedure SendVerificationEmail(email,login,lang:UTF8String);
 
- // ------ вызывать только внутри критсекции gSect! -----------
- // Создает юзера, возвращает UserID
+ // ------ РІС‹Р·С‹РІР°С‚СЊ С‚РѕР»СЊРєРѕ РІРЅСѓС‚СЂРё РєСЂРёС‚СЃРµРєС†РёРё gSect! -----------
+ // РЎРѕР·РґР°РµС‚ СЋР·РµСЂР°, РІРѕР·РІСЂР°С‰Р°РµС‚ UserID
  function CreateUser(tempUser:boolean=false):integer;
- // Удаляет юзера по UserID
+ // РЈРґР°Р»СЏРµС‚ СЋР·РµСЂР° РїРѕ UserID
  procedure DeleteUser(userID:integer;reason:UTF8String='';extra:UTF8String='');
  // UserID by name (0 - not found)
  function FindUser(name:UTF8String;ignoreBots:boolean=true):integer;
  // Get UserID by session
 // function GetUser(sess:UTF8String):integer;
 
- function GetPlayerID(userID:integer):integer; // 0 если такого юзера нет
+ function GetPlayerID(userID:integer):integer; // 0 РµСЃР»Рё С‚Р°РєРѕРіРѕ СЋР·РµСЂР° РЅРµС‚
 
- // Вызывать внутри gSect (очевидно)
+ // Р’С‹Р·С‹РІР°С‚СЊ РІРЅСѓС‚СЂРё gSect (РѕС‡РµРІРёРґРЅРѕ)
  function IsValidUserID(userID:integer;authorizedOnly:boolean=false):boolean;
 
  function TempUserIndex(userID:integer):integer;
@@ -57,22 +57,22 @@ interface
 
  function LoginAllowed:boolean;
 
- // Вызывается раз в секунду внутри gSect
+ // Р’С‹Р·С‹РІР°РµС‚СЃСЏ СЂР°Р· РІ СЃРµРєСѓРЅРґСѓ РІРЅСѓС‚СЂРё gSect
  procedure onTimer;
 
  var
-  // Список АВТОРИЗОВАННЫХ юзеров
-  // занятые записи идут не по порядку! Индекс массива - userID
-  users:array[0..MAX_USERS] of TUser;  // -1,0 - специальный слот для инвалидного юзера
+  // РЎРїРёСЃРѕРє РђР’РўРћР РР—РћР’РђРќРќР«РҐ СЋР·РµСЂРѕРІ
+  // Р·Р°РЅСЏС‚С‹Рµ Р·Р°РїРёСЃРё РёРґСѓС‚ РЅРµ РїРѕ РїРѕСЂСЏРґРєСѓ! РРЅРґРµРєСЃ РјР°СЃСЃРёРІР° - userID
+  users:array[0..MAX_USERS] of TUser;  // -1,0 - СЃРїРµС†РёР°Р»СЊРЅС‹Р№ СЃР»РѕС‚ РґР»СЏ РёРЅРІР°Р»РёРґРЅРѕРіРѕ СЋР·РµСЂР°
 
 implementation
  uses SysUtils,Logging,net,workers,CustomLogic,structs,WinSock2,classes,StrUtils;
 
  var
-  // Неавторизованные (временные) юзеры имеют номера вида 1xxxx,
-  // где xxxx - случайное число
-  // Эти юзеры не создаются и не управляются кастомной логикой
-  //   служат только для управления соединением
+  // РќРµР°РІС‚РѕСЂРёР·РѕРІР°РЅРЅС‹Рµ (РІСЂРµРјРµРЅРЅС‹Рµ) СЋР·РµСЂС‹ РёРјРµСЋС‚ РЅРѕРјРµСЂР° РІРёРґР° 1xxxx,
+  // РіРґРµ xxxx - СЃР»СѓС‡Р°Р№РЅРѕРµ С‡РёСЃР»Рѕ
+  // Р­С‚Рё СЋР·РµСЂС‹ РЅРµ СЃРѕР·РґР°СЋС‚СЃСЏ Рё РЅРµ СѓРїСЂР°РІР»СЏСЋС‚СЃСЏ РєР°СЃС‚РѕРјРЅРѕР№ Р»РѕРіРёРєРѕР№
+  //   СЃР»СѓР¶Р°С‚ С‚РѕР»СЊРєРѕ РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ СЃРѕРµРґРёРЅРµРЅРёРµРј
   tempUsers:array[1..20] of TUser;
 
 
@@ -174,7 +174,7 @@ function TCustomMySQLDatabase.Query(DBquery: RawByteString): AStringArr;
      end;
     exit;
    end;
-   // Нормальный юзер
+   // РќРѕСЂРјР°Р»СЊРЅС‹Р№ СЋР·РµСЂ
    if uCnt>=MAX_USERS then
     raise EError.Create('TOO MANY USERS');
 
@@ -297,7 +297,7 @@ function TCustomMySQLDatabase.Query(DBquery: RawByteString): AStringArr;
       else messages:=messages+msg;
      if not delayed then sendASAP:=true;
      inc(msgCount);
-     if msgCount>=10 then sendASAP:=true; // накопилось слишком много сообщений - надо отправить   
+     if msgCount>=10 then sendASAP:=true; // РЅР°РєРѕРїРёР»РѕСЃСЊ СЃР»РёС€РєРѕРј РјРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёР№ - РЅР°РґРѕ РѕС‚РїСЂР°РІРёС‚СЊ   
     end;
    finally
     LeaveCriticalSection(gSect);
@@ -475,7 +475,7 @@ function TCustomMySQLDatabase.Query(DBquery: RawByteString): AStringArr;
       result:='User not found!'
    end;
 
-   // Только юзера на сервере, наказание в базу не вносит
+   // РўРѕР»СЊРєРѕ СЋР·РµСЂР° РЅР° СЃРµСЂРІРµСЂРµ, РЅР°РєР°Р·Р°РЅРёРµ РІ Р±Р°Р·Сѓ РЅРµ РІРЅРѕСЃРёС‚
    if action='makesilent' then begin
      target:=Param(con,'plrname');
      value:=Param(con,'reason');
@@ -585,17 +585,17 @@ function TCustomMySQLDatabase.Query(DBquery: RawByteString): AStringArr;
  function LoginAllowed:boolean;
   begin
    result:=true;
-   if uCnt>round(high(users)*0.75) then result:=false; // Запрещен логин, если в резерве осталось менее 25%
+   if uCnt>round(high(users)*0.75) then result:=false; // Р—Р°РїСЂРµС‰РµРЅ Р»РѕРіРёРЅ, РµСЃР»Рё РІ СЂРµР·РµСЂРІРµ РѕСЃС‚Р°Р»РѕСЃСЊ РјРµРЅРµРµ 25%
   end;   
 
- // 10 раз в секунду
+ // 10 СЂР°Р· РІ СЃРµРєСѓРЅРґСѓ
  procedure onTimer;
   var
    i:integer;
    t:int64;
   begin
    try
-   // Удаление юзеров по таймауту
+   // РЈРґР°Р»РµРЅРёРµ СЋР·РµСЂРѕРІ РїРѕ С‚Р°Р№РјР°СѓС‚Сѓ
    t:=myTickCount;
    for i:=1 to MAX_USERS do
     if (users[i]<>nil) and (t>users[i].timeOut) then begin
@@ -603,7 +603,7 @@ function TCustomMySQLDatabase.Query(DBquery: RawByteString): AStringArr;
      LogMsg('WARN: user timeout %d (%s)',[i,users[i].name],logWarn);
      DeleteUser(i,'Timeout');
     end;
-   // Удаление временных юзеров
+   // РЈРґР°Р»РµРЅРёРµ РІСЂРµРјРµРЅРЅС‹С… СЋР·РµСЂРѕРІ
    for i:=1 to High(tempUsers) do
     if (tempUsers[i]<>nil) and (t>tempUsers[i].timeOut) then begin
      LogMsg('Temp user timeout '+inttostr(10000+i),logInfo);

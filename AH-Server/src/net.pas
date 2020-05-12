@@ -1,23 +1,23 @@
-// Универсальная сетевая часть сервера: реализация HTTP на overlapped-сокетов TCP/IP
+п»ї// РЈРЅРёРІРµСЂСЃР°Р»СЊРЅР°СЏ СЃРµС‚РµРІР°СЏ С‡Р°СЃС‚СЊ СЃРµСЂРІРµСЂР°: СЂРµР°Р»РёР·Р°С†РёСЏ HTTP РЅР° overlapped-СЃРѕРєРµС‚РѕРІ TCP/IP
 // Copyright (C) Ivan Polyacov, ivan@apus-software.com, cooler@tut.by
 {$R+}
 unit net;
 interface
  type
-  // аттрибуты соединения
-  TConAttr=(caIP,           // IP-адрес
-            caCountry);     // Страна, соответствующая IP
+  // Р°С‚С‚СЂРёР±СѓС‚С‹ СЃРѕРµРґРёРЅРµРЅРёСЏ
+  TConAttr=(caIP,           // IP-Р°РґСЂРµСЃ
+            caCountry);     // РЎС‚СЂР°РЅР°, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰Р°СЏ IP
 
-  // состояние соединения
+  // СЃРѕСЃС‚РѕСЏРЅРёРµ СЃРѕРµРґРёРЅРµРЅРёСЏ
   TConStatus=(csNone=0,
-              csReading=1,   // идет чтение из сети (ожидание) входящего запроса
-              csWaiting=2,   // ждем когда будет готов ответ на запрос
-              csWriting=3,   // идет запись (отправка в сеть) ответа
-              csClosing=4);  // соединение нуждается в закрытии
+              csReading=1,   // РёРґРµС‚ С‡С‚РµРЅРёРµ РёР· СЃРµС‚Рё (РѕР¶РёРґР°РЅРёРµ) РІС…РѕРґСЏС‰РµРіРѕ Р·Р°РїСЂРѕСЃР°
+              csWaiting=2,   // Р¶РґРµРј РєРѕРіРґР° Р±СѓРґРµС‚ РіРѕС‚РѕРІ РѕС‚РІРµС‚ РЅР° Р·Р°РїСЂРѕСЃ
+              csWriting=3,   // РёРґРµС‚ Р·Р°РїРёСЃСЊ (РѕС‚РїСЂР°РІРєР° РІ СЃРµС‚СЊ) РѕС‚РІРµС‚Р°
+              csClosing=4);  // СЃРѕРµРґРёРЅРµРЅРёРµ РЅСѓР¶РґР°РµС‚СЃСЏ РІ Р·Р°РєСЂС‹С‚РёРё
 
   TConInfo=record
    ID:integer;
-   cometUserID:cardinal; // если соединение ожидает данных для юзера - здесь userID
+   cometUserID:cardinal; // РµСЃР»Рё СЃРѕРµРґРёРЅРµРЅРёРµ РѕР¶РёРґР°РµС‚ РґР°РЅРЅС‹С… РґР»СЏ СЋР·РµСЂР° - Р·РґРµСЃСЊ userID
    remIP:cardinal;
    remPort:word;
    clientType:byte; // 0 - browser
@@ -32,7 +32,7 @@ interface
  var
   loopCounter:int64;
   netThreadTimestamp:TDateTime;
-  acceptIncomingMessages:boolean=true; // разрешить входящие запросы
+  acceptIncomingMessages:boolean=true; // СЂР°Р·СЂРµС€РёС‚СЊ РІС…РѕРґСЏС‰РёРµ Р·Р°РїСЂРѕСЃС‹
 
  procedure StartNetwork;
  procedure DoneNetwork;
@@ -40,24 +40,24 @@ interface
  function FormatResponse(body:UTF8String;dontCompress:boolean=false;mime:UTF8String='';cacheControl:UTF8String=''):UTF8String;
  function FormatError(status,query:UTF8String):UTF8String;
 
- // записать данные сообщения в исходящий буфер соединения (либо отправить)
- // msg - без заголовков! (может добавляться к уже накопленным сообщениям)
+ // Р·Р°РїРёСЃР°С‚СЊ РґР°РЅРЅС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ РІ РёСЃС…РѕРґСЏС‰РёР№ Р±СѓС„РµСЂ СЃРѕРµРґРёРЅРµРЅРёСЏ (Р»РёР±Рѕ РѕС‚РїСЂР°РІРёС‚СЊ)
+ // msg - Р±РµР· Р·Р°РіРѕР»РѕРІРєРѕРІ! (РјРѕР¶РµС‚ РґРѕР±Р°РІР»СЏС‚СЊСЃСЏ Рє СѓР¶Рµ РЅР°РєРѕРїР»РµРЅРЅС‹Рј СЃРѕРѕР±С‰РµРЅРёСЏРј)
  procedure SendMsg(con:integer;msg:UTF8String;urgency:byte=0);
 
- // Получить параметр запроса, который обрабатывается в соединении con по его имени
- // idx желательно получать через TConnection.GetTarget
+ // РџРѕР»СѓС‡РёС‚СЊ РїР°СЂР°РјРµС‚СЂ Р·Р°РїСЂРѕСЃР°, РєРѕС‚РѕСЂС‹Р№ РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚СЃСЏ РІ СЃРѕРµРґРёРЅРµРЅРёРё con РїРѕ РµРіРѕ РёРјРµРЅРё
+ // idx Р¶РµР»Р°С‚РµР»СЊРЅРѕ РїРѕР»СѓС‡Р°С‚СЊ С‡РµСЂРµР· TConnection.GetTarget
  function Param(CRID:integer;name:UTF8String):UTF8String;
 
- // Получить cookie запроса, который обрабатывается в соединении con по его имени
- // idx желательно получать через TConnection.GetTarget
+ // РџРѕР»СѓС‡РёС‚СЊ cookie Р·Р°РїСЂРѕСЃР°, РєРѕС‚РѕСЂС‹Р№ РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚СЃСЏ РІ СЃРѕРµРґРёРЅРµРЅРёРё con РїРѕ РµРіРѕ РёРјРµРЅРё
+ // idx Р¶РµР»Р°С‚РµР»СЊРЅРѕ РїРѕР»СѓС‡Р°С‚СЊ С‡РµСЂРµР· TConnection.GetTarget
  function Cookie(CRID:integer;name:UTF8String):UTF8String;
 
- // Возвращает запрашиваемый аттрибут соединения по его индексу
+ // Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·Р°РїСЂР°С€РёРІР°РµРјС‹Р№ Р°С‚С‚СЂРёР±СѓС‚ СЃРѕРµРґРёРЅРµРЅРёСЏ РїРѕ РµРіРѕ РёРЅРґРµРєСЃСѓ
  function GetConnAttr(con:integer;attr:TConAttr):UTF8String;
 
  function GetConnInfo(con:integer):TConInfo;
 
- // Увеличивает счетчик бана по IP
+ // РЈРІРµР»РёС‡РёРІР°РµС‚ СЃС‡РµС‚С‡РёРє Р±Р°РЅР° РїРѕ IP
  procedure UseIP(con:integer;value:integer);
 
  function GetConnectionsList:TConInfoArray;
@@ -82,38 +82,38 @@ implementation
   end;
 
   TConnection=record
-   selfID:integer;    // ID данного соединения
+   selfID:integer;    // ID РґР°РЅРЅРѕРіРѕ СЃРѕРµРґРёРЅРµРЅРёСЏ
    socket:TSocket;
-   cometUserID:integer; // если соединение ожидает данных для юзера - здесь userID
+   cometUserID:integer; // РµСЃР»Рё СЃРѕРµРґРёРЅРµРЅРёРµ РѕР¶РёРґР°РµС‚ РґР°РЅРЅС‹С… РґР»СЏ СЋР·РµСЂР° - Р·РґРµСЃСЊ userID
    remIP:cardinal;
    remPort:word;
    country:string[3];
    status:TConStatus;
    keepAlive:boolean;
-   inBuf:UTF8String; // буфер для входящих данных
-   inPos:integer; // текущая позиция - номер первого незанятого байта
-   headersParsed:boolean; // заголовки были получены и обработаны?
-   bodySize,bodyPos:integer; // размер и расположение тела (для запроса POST)
-   requestRnd:byte; // случайное число, обновляющееся с каждым новым запросом
-   rTypeGet:boolean; // тип запроса
-   rURI:UTF8String; // что запрашивается
-   query:UTF8String; // часть запроса после '?'
-   contentType:UTF8String; // тип тела запроса POST
-   body:UTF8String; // тело запроса (POST)
+   inBuf:UTF8String; // Р±СѓС„РµСЂ РґР»СЏ РІС…РѕРґСЏС‰РёС… РґР°РЅРЅС‹С…
+   inPos:integer; // С‚РµРєСѓС‰Р°СЏ РїРѕР·РёС†РёСЏ - РЅРѕРјРµСЂ РїРµСЂРІРѕРіРѕ РЅРµР·Р°РЅСЏС‚РѕРіРѕ Р±Р°Р№С‚Р°
+   headersParsed:boolean; // Р·Р°РіРѕР»РѕРІРєРё Р±С‹Р»Рё РїРѕР»СѓС‡РµРЅС‹ Рё РѕР±СЂР°Р±РѕС‚Р°РЅС‹?
+   bodySize,bodyPos:integer; // СЂР°Р·РјРµСЂ Рё СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ С‚РµР»Р° (РґР»СЏ Р·Р°РїСЂРѕСЃР° POST)
+   requestRnd:byte; // СЃР»СѓС‡Р°Р№РЅРѕРµ С‡РёСЃР»Рѕ, РѕР±РЅРѕРІР»СЏСЋС‰РµРµСЃСЏ СЃ РєР°Р¶РґС‹Рј РЅРѕРІС‹Рј Р·Р°РїСЂРѕСЃРѕРј
+   rTypeGet:boolean; // С‚РёРї Р·Р°РїСЂРѕСЃР°
+   rURI:UTF8String; // С‡С‚Рѕ Р·Р°РїСЂР°С€РёРІР°РµС‚СЃСЏ
+   query:UTF8String; // С‡Р°СЃС‚СЊ Р·Р°РїСЂРѕСЃР° РїРѕСЃР»Рµ '?'
+   contentType:UTF8String; // С‚РёРї С‚РµР»Р° Р·Р°РїСЂРѕСЃР° POST
+   body:UTF8String; // С‚РµР»Рѕ Р·Р°РїСЂРѕСЃР° (POST)
    userAgent:UTF8String;
-   cookies:UTF8String; // куки из заголовка
+   cookies:UTF8String; // РєСѓРєРё РёР· Р·Р°РіРѕР»РѕРІРєР°
    dontCompress:boolean;
-   outBuf:UTF8String;  // исходящие данные
+   outBuf:UTF8String;  // РёСЃС…РѕРґСЏС‰РёРµ РґР°РЅРЅС‹Рµ
    overlapped:TOverlapped;
    opened,lastRequestTime:TDateTime;
-   timeOut:int64; // момент после которого нужно закрыть соединение по таймауту (MyTickCount)
-   closeReason:byte; // 1 - not keep-alive, 2 - receive error, 3 - error,  5 - graceful termination, 7 - закрыто сервером за ненадобностью
+   timeOut:int64; // РјРѕРјРµРЅС‚ РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ РЅСѓР¶РЅРѕ Р·Р°РєСЂС‹С‚СЊ СЃРѕРµРґРёРЅРµРЅРёРµ РїРѕ С‚Р°Р№РјР°СѓС‚Сѓ (MyTickCount)
+   closeReason:byte; // 1 - not keep-alive, 2 - receive error, 3 - error,  5 - graceful termination, 7 - Р·Р°РєСЂС‹С‚Рѕ СЃРµСЂРІРµСЂРѕРј Р·Р° РЅРµРЅР°РґРѕР±РЅРѕСЃС‚СЊСЋ
    parNames,parValues:AStringArr;
    function RequestReceived(bytesReceived:integer):boolean;
-   function ParseHeaders(size:integer):boolean; // возвращает false если запрос некорректный
+   function ParseHeaders(size:integer):boolean; // РІРѕР·РІСЂР°С‰Р°РµС‚ false РµСЃР»Рё Р·Р°РїСЂРѕСЃ РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№
    procedure HandleRequest;
    procedure SendResponse(context:integer=0);
-   procedure ExtractParameters; // заполняет массивы имен и значений параметров
+   procedure ExtractParameters; // Р·Р°РїРѕР»РЅСЏРµС‚ РјР°СЃСЃРёРІС‹ РёРјРµРЅ Рё Р·РЅР°С‡РµРЅРёР№ РїР°СЂР°РјРµС‚СЂРѕРІ
    procedure HandleLogin;
    procedure HandleLogout;
    procedure HandleCheckValue;
@@ -121,7 +121,7 @@ implementation
    procedure HandleUserMsgs(userID,serial:integer;sign:UTF8String);
    procedure HandleCometRequest(userID:integer;serial:cardinal;sign:UTF8String);
    function Param(name:UTF8String):UTF8String;
-   function GetCRID:cardinal; // Target текущего запроса
+   function GetCRID:cardinal; // Target С‚РµРєСѓС‰РµРіРѕ Р·Р°РїСЂРѕСЃР°
    procedure PrepareForNextRequest;
    function FormatError(status:UTF8String):UTF8String;
    function GetInfo:TConInfo;
@@ -150,36 +150,36 @@ implementation
   sock:TSocket;
   local_IP:cardinal=INADDR_ANY; // localhost
 
-  // Сокеты подключений клиентов
+  // РЎРѕРєРµС‚С‹ РїРѕРґРєР»СЋС‡РµРЅРёР№ РєР»РёРµРЅС‚РѕРІ
   connections:array[1..MAX_CONNECTIONS_LIMIT] of TConnection;
   // list of free connection indices
 //  freeCon:array[1..MAX_CONNECTIONS_LIMIT] of integer;
-//  conCount:integer=0; // кол-во занятых соединений
+//  conCount:integer=0; // РєРѕР»-РІРѕ Р·Р°РЅСЏС‚С‹С… СЃРѕРµРґРёРЅРµРЅРёР№
 
-{  // список соединений, в которых есть данные для отправки
+{  // СЃРїРёСЃРѕРє СЃРѕРµРґРёРЅРµРЅРёР№, РІ РєРѕС‚РѕСЂС‹С… РµСЃС‚СЊ РґР°РЅРЅС‹Рµ РґР»СЏ РѕС‚РїСЂР°РІРєРё
   notifications:array[1..MAX_CONNECTIONS_LIMIT] of integer;
   nCount:integer;}
 
 //  totalUrgency:integer;
-  event:THandle; // событие, связанное с выполнением какой-либо сетевой задачи 
+  event:THandle; // СЃРѕР±С‹С‚РёРµ, СЃРІСЏР·Р°РЅРЅРѕРµ СЃ РІС‹РїРѕР»РЅРµРЅРёРµРј РєР°РєРѕР№-Р»РёР±Рѕ СЃРµС‚РµРІРѕР№ Р·Р°РґР°С‡Рё 
 
-  lastSecond,lastMinute,lastHour,lastDay:integer; // для таймера
+  lastSecond,lastMinute,lastHour,lastDay:integer; // РґР»СЏ С‚Р°Р№РјРµСЂР°
   firstTimer:boolean=true;
   
   // Statistics
 //  stat:TStatistics;
 
-  // время до сброса лога
+  // РІСЂРµРјСЏ РґРѕ СЃР±СЂРѕСЃР° Р»РѕРіР°
   timeToFlush:integer;
 
   // Temporary ban list
-  // Принцип работы: IP -> значение
-  // С каждым запросом значение растёт, с каждым ошибочным запросом значение растет сильно
-  // При достижении критического уровня (100) соединение закрывается, новые соединения с этого IP не принимаются
-  // Раз в секунду значение уменьшается на 10
+  // РџСЂРёРЅС†РёРї СЂР°Р±РѕС‚С‹: IP -> Р·РЅР°С‡РµРЅРёРµ
+  // РЎ РєР°Р¶РґС‹Рј Р·Р°РїСЂРѕСЃРѕРј Р·РЅР°С‡РµРЅРёРµ СЂР°СЃС‚С‘С‚, СЃ РєР°Р¶РґС‹Рј РѕС€РёР±РѕС‡РЅС‹Рј Р·Р°РїСЂРѕСЃРѕРј Р·РЅР°С‡РµРЅРёРµ СЂР°СЃС‚РµС‚ СЃРёР»СЊРЅРѕ
+  // РџСЂРё РґРѕСЃС‚РёР¶РµРЅРёРё РєСЂРёС‚РёС‡РµСЃРєРѕРіРѕ СѓСЂРѕРІРЅСЏ (100) СЃРѕРµРґРёРЅРµРЅРёРµ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ, РЅРѕРІС‹Рµ СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ СЌС‚РѕРіРѕ IP РЅРµ РїСЂРёРЅРёРјР°СЋС‚СЃСЏ
+  // Р Р°Р· РІ СЃРµРєСѓРЅРґСѓ Р·РЅР°С‡РµРЅРёРµ СѓРјРµРЅСЊС€Р°РµС‚СЃСЏ РЅР° 10
   banlist:array[0..$3FFFFF] of byte; // 4Mb table
 
-  badIP:array[0..7] of TBadIP; // проблемные IP - на такие сообщения отправляются чаще
+  badIP:array[0..7] of TBadIP; // РїСЂРѕР±Р»РµРјРЅС‹Рµ IP - РЅР° С‚Р°РєРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ РѕС‚РїСЂР°РІР»СЏСЋС‚СЃСЏ С‡Р°С‰Рµ
 
  function IPHash(ip:cardinal):cardinal; inline;
   begin
@@ -521,9 +521,9 @@ implementation
    end;
    end;
 
- // Проверяет на допустимость запрос файла.
- // Запрос должен быть безопасным, а файл - существовать.
- // Возвращает путь к файлу либо пустую строку
+ // РџСЂРѕРІРµСЂСЏРµС‚ РЅР° РґРѕРїСѓСЃС‚РёРјРѕСЃС‚СЊ Р·Р°РїСЂРѕСЃ С„Р°Р№Р»Р°.
+ // Р—Р°РїСЂРѕСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р±РµР·РѕРїР°СЃРЅС‹Рј, Р° С„Р°Р№Р» - СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ.
+ // Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ Р»РёР±Рѕ РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
  function ValidFileRequest(req:UTF8String):UTF8String;
   var
    i,c:integer;
@@ -534,16 +534,16 @@ implementation
    for i:=1 to length(req) do begin
     if not (req[i] in ['A'..'Z','a'..'z','0'..'9','/','.','_','-']) then exit;
     if req[i]='.' then inc(c);
-    if (req[i]='/') and (c>0) then exit; // точки допустимы только в имени файла 
+    if (req[i]='/') and (c>0) then exit; // С‚РѕС‡РєРё РґРѕРїСѓСЃС‚РёРјС‹ С‚РѕР»СЊРєРѕ РІ РёРјРµРЅРё С„Р°Р№Р»Р° 
    end;
-   if c>1 then exit; // более 1 точки нельзя
+   if c>1 then exit; // Р±РѕР»РµРµ 1 С‚РѕС‡РєРё РЅРµР»СЊР·СЏ
    req:=StringReplace(req,'/','\',[rfReplaceAll]);
    if not FileExists(HomeDir+req) then exit;
    result:=HomeDir+req;
   end;
 
- // Формирует HTTP-ответ с телом указанного файла
- // Файл должен существовать
+ // Р¤РѕСЂРјРёСЂСѓРµС‚ HTTP-РѕС‚РІРµС‚ СЃ С‚РµР»РѕРј СѓРєР°Р·Р°РЅРЅРѕРіРѕ С„Р°Р№Р»Р°
+ // Р¤Р°Р№Р» РґРѕР»Р¶РµРЅ СЃСѓС‰РµСЃС‚РІРѕРІР°С‚СЊ
  function GetStaticFile(fname:UTF8String):UTF8String;
   var
    f:file;
@@ -623,7 +623,7 @@ procedure TConnection.HandleNewAcc;
   begin
    rnd:=StrToIntDef(query,0);
    if rnd<>0 then begin
-    // Подключение без авторизации
+    // РџРѕРґРєР»СЋС‡РµРЅРёРµ Р±РµР· Р°РІС‚РѕСЂРёР·Р°С†РёРё
     userID:=CreateUser(true);
     outBuf:=FormatResponse(IntToStr(userID),false,'text/plain');
     exit;
@@ -633,7 +633,7 @@ procedure TConnection.HandleNewAcc;
     UserID:=StrToIntDef(A,0);
     if IsValidUserID(userID) then begin
      if LoginAllowed then begin
-      // попытка авторизации
+      // РїРѕРїС‹С‚РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё
       B:=param('B'); C:=param('C'); D:=param('D');
       AddTask(userID,GetCRID,['LOGIN',B,C,D]);
      end else
@@ -710,7 +710,7 @@ procedure TConnection.HandleNewAcc;
      LogMsg('Out of order POST request ignored '+IntToStr(serial),logInfo,lgHTTP);
     end
     else
-    if serial=lastPostSerial then begin  // Нужно пересмотреть этот код, т.к. смысл POST и GET не соответствует POLL и PUSH
+    if serial=lastPostSerial then begin  // РќСѓР¶РЅРѕ РїРµСЂРµСЃРјРѕС‚СЂРµС‚СЊ СЌС‚РѕС‚ РєРѕРґ, С‚.Рє. СЃРјС‹СЃР» POST Рё GET РЅРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ POLL Рё PUSH
      outBuf:=FormatResponse('IGNORED');
      LogMsg('Duplicated request '+IntToStr(serial),logInfo,lgHTTP);
     end else
@@ -730,7 +730,7 @@ procedure TConnection.HandleNewAcc;
       SetLength(sa,15); // Up to 15 messages per request
       for i:=0 to high(sa) do sa[i]:='';
       n:=0;
-      i:=1; // текущая позиция в body
+      i:=1; // С‚РµРєСѓС‰Р°СЏ РїРѕР·РёС†РёСЏ РІ body
       while i<length(body) do begin
        if n>high(sa) then break;
        l:=byte(body[i]); inc(i);
@@ -784,7 +784,7 @@ procedure TConnection.HandleNewAcc;
     if serial=lastPollSerial then begin
      LogMsg('Duplicated poll request '+IntToStr(serial),logInfo,lgHTTP);
      if lastPollResponse=UNSENT_RESPONSE then begin
-      // ответ еще не был отправлен - поискать другое соединение для юзера
+      // РѕС‚РІРµС‚ РµС‰Рµ РЅРµ Р±С‹Р» РѕС‚РїСЂР°РІР»РµРЅ - РїРѕРёСЃРєР°С‚СЊ РґСЂСѓРіРѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ РґР»СЏ СЋР·РµСЂР°
       for i:=1 to high(connections) do
        if connections[i].status<>csNone then
         if (connections[i].cometUserID=userID) and (connections[i].status<>csClosing) then begin
@@ -804,7 +804,7 @@ procedure TConnection.HandleNewAcc;
     end
     else
     if serial>lastPollSerial then begin
-     // отправим исходящие сообщения (если есть) и запомним ответ, либо поставим в ожидание
+     // РѕС‚РїСЂР°РІРёРј РёСЃС…РѕРґСЏС‰РёРµ СЃРѕРѕР±С‰РµРЅРёСЏ (РµСЃР»Рё РµСЃС‚СЊ) Рё Р·Р°РїРѕРјРЅРёРј РѕС‚РІРµС‚, Р»РёР±Рѕ РїРѕСЃС‚Р°РІРёРј РІ РѕР¶РёРґР°РЅРёРµ
      users[userid].timeout:=MyTickCount+USER_TIMEOUT;
      lastPollSerial:=serial;
      lastPollResponse:=GetUserMsgs(userID);
@@ -815,7 +815,7 @@ procedure TConnection.HandleNewAcc;
       cometUserID:=userID;
       err:=1+GetIPErrors(remIP);
       if err>4 then err:=4;
-      self.timeOut:=MyTickCount+DATA_TIMEOUT div err; // в это время будет отправлен пустой ответ, если только сообщения не поступят раньше
+      self.timeOut:=MyTickCount+DATA_TIMEOUT div err; // РІ СЌС‚Рѕ РІСЂРµРјСЏ Р±СѓРґРµС‚ РѕС‚РїСЂР°РІР»РµРЅ РїСѓСЃС‚РѕР№ РѕС‚РІРµС‚, РµСЃР»Рё С‚РѕР»СЊРєРѕ СЃРѕРѕР±С‰РµРЅРёСЏ РЅРµ РїРѕСЃС‚СѓРїСЏС‚ СЂР°РЅСЊС€Рµ
      end;
     end;
    end;
@@ -896,8 +896,8 @@ procedure TConnection.HandleNewAcc;
    end;
   end;
 
- // Во входящем буфере соединения полностью содержится запрос
- // Нужно его обработать и сформировать ответ в исходящем буфере
+ // Р’Рѕ РІС…РѕРґСЏС‰РµРј Р±СѓС„РµСЂРµ СЃРѕРµРґРёРЅРµРЅРёСЏ РїРѕР»РЅРѕСЃС‚СЊСЋ СЃРѕРґРµСЂР¶РёС‚СЃСЏ Р·Р°РїСЂРѕСЃ
+ // РќСѓР¶РЅРѕ РµРіРѕ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ Рё СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ РѕС‚РІРµС‚ РІ РёСЃС…РѕРґСЏС‰РµРј Р±СѓС„РµСЂРµ
  procedure TConnection.HandleRequest;
   var
    i,level:integer;
@@ -914,7 +914,7 @@ procedure TConnection.HandleNewAcc;
     if keepAlive then
      timeOut:=MyTickCount+KEEP_ALIVE_TIMEOUT;
 
-    // Разделение запроса на части
+    // Р Р°Р·РґРµР»РµРЅРёРµ Р·Р°РїСЂРѕСЃР° РЅР° С‡Р°СЃС‚Рё
     i:=pos('?',rURI);
     if i>0 then begin
      query:=copy(rURI,i+1,length(rURI));
@@ -928,7 +928,7 @@ procedure TConnection.HandleNewAcc;
 
     rURI:=UpperCase(rURI);
 
-    // Логирование запросов
+    // Р›РѕРіРёСЂРѕРІР°РЅРёРµ Р·Р°РїСЂРѕСЃРѕРІ
     if LOG_HTTP then begin
      params:='';
      for i:=0 to length(parNames)-1 do
@@ -946,7 +946,7 @@ procedure TConnection.HandleNewAcc;
      end;
     end;
 
-    // Сперва стандартные запросы
+    // РЎРїРµСЂРІР° СЃС‚Р°РЅРґР°СЂС‚РЅС‹Рµ Р·Р°РїСЂРѕСЃС‹
     if rTypeGet then begin
      // GET
      if rURI='CMD' then begin
@@ -961,15 +961,15 @@ procedure TConnection.HandleNewAcc;
       HandleLogout;
       exit;
      end;
-     if rURI='CHECKVALUE' then begin // проверка допустимости значений аккаунта
+     if rURI='CHECKVALUE' then begin // РїСЂРѕРІРµСЂРєР° РґРѕРїСѓСЃС‚РёРјРѕСЃС‚Рё Р·РЅР°С‡РµРЅРёР№ Р°РєРєР°СѓРЅС‚Р°
       HandleCheckValue;
       exit;
      end;
-     if rURI='GETVERSION' then begin // текущая версия игры
+     if rURI='GETVERSION' then begin // С‚РµРєСѓС‰Р°СЏ РІРµСЂСЃРёСЏ РёРіСЂС‹
       outBuf:=FormatResponse(GetAllowedVersions,false,'text/plain');
       exit;
      end;
-     // Запросы, требующие авторизации
+     // Р—Р°РїСЂРѕСЃС‹, С‚СЂРµР±СѓСЋС‰РёРµ Р°РІС‚РѕСЂРёР·Р°С†РёРё
      if (rURI='ADMIN') or (rURI='LOG') then begin
       if (length(accessToken)>3) and (Cookie(selfID,'AHSERVER_TOKEN')=AccessToken) then begin
        if rURI='ADMIN' then begin
@@ -994,7 +994,7 @@ procedure TConnection.HandleNewAcc;
      end;
      if (length(accessToken)>3) and
         ((Cookie(selfID,'AHSERVER_TOKEN')=AccessToken) or (param('AHSERVER_TOKEN')=AccessToken)) then begin
-      // Требуется авторизация через cookie
+      // РўСЂРµР±СѓРµС‚СЃСЏ Р°РІС‚РѕСЂРёР·Р°С†РёСЏ С‡РµСЂРµР· cookie
       if rURI='ADMINCMD' then begin
        outBuf:=RequestAdminCmd(GetCRID);
        exit;
@@ -1006,7 +1006,7 @@ procedure TConnection.HandleNewAcc;
      end;
     end;
 
-    // Отправка/получение сообщений залогинившегося юзера?
+    // РћС‚РїСЂР°РІРєР°/РїРѕР»СѓС‡РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёР№ Р·Р°Р»РѕРіРёРЅРёРІС€РµРіРѕСЃСЏ СЋР·РµСЂР°?
     i:=pos('-',rURI);
     if i>0 then begin
      req:=splitA('-',rURI);
@@ -1014,15 +1014,15 @@ procedure TConnection.HandleNewAcc;
      serial:=StrToIntDef(req[1],0);
      if IsValidUserID(uID,true) and (length(req)=3) then begin
       if bodySize>0 then
-       HandleUserMsgs(uID,serial,req[2]) // приём входящих сообщений юзера
+       HandleUserMsgs(uID,serial,req[2]) // РїСЂРёС‘Рј РІС…РѕРґСЏС‰РёС… СЃРѕРѕР±С‰РµРЅРёР№ СЋР·РµСЂР°
       else
-       HandleCometRequest(uID,serial,req[2]); // запрос исходящих сообщений
+       HandleCometRequest(uID,serial,req[2]); // Р·Р°РїСЂРѕСЃ РёСЃС…РѕРґСЏС‰РёС… СЃРѕРѕР±С‰РµРЅРёР№
 
       exit;
      end;
     end;
 
-    // если ни один вариант не подошел - попробуем запрос статического файла
+    // РµСЃР»Рё РЅРё РѕРґРёРЅ РІР°СЂРёР°РЅС‚ РЅРµ РїРѕРґРѕС€РµР» - РїРѕРїСЂРѕР±СѓРµРј Р·Р°РїСЂРѕСЃ СЃС‚Р°С‚РёС‡РµСЃРєРѕРіРѕ С„Р°Р№Р»Р°
     if HomeDir<>'' then begin
      fname:=ValidFileRequest(rURI);
      if fname<>'' then outBuf:=GetStaticFile(fname)
@@ -1031,7 +1031,7 @@ procedure TConnection.HandleNewAcc;
      exit;
     end;
 
-    // если ничего не подошло - 404
+    // РµСЃР»Рё РЅРёС‡РµРіРѕ РЅРµ РїРѕРґРѕС€Р»Рѕ - 404
     outBuf:=FormatError('404 Not Found');
     LogMsg('WARN! Request not handled',logNormal,lgHTTP);
    except
@@ -1064,7 +1064,7 @@ procedure onSent(const dwError,cbTransferred:DWORD;
    with connections[idx] do
     if keepAlive and (banList[IPhash(connections[idx].remIP)]<=80) then begin
      connections[idx].PrepareForNextRequest;
-     StartRecv(idx); // прием очередного запроса
+     StartRecv(idx); // РїСЂРёРµРј РѕС‡РµСЂРµРґРЅРѕРіРѕ Р·Р°РїСЂРѕСЃР°
     end else begin
      if banList[IPhash(connections[idx].remIP)]>80 then inc(serverStat.ipBanned);
      if LOG_HTTP then begin
@@ -1092,7 +1092,7 @@ procedure TConnection.SendResponse(context:integer=0);
   size:cardinal;
   res:integer;
  begin
-  inPos:=1; // сперва очистим входящий буфер
+  inPos:=1; // СЃРїРµСЂРІР° РѕС‡РёСЃС‚РёРј РІС…РѕРґСЏС‰РёР№ Р±СѓС„РµСЂ
   if length(outBuf)=0 then begin
    LogMsg('Trying to send 0 bytes',logWarn,lgHTTP);
    exit;
@@ -1117,10 +1117,10 @@ procedure TConnection.SendResponse(context:integer=0);
   end;
  end;
 
-// Парсит заголовки запроса
-// - если это корректный запрос POST - определяет размер тела для чтения
-// - если корректный запрос GET - устанавливает размер тела в 0
-// - если запрос некорректный - формирует ошибку, устанавливает keepAlive=false, возвращает false
+// РџР°СЂСЃРёС‚ Р·Р°РіРѕР»РѕРІРєРё Р·Р°РїСЂРѕСЃР°
+// - РµСЃР»Рё СЌС‚Рѕ РєРѕСЂСЂРµРєС‚РЅС‹Р№ Р·Р°РїСЂРѕСЃ POST - РѕРїСЂРµРґРµР»СЏРµС‚ СЂР°Р·РјРµСЂ С‚РµР»Р° РґР»СЏ С‡С‚РµРЅРёСЏ
+// - РµСЃР»Рё РєРѕСЂСЂРµРєС‚РЅС‹Р№ Р·Р°РїСЂРѕСЃ GET - СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЂР°Р·РјРµСЂ С‚РµР»Р° РІ 0
+// - РµСЃР»Рё Р·Р°РїСЂРѕСЃ РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ - С„РѕСЂРјРёСЂСѓРµС‚ РѕС€РёР±РєСѓ, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ keepAlive=false, РІРѕР·РІСЂР°С‰Р°РµС‚ false
 function TConnection.ParseHeaders(size:integer):boolean;
  var
   i,p:integer;
@@ -1134,20 +1134,20 @@ function TConnection.ParseHeaders(size:integer):boolean;
   req:=splitA(' ',copy(inBuf,1,i-1));
   keepAlive:=false;
   bodySize:=0;
-  // запрос должен содержать 3 поля
+  // Р·Р°РїСЂРѕСЃ РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ 3 РїРѕР»СЏ
   if (length(req)<>3) then begin
    outBuf:=FormatError(ERR400);
    result:=true;   exit;
   end;
-  // первое поле должно быть GET либо POST
+  // РїРµСЂРІРѕРµ РїРѕР»Рµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ GET Р»РёР±Рѕ POST
   req[0]:=UpperCase(req[0]);
   if (req[0]<>'GET') and (req[0]<>'POST') then begin
    outBuf:=FormatError('405 Method Not Allowed'#13#10'Allow: GET,POST');
    result:=true;   exit;
   end;
   rTypeGet:=req[0]='GET';
-  // проверка версии HTTP пока опущена...
-  // запрос должен начинаться с / и содержать хотя бы 1 символ после слэша
+  // РїСЂРѕРІРµСЂРєР° РІРµСЂСЃРёРё HTTP РїРѕРєР° РѕРїСѓС‰РµРЅР°...
+  // Р·Р°РїСЂРѕСЃ РґРѕР»Р¶РµРЅ РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ / Рё СЃРѕРґРµСЂР¶Р°С‚СЊ С…РѕС‚СЏ Р±С‹ 1 СЃРёРјРІРѕР» РїРѕСЃР»Рµ СЃР»СЌС€Р°
   rURI:=req[1];
   if (length(rURI)<2) or (rURI[1]<>'/') then begin
    outBuf:=FormatError(ERR404);
@@ -1163,7 +1163,7 @@ function TConnection.ParseHeaders(size:integer):boolean;
     if p=0 then continue;
     par:=UpperCase(copy(req[i],1,p));
     value:=copy(req[i],p+1,length(req[i]));
-    // размер тела запроса
+    // СЂР°Р·РјРµСЂ С‚РµР»Р° Р·Р°РїСЂРѕСЃР°
     if par='CONTENT-LENGTH:' then begin
      bodySize:=StrToIntDef(value,0);
      if bodyPos+bodySize>=Length(inBuf) then begin
@@ -1171,7 +1171,7 @@ function TConnection.ParseHeaders(size:integer):boolean;
       result:=true; exit;
      end;
     end;
-    // тип содержимого тела
+    // С‚РёРї СЃРѕРґРµСЂР¶РёРјРѕРіРѕ С‚РµР»Р°
     if par='CONTENT-TYPE:' then contentType:=lowercase(value);
     if par='USER-AGENT:' then userAgent:=value;
     if par='COOKIE:' then cookies:=value;
@@ -1204,20 +1204,20 @@ procedure TConnection.PrepareForNextRequest;
   SetLength(parValues,0);
  end;
 
-// Проверяет наличие полностью принятого запроса во входящем буфере
-// Возможные варианты:
-// - запрос еще не получен, необходим дальнейший прием данных - выставляем csReading
-// - получено нечто, что не может быть корректным запросом - дальнейший прием не имеет смысла - csClosing
-// - запрос получен полностью и может быть обработан
+// РџСЂРѕРІРµСЂСЏРµС‚ РЅР°Р»РёС‡РёРµ РїРѕР»РЅРѕСЃС‚СЊСЋ РїСЂРёРЅСЏС‚РѕРіРѕ Р·Р°РїСЂРѕСЃР° РІРѕ РІС…РѕРґСЏС‰РµРј Р±СѓС„РµСЂРµ
+// Р’РѕР·РјРѕР¶РЅС‹Рµ РІР°СЂРёР°РЅС‚С‹:
+// - Р·Р°РїСЂРѕСЃ РµС‰Рµ РЅРµ РїРѕР»СѓС‡РµРЅ, РЅРµРѕР±С…РѕРґРёРј РґР°Р»СЊРЅРµР№С€РёР№ РїСЂРёРµРј РґР°РЅРЅС‹С… - РІС‹СЃС‚Р°РІР»СЏРµРј csReading
+// - РїРѕР»СѓС‡РµРЅРѕ РЅРµС‡С‚Рѕ, С‡С‚Рѕ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕСЂСЂРµРєС‚РЅС‹Рј Р·Р°РїСЂРѕСЃРѕРј - РґР°Р»СЊРЅРµР№С€РёР№ РїСЂРёРµРј РЅРµ РёРјРµРµС‚ СЃРјС‹СЃР»Р° - csClosing
+// - Р·Р°РїСЂРѕСЃ РїРѕР»СѓС‡РµРЅ РїРѕР»РЅРѕСЃС‚СЊСЋ Рё РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕР±СЂР°Р±РѕС‚Р°РЅ
 function TConnection.RequestReceived(bytesReceived:integer):boolean;
  var
   i,crlf:integer;
  begin
   result:=false;
   status:=csReading;
-  if inPos<12 then exit; // слишком мало данных принято
+  if inPos<12 then exit; // СЃР»РёС€РєРѕРј РјР°Р»Рѕ РґР°РЅРЅС‹С… РїСЂРёРЅСЏС‚Рѕ
   if not headersParsed then begin
-   // поиск \n\n
+   // РїРѕРёСЃРє \n\n
    i:=inPos-bytesReceived-4;
    if i<1 then i:=1;
    crlf:=0;
@@ -1231,16 +1231,16 @@ function TConnection.RequestReceived(bytesReceived:integer):boolean;
     inc(i);
     end;
    if (crlf=0) or (crlf>3000) then begin
-    if (inPos>3000) or (crlf>3000) then status:=csClosing; // получена какая-то хрень!
+    if (inPos>3000) or (crlf>3000) then status:=csClosing; // РїРѕР»СѓС‡РµРЅР° РєР°РєР°СЏ-С‚Рѕ С…СЂРµРЅСЊ!
     exit;
    end;
-   // Парсинг заголовков
+   // РџР°СЂСЃРёРЅРі Р·Р°РіРѕР»РѕРІРєРѕРІ
    if ParseHeaders(crlf-1) then begin
     if rTypeGet then result:=true;
     if inPos>=bodySize+bodyPos then result:=true;
    end;
   end else begin
-   // Заголовки уже обработаны - нужно лишь дождаться загрузки всего запроса
+   // Р—Р°РіРѕР»РѕРІРєРё СѓР¶Рµ РѕР±СЂР°Р±РѕС‚Р°РЅС‹ - РЅСѓР¶РЅРѕ Р»РёС€СЊ РґРѕР¶РґР°С‚СЊСЃСЏ Р·Р°РіСЂСѓР·РєРё РІСЃРµРіРѕ Р·Р°РїСЂРѕСЃР°
    if inPos>=bodySize+bodyPos then result:=true;
   end;
   if result then inc(requestRnd);
@@ -1263,8 +1263,8 @@ procedure onReceive(const dwError,cbTransferred:DWORD;
    end;
 //  LogMsg(inttostr(idx)+' Received: '+inttostr(cbTransferred)+#13#10+connections[idx].inBuf);
    with connections[idx] do begin
-    if status=csNone then exit; // соединение уже удалено
-    if status=csClosing then exit; // соединение уже закрывается - нечего тут делать
+    if status=csNone then exit; // СЃРѕРµРґРёРЅРµРЅРёРµ СѓР¶Рµ СѓРґР°Р»РµРЅРѕ
+    if status=csClosing then exit; // СЃРѕРµРґРёРЅРµРЅРёРµ СѓР¶Рµ Р·Р°РєСЂС‹РІР°РµС‚СЃСЏ - РЅРµС‡РµРіРѕ С‚СѓС‚ РґРµР»Р°С‚СЊ
     if dwerror<>0 then LogMsg('onRecv error '+WSAError(dwError)+' in con #'+inttostr(idx),logNormal,lgHTTP);
     if (dwError=WSAENOTCONN) or
        (dwError=WSAEDISCON) or
@@ -1280,16 +1280,16 @@ procedure onReceive(const dwError,cbTransferred:DWORD;
     end;
     inc(inPos,cbTransferred);
     inc(serverStat.recvBytes,cbTransferred);
-    // проверим, поступил ли запрос полностью
+    // РїСЂРѕРІРµСЂРёРј, РїРѕСЃС‚СѓРїРёР» Р»Рё Р·Р°РїСЂРѕСЃ РїРѕР»РЅРѕСЃС‚СЊСЋ
     if RequestReceived(cbTransferred) then begin
       lastRequestTime:=now;
       status:=csWaiting;
       if outBuf='' then HandleRequest;
-      // если сформирован ответ - отправить его
+      // РµСЃР»Рё СЃС„РѕСЂРјРёСЂРѕРІР°РЅ РѕС‚РІРµС‚ - РѕС‚РїСЂР°РІРёС‚СЊ РµРіРѕ
       if outBuf<>'' then SendResponse(1);
     end else begin
-     if status=csReading then StartRecv(idx); // слишком мало данных, продолжаем прием
-    // if outBuf<>'' then SendResponse; - что это за хрень!??
+     if status=csReading then StartRecv(idx); // СЃР»РёС€РєРѕРј РјР°Р»Рѕ РґР°РЅРЅС‹С…, РїСЂРѕРґРѕР»Р¶Р°РµРј РїСЂРёРµРј
+    // if outBuf<>'' then SendResponse; - С‡С‚Рѕ СЌС‚Рѕ Р·Р° С…СЂРµРЅСЊ!??
     end;
    end;
    except
@@ -1300,7 +1300,7 @@ procedure onReceive(const dwError,cbTransferred:DWORD;
   end;
  end;
 
-// Инициируем прием/чтение данных из сокета соединения
+// РРЅРёС†РёРёСЂСѓРµРј РїСЂРёРµРј/С‡С‚РµРЅРёРµ РґР°РЅРЅС‹С… РёР· СЃРѕРєРµС‚Р° СЃРѕРµРґРёРЅРµРЅРёСЏ
 procedure StartRecv(idx:integer);
  var
   buf:WSAbuf;
@@ -1313,8 +1313,8 @@ procedure StartRecv(idx:integer);
     LogMsg('Can''t read from closed con#'+inttostr(idx),logInfo);
     exit;
    end;
-   buf.len:=length(inBuf)-inPos+1; // столько байтов еще можно прочитать в буфер
-   buf.buf:=@inBuf[inPos]; // тут range check error!
+   buf.len:=length(inBuf)-inPos+1; // СЃС‚РѕР»СЊРєРѕ Р±Р°Р№С‚РѕРІ РµС‰Рµ РјРѕР¶РЅРѕ РїСЂРѕС‡РёС‚Р°С‚СЊ РІ Р±СѓС„РµСЂ
+   buf.buf:=@inBuf[inPos]; // С‚СѓС‚ range check error!
    fillchar(overlapped,sizeof(overlapped),0);
    overlapped.hEvent:=idx;
    flags:=0;
@@ -1394,7 +1394,7 @@ procedure StartRecv(idx:integer);
     move(lpCallerID.buf^,addr,sizeof(addr));
     ip:=addr.sin_addr.S_addr;
     if banlist[IPhash(ip)]>40 then begin
-     result:=CF_REJECT; // 5 секунд после принудительного разрыва новое соединение установить нельзя
+     result:=CF_REJECT; // 5 СЃРµРєСѓРЅРґ РїРѕСЃР»Рµ РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРіРѕ СЂР°Р·СЂС‹РІР° РЅРѕРІРѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РЅРµР»СЊР·СЏ
      inc(serverStat.connDenied);
      LogMsg('Connection not allowed from '+IpToStr(ip),logInfo,lgHTTP);
      exit;
@@ -1471,7 +1471,7 @@ begin
         outBuf:=FormatResponse(outBuf,dontCompress);
         inc(j,200+length(outBuf));
         SendResponse(3);
-        if j>10000 then break; // слишком много сразу отправлять не будем
+        if j>10000 then break; // СЃР»РёС€РєРѕРј РјРЅРѕРіРѕ СЃСЂР°Р·Сѓ РѕС‚РїСЂР°РІР»СЏС‚СЊ РЅРµ Р±СѓРґРµРј
        end;
       end;
    except
@@ -1511,7 +1511,7 @@ begin
         closeReason:=0;
         setLength(inBuf,INBUF_SIZE);
         PrepareForNextRequest;
-        keepAlive:=true; // устанавливается ПОСЛЕ PrepareForNext... для правильного выбора таймаута
+        keepAlive:=true; // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РџРћРЎР›Р• PrepareForNext... РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕРіРѕ РІС‹Р±РѕСЂР° С‚Р°Р№РјР°СѓС‚Р°
         StartRecv(i);
         if LOG_HTTP and (minLogMemLevel=0) then
           LogMsg('Conn accepted: #'+connectionstr(i),logDebug,lgHTTP);
@@ -1537,25 +1537,25 @@ begin
      firstTimer:=false;
     end;
 
-    // Если что-то надо делать ежеминутно
+    // Р•СЃР»Рё С‡С‚Рѕ-С‚Рѕ РЅР°РґРѕ РґРµР»Р°С‚СЊ РµР¶РµРјРёРЅСѓС‚РЅРѕ
     i:=time.wMinute;
     if i<>lastMinute then begin
      lastMinute:=i;
-     if lastMinute mod 10=1 then AddTask(0,0,['DB_MAINTENANCE']); // Раз в 10 минут обслуживать базу данных
-     MarkIPAsBad(i); // вытеснение проблемных IP со временем
+     if lastMinute mod 10=1 then AddTask(0,0,['DB_MAINTENANCE']); // Р Р°Р· РІ 10 РјРёРЅСѓС‚ РѕР±СЃР»СѓР¶РёРІР°С‚СЊ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
+     MarkIPAsBad(i); // РІС‹С‚РµСЃРЅРµРЅРёРµ РїСЂРѕР±Р»РµРјРЅС‹С… IP СЃРѕ РІСЂРµРјРµРЅРµРј
     end;
 
-    // Если что-то надо делать раз в час
+    // Р•СЃР»Рё С‡С‚Рѕ-С‚Рѕ РЅР°РґРѕ РґРµР»Р°С‚СЊ СЂР°Р· РІ С‡Р°СЃ
     i:=time.wHour;
     if i<>lastHour then begin
      lastHour:=i;
-     AddTask(0,0,['HOURLY_MAINTENANCE']); // Раз в час
+     AddTask(0,0,['HOURLY_MAINTENANCE']); // Р Р°Р· РІ С‡Р°СЃ
     end;
 
     i:=time.wDay;
     if i<>lastDay then begin
      lastDay:=i;
-     AddTask(0,0,['DAILY_MAINTENANCE']); // Раз в сутки
+     AddTask(0,0,['DAILY_MAINTENANCE']); // Р Р°Р· РІ СЃСѓС‚РєРё
     end;
    except
     on e:exception do begin
@@ -1567,28 +1567,28 @@ begin
    i:=time.wMilliseconds div 100;
    if i<>LastSecond then begin
     lastSecond:=i;
-    // обработка таймаутов
+    // РѕР±СЂР°Р±РѕС‚РєР° С‚Р°Р№РјР°СѓС‚РѕРІ
     try
      t:=MyTickCount;
      for i:=1 to MAX_CONNECTIONS do
       with connections[i] do
        if (socket<>0) and (not (status in [csClosing,csWriting])) then begin
         if t>timeOut then begin
-         // если ждем запроса а его все нет - закрыть соединение
+         // РµСЃР»Рё Р¶РґРµРј Р·Р°РїСЂРѕСЃР° Р° РµРіРѕ РІСЃРµ РЅРµС‚ - Р·Р°РєСЂС‹С‚СЊ СЃРѕРµРґРёРЅРµРЅРёРµ
          if status in [csReading,csWriting] then begin
           if LOG_HTTP and (minLogMemLevel=0) then
             LogMsg('Timeout for con#'+inttostr(i)+': '+inttostr(t-timeOut),logDebug,lgHTTP);
           status:=csClosing;
           closeReason:=4; // request read timeout
          end;
-         // если запрос был, а ответа все нет - отправить пустой ответ
+         // РµСЃР»Рё Р·Р°РїСЂРѕСЃ Р±С‹Р», Р° РѕС‚РІРµС‚Р° РІСЃРµ РЅРµС‚ - РѕС‚РїСЂР°РІРёС‚СЊ РїСѓСЃС‚РѕР№ РѕС‚РІРµС‚
          if status=csWaiting then begin
           if LOG_HTTP and (minLogMemLevel=0) then
             LogMsg('Con#'+inttostr(i)+' timeout',logDebug,lgHTTP);
           if outBuf='' then begin
            if (cometUserID>0) and (IsValidUserID(cometUserID)) then begin
             outbuf:=GetUserMsgs(cometUserID);
-            users[cometUserID].lastPollResponse:=outbuf; // возможно пустой ответ - признак того, что он был отправлен
+            users[cometUserID].lastPollResponse:=outbuf; // РІРѕР·РјРѕР¶РЅРѕ РїСѓСЃС‚РѕР№ РѕС‚РІРµС‚ - РїСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РѕРЅ Р±С‹Р» РѕС‚РїСЂР°РІР»РµРЅ
             if outbuf<>'' then outBuf:=FormatResponse(outbuf,dontCompress);
            end;
           end else
@@ -1599,7 +1599,7 @@ begin
         end;
        end;
 
-     // ban list (1 раз в секунду)          
+     // ban list (1 СЂР°Р· РІ СЃРµРєСѓРЅРґСѓ)          
      if lastSecond=0 then
       for i:=0 to high(banlist) do
        if banlist[i]>10 then dec(banlist[i],10)
@@ -1613,7 +1613,7 @@ begin
      timeToFlush:=LOG_FLUSH_INTERVAL;
     end else dec(timeToFlush);
 
-    // Таймеры сервера и логики
+    // РўР°Р№РјРµСЂС‹ СЃРµСЂРІРµСЂР° Рё Р»РѕРіРёРєРё
     onTimer;
     onCustomTimer;
    end;
@@ -1635,7 +1635,7 @@ begin
 
   // Non-alterable delay
   WaitForSingleObject(event,NET_LOOP_INTERVAL);
-  SleepEx(1,true); // позволяет выполняться APC
+  SleepEx(1,true); // РїРѕР·РІРѕР»СЏРµС‚ РІС‹РїРѕР»РЅСЏС‚СЊСЃСЏ APC
   netThreadTimestamp:=Now;
   
  until terminated;

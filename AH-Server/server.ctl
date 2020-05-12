@@ -14,7 +14,7 @@ ControlToken "TOKEN"
 SteamAPIkey  ""
 
 # Number of worker threads (1..10)
-NumWorkers  1
+NumWorkers  2
 
 # Urgency threshold to wake-up network thread immediately
 MaxUrgency  2
