@@ -1,0 +1,84 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{796D9326-4ACC-4195-BB11-CE58D7314EBE}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="AH-Server\src\AHserver.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="AH-Stat\src\ahStat.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="AH-Website\Backend\src\website.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="CompressBuild\compressBuild2.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="GameUpdater\updater.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="AHserver">
+        <MSBuild Projects="AH-Server\src\AHserver.dproj"/>
+    </Target>
+    <Target Name="AHserver:Clean">
+        <MSBuild Projects="AH-Server\src\AHserver.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="AHserver:Make">
+        <MSBuild Projects="AH-Server\src\AHserver.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ahStat">
+        <MSBuild Projects="AH-Stat\src\ahStat.dproj"/>
+    </Target>
+    <Target Name="ahStat:Clean">
+        <MSBuild Projects="AH-Stat\src\ahStat.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ahStat:Make">
+        <MSBuild Projects="AH-Stat\src\ahStat.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="website">
+        <MSBuild Projects="AH-Website\Backend\src\website.dproj"/>
+    </Target>
+    <Target Name="website:Clean">
+        <MSBuild Projects="AH-Website\Backend\src\website.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="website:Make">
+        <MSBuild Projects="AH-Website\Backend\src\website.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="compressBuild2">
+        <MSBuild Projects="CompressBuild\compressBuild2.dproj"/>
+    </Target>
+    <Target Name="compressBuild2:Clean">
+        <MSBuild Projects="CompressBuild\compressBuild2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="compressBuild2:Make">
+        <MSBuild Projects="CompressBuild\compressBuild2.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="updater">
+        <MSBuild Projects="GameUpdater\updater.dproj"/>
+    </Target>
+    <Target Name="updater:Clean">
+        <MSBuild Projects="GameUpdater\updater.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="updater:Make">
+        <MSBuild Projects="GameUpdater\updater.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="AHserver;ahStat;website;compressBuild2;updater"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="AHserver:Clean;ahStat:Clean;website:Clean;compressBuild2:Clean;updater:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="AHserver:Make;ahStat:Make;website:Make;compressBuild2:Make;updater:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
