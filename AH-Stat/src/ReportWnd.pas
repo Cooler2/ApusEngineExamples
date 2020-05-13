@@ -1,4 +1,4 @@
-﻿// Функциональность окна отчётов
+// Функциональность окна отчётов
 unit ReportWnd;
 
 {$IFDEF FPC}
@@ -23,7 +23,7 @@ implementation
   LCLIntf, LCLType, LMessages,
 {$ENDIF}
   MyServis,SysUtils,classes,mainWnd,
-   conScene,eventman,GLgame,EngineAPI,engineTools,UIClasses,customUI,UICharts,Reports,Data;
+   conScene,EventMan,GLgame,EngineAPI,engineTools,UIClasses,customUI,UICharts,Reports,Data;
  const
   reportsList=
    '02|Показатели игроков;'+

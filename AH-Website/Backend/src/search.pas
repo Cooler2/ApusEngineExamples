@@ -121,7 +121,7 @@ implementation
   end;
 
  // Оценивает сообщение и формирует вырезку из него, наиболее близкую к запросу
- function RateForumMessage(query:WStringArr;msgText,title,author:WideString;out quote:WideString;explain:boolean=false):single;
+ function RateForumMessage(query:WStringArr;msgText,title,author:WideString;out quote:String16;explain:boolean=false):single;
   var
    i,j,k,d,l,best,bestS,bestE:integer;
    txt:WStringArr;
@@ -168,7 +168,7 @@ implementation
       // Отметим места в тексте, где данное слово присутствует
       l:=1;
       repeat
-       d:=PosFrom(txt[j],msgtext,l,true);
+       d:=PosFrom(WideString(txt[j]),msgtext,l,true);
        if d<=0 then break;
        l:=d+1;
        inc(hl[d],round(rate));
@@ -226,7 +226,7 @@ implementation
    quotes:WStringArr;
    rates,rates2:array of single;
    maxrate:single;
-   wst:WideString;
+   wst:String16;
   begin
    cSect.Enter;
    try

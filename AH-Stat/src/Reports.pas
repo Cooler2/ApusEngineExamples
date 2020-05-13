@@ -1,4 +1,4 @@
-﻿// Здесь объекты с данными отчётов. Построение этих данный вызывается из DataThread
+// Здесь объекты с данными отчётов. Построение этих данный вызывается из DataThread
 // Сами данные (когда готовы) используются при отрисовке отчётов
 unit Reports;
 
@@ -120,7 +120,7 @@ implementation
 {$ELSE}
   LCLIntf, LCLType, LMessages,
 {$ENDIF}
-  SysUtils,Data,UICharts,structs,EngineAPI;
+  SysUtils,Data,UICharts,Structs,EngineAPI;
 
 const
  monthNames:array[1..12] of AnsiString=('JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC');

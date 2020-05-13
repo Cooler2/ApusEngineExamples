@@ -1,4 +1,4 @@
-﻿unit mainWnd;
+unit mainWnd;
 
 {$IFDEF FPC}
   {$MODE Delphi}
@@ -20,7 +20,9 @@ type
     memo: TMemo;
     btnSync: TButton;
     btnReports: TButton;
+    {$IFDEF DELPHI}
     XPManifest1: TXPManifest;
+    {$ENDIF}
     Timer: TTimer;
     btnVerify: TButton;
     procedure FormActivate(Sender: TObject);
@@ -48,11 +50,7 @@ var
 
 implementation
  uses
-{$IFnDEF FPC}
-  database,
-{$ELSE}
-{$ENDIF}
-  MyServis,BackupDB,ReportWnd,eventman;
+  database,MyServis,BackupDB,ReportWnd,EventMan;
 
 
 {$IFnDEF FPC}

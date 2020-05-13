@@ -1,4 +1,4 @@
-﻿unit BackupDB;
+unit BackupDB;
 
 {$IFDEF FPC}
   {$MODE Delphi}
@@ -18,11 +18,7 @@ interface
 
 implementation
 uses
-{$IFnDEF FPC}
-  database,
-{$ELSE}
-{$ENDIF}
-  SysUtils,Classes,MyServis,mainWnd,Data,NetCommon,UCalculating,Cnsts,structs;
+  database,SysUtils,Classes,MyServis,mainWnd,Data,NetCommon,UCalculating,Cnsts,Structs;
 
 type
  TSyncThread=class(TThread)

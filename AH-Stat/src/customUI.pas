@@ -1,4 +1,4 @@
-﻿// Здесь реализация дополнительных (не входящих в движок) классов UI общего назначения
+// Здесь реализация дополнительных (не входящих в движок) классов UI общего назначения
 // (т.е. таких, которые могут быть применены и в других проектах)
 unit customUI;
 
@@ -43,7 +43,7 @@ interface
  procedure InitCustomUI;
 
 implementation
- uses CrossPlatform,SysUtils,eventman,engineTools,ReportWnd,UIRender,types,Geom2d;
+ uses CrossPlatform,SysUtils,EventMan,engineTools,ReportWnd,UIRender,types,Geom2d;
 
  function EventHandler(event:EventStr;tag:TTag):boolean;
   var

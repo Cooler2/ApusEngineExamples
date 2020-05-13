@@ -1,4 +1,4 @@
-﻿// Элементы UI для всевозможных графиков и диаграмм
+// Элементы UI для всевозможных графиков и диаграмм
 // Модуль включает как сами классы диаграмм, так и отрисовщик для них
 //
 // Существуют следующие виды диаграмм:
@@ -26,7 +26,7 @@ unit UICharts;
 {$ENDIF}
 
 interface
-uses MyServis,EngineApi,UIClasses,AnimatedValues;
+uses MyServis,EngineAPI,UIClasses,AnimatedValues;
 
 const
   UIChartDrawerID:integer=27; // Can be changed to avoid conflicts
@@ -206,7 +206,7 @@ type
 
 
 implementation
- uses SysUtils,types,colors,FastGFX,engineTools,UIrender;
+ uses SysUtils,types,Colors,FastGFX,engineTools,UIRender;
 
  function UISimpleTable(name:string):TUISimpleTable;
   begin
