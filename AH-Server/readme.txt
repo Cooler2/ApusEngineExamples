@@ -22,3 +22,16 @@ How to run the game server:
   - put "command.txt" file with "STOP" phrase (it will be automatically deleted)
 
 * See "AM2Protocol.txt.docx" for the client-server protocol specfication.
+
+-----------------
+Project structure:
+
+* Main.pas - initialization etc.
+
+* Net.pas - implements an HTTP Comet server using Overlapped I/O for network sockets
+
+* ServerLogic.pas - implements generic (game-independent) server management requests
+
+* CustomLogic.pas - implements game protocol with all game logic (server-side)
+
+* ULogicWrapper.pas - wrapper for the combat logic (which is considered a part of the client)
